@@ -31,7 +31,8 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
       <button
         onClick={toggleMenu}
         className="p-2 -mr-2 text-gray-600 hover:text-gray-900 focus:outline-none"
-        aria-label="Toggle menu"
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isOpen}
       >
         <svg
           className="h-6 w-6"
@@ -42,15 +43,22 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path d="M4 6h16M4 12h16M4 18h16"></path>
+          {isOpen ? (
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          ) : (
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          )}
         </svg>
       </button>
 
-
       {/* Full Screen Menu */}
       <div
+        aria-hidden={!isOpen}
+        inert={!isOpen}
         className={`fixed inset-0 z-[70] w-full h-full bg-white transform transition-transform duration-500 ease-in-out ${
-          isOpen ? "translate-y-0" : "-translate-y-full"
+          isOpen
+            ? "translate-y-0 pointer-events-auto"
+            : "-translate-y-full pointer-events-none"
         }`}
       >
         <div className="flex flex-col h-full">

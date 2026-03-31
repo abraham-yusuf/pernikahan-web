@@ -84,28 +84,8 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
 
           <nav className="flex-1 overflow-y-auto py-12 px-6">
             <div className="flex flex-col gap-4 text-center">
-              <Link
-                href="/#templates"
-                onClick={closeMenu}
-                className="px-4 py-4 text-2xl font-semibold text-gray-600 hover:text-primary hover:bg-gray-50 rounded-2xl transition-all"
-              >
-                Template
-              </Link>
-              <Link
-                href="/#fitur"
-                onClick={closeMenu}
-                className="px-4 py-4 text-2xl font-semibold text-gray-600 hover:text-primary hover:bg-gray-50 rounded-2xl transition-all"
-              >
-                Fitur
-              </Link>
-              <Link
-                href="/#harga"
-                onClick={closeMenu}
-                className="px-4 py-4 text-2xl font-semibold text-gray-600 hover:text-primary hover:bg-gray-50 rounded-2xl transition-all"
-              >
-                Harga
-              </Link>
-            </div>
+              
+              
 
             <div className="mt-8 pt-8 border-t border-gray-100">
               {isLoggedIn ? (
@@ -137,11 +117,7 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
             </div>
           </nav>
 
-          <div className="p-6 border-t border-gray-50 bg-gray-50/50">
-            <p className="text-xs text-center text-gray-400">
-              © {new Date().getFullYear()} NikahDigital. All rights reserved.
-            </p>
-          </div>
+          
         </div>
       </div>
     </div>

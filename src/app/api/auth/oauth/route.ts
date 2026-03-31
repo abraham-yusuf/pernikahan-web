@@ -11,11 +11,11 @@ export async function GET(request: NextRequest) {
 
   const { account } = createAdminClient();
 
-  const origin = request.nextUrl.origin;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Google,
-    `${origin}/api/auth/oauth/callback`,
-    `${origin}/auth/login?error=oauth_failed`
+    `${baseUrl}/api/auth/oauth/callback`,
+    `${baseUrl}/auth/login?error=oauth_failed`
   );
 
   return NextResponse.redirect(redirectUrl);

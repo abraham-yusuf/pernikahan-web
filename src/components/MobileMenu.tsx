@@ -46,33 +46,22 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
         </svg>
       </button>
 
-      {/* Overlay */}
-      <div
-        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={closeMenu}
-      ></div>
 
-      {/* Side Drawer */}
+      {/* Full Screen Menu */}
       <div
-        className={`fixed top-0 left-0 bottom-0 z-[70] w-[280px] h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-0 z-[70] w-full h-full bg-white transform transition-transform duration-500 ease-in-out ${
+          isOpen ? "translate-y-0" : "-translate-y-full"
         }`}
-        style={{
-          boxShadow: isOpen ? "0 0 50px rgba(0,0,0,0.15)" : "none",
-        }}
       >
         <div className="flex flex-col h-full">
-          <div className="flex justify-between items-center p-6 border-b border-gray-50">
-            <span className="text-xl font-bold text-gray-900">Menu</span>
+          <div className="flex justify-end p-6">
             <button
               onClick={closeMenu}
-              className="p-2 -mr-2 text-gray-600 hover:text-gray-900 focus:outline-none"
+              className="p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
               aria-label="Close menu"
             >
               <svg
-                className="h-6 w-6"
+                className="h-8 w-8"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -85,26 +74,26 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto py-6 px-4">
-            <div className="flex flex-col gap-1">
+          <nav className="flex-1 overflow-y-auto py-12 px-6">
+            <div className="flex flex-col gap-4 text-center">
               <Link
                 href="/#templates"
                 onClick={closeMenu}
-                className="px-4 py-3 text-lg font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-xl transition-all"
+                className="px-4 py-4 text-2xl font-semibold text-gray-600 hover:text-primary hover:bg-gray-50 rounded-2xl transition-all"
               >
                 Template
               </Link>
               <Link
                 href="/#fitur"
                 onClick={closeMenu}
-                className="px-4 py-3 text-lg font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-xl transition-all"
+                className="px-4 py-4 text-2xl font-semibold text-gray-600 hover:text-primary hover:bg-gray-50 rounded-2xl transition-all"
               >
                 Fitur
               </Link>
               <Link
                 href="/#harga"
                 onClick={closeMenu}
-                className="px-4 py-3 text-lg font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-xl transition-all"
+                className="px-4 py-4 text-2xl font-semibold text-gray-600 hover:text-primary hover:bg-gray-50 rounded-2xl transition-all"
               >
                 Harga
               </Link>

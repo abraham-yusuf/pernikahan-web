@@ -9,28 +9,29 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${request.nextUrl.origin}/auth/login?error=invalid_callback`);
   }
 
-  const { account, users } = createAdminClient();
-  const session = await account.createSession(userId, secret);
-
-  // Initialize user preferences for new OAuth users
   try {
+    const { account, users } = createAdminClient();
+    const session = await account.createSession(userId, secret);
+
+    // Initialize user preferences for new OAuth users
     const user = await users.get(userId);
     if (!user.prefs || Object.keys(user.prefs).length === 0) {
       await users.updatePrefs(userId, { tier: "free" });
     }
+
+    const response = NextResponse.redirect(`${request.nextUrl.origin}/dashboard`);
+
+    response.cookies.set(SESSION_COOKIE_NAME, session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+
+    return response;
   } catch (error) {
-    console.error("Failed to initialize user preferences:", error);
+    console.error("OAuth callback error:", error);
+    return NextResponse.redirect(`${request.nextUrl.origin}/auth/login?error=oauth_callback_failed`);
   }
-
-  const response = NextResponse.redirect(`${request.nextUrl.origin}/dashboard`);
-
-  response.cookies.set(SESSION_COOKIE_NAME, session.secret, {
-    path: "/",
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-  });
-
-  return response;
 }

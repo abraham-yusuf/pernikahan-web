@@ -1,8 +1,13 @@
-import { demoEvent } from "@/lib/data";
+import { demoEvent, type WeddingEvent } from "@/lib/data";
 import { CountdownTimer } from "../CountdownTimer";
 import { RSVPForm } from "../RSVPForm";
 
-export function AdatAcehTemplate() {
+interface TemplateProps {
+  event?: WeddingEvent;
+}
+
+export function AdatAcehTemplate({ event }: TemplateProps) {
+  const data = event ?? demoEvent;
   return (
     <div className="min-h-screen overflow-hidden bg-[#FAF3E0] text-[#1a2e1a] bg-aceh-arabesque">
       <section className="relative flex min-h-screen items-center justify-center px-6 text-center">
@@ -16,14 +21,14 @@ export function AdatAcehTemplate() {
           <p className="mb-4 text-xs uppercase tracking-[0.4em] text-[#D4AF37]">
             Undangan Pernikahan
           </p>
-          <h1 className="text-4xl font-serif sm:text-6xl">{demoEvent.bride}</h1>
+          <h1 className="text-4xl font-serif sm:text-6xl">{data.bride}</h1>
           <div className="my-5 flex items-center justify-center gap-4 text-[#0B6E4F]">
             <span className="h-px w-16 bg-current" />
             <span className="text-2xl text-[#D4AF37]">✦</span>
             <span className="h-px w-16 bg-current" />
           </div>
-          <h1 className="text-4xl font-serif sm:text-6xl">{demoEvent.groom}</h1>
-          <p className="mt-5 text-lg text-[#1a2e1a]/70">{demoEvent.akadDate}</p>
+          <h1 className="text-4xl font-serif sm:text-6xl">{data.groom}</h1>
+          <p className="mt-5 text-lg text-[#1a2e1a]/70">{data.akadDate}</p>
         </div>
       </section>
 
@@ -59,18 +64,18 @@ export function AdatAcehTemplate() {
               <div className="mx-auto mb-4 flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#D4AF37]/40 bg-[#0B6E4F]/10 text-4xl text-[#0B6E4F]">
                 👰
               </div>
-              <h3 className="text-2xl font-serif">{demoEvent.bride}</h3>
+              <h3 className="text-2xl font-serif">{data.bride}</h3>
               <p className="mt-2 text-sm text-[#1a2e1a]/70">
-                Putri dari {demoEvent.brideParents}
+                Putri dari {data.brideParents}
               </p>
             </div>
             <div className="rounded-[2rem] border border-[#D4AF37]/25 bg-white/70 p-7 shadow-[0_16px_38px_rgba(26,46,26,0.08)]">
               <div className="mx-auto mb-4 flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#D4AF37]/40 bg-[#0B6E4F]/10 text-4xl text-[#0B6E4F]">
                 🤵
               </div>
-              <h3 className="text-2xl font-serif">{demoEvent.groom}</h3>
+              <h3 className="text-2xl font-serif">{data.groom}</h3>
               <p className="mt-2 text-sm text-[#1a2e1a]/70">
-                Putra dari {demoEvent.groomParents}
+                Putra dari {data.groomParents}
               </p>
             </div>
           </div>
@@ -88,7 +93,7 @@ export function AdatAcehTemplate() {
             <span className="h-px w-16 bg-current" />
           </div>
           <p className="leading-relaxed italic text-[#1a2e1a]/80">
-            &ldquo;{demoEvent.story}&rdquo;
+            &ldquo;{data.story}&rdquo;
           </p>
         </div>
       </section>
@@ -102,21 +107,21 @@ export function AdatAcehTemplate() {
             <div className="rounded-[2rem] border border-[#D4AF37]/25 bg-white/75 p-7 text-center shadow-[0_16px_38px_rgba(26,46,26,0.08)]">
               <div className="mb-3 text-3xl text-[#0B6E4F]">🕌</div>
               <h3 className="text-xl font-serif text-[#0B6E4F]">Akad Nikah</h3>
-              <p className="mt-3 text-sm text-[#1a2e1a]/65">{demoEvent.akadDate}</p>
-              <p className="text-sm text-[#1a2e1a]/65">{demoEvent.akadTime}</p>
-              <p className="mt-3 text-sm">{demoEvent.akadLocation}</p>
+              <p className="mt-3 text-sm text-[#1a2e1a]/65">{data.akadDate}</p>
+              <p className="text-sm text-[#1a2e1a]/65">{data.akadTime}</p>
+              <p className="mt-3 text-sm">{data.akadLocation}</p>
             </div>
             <div className="rounded-[2rem] border border-[#D4AF37]/25 bg-[#0B6E4F] p-7 text-center text-white shadow-[0_16px_38px_rgba(11,110,79,0.14)]">
               <div className="mb-3 text-3xl text-[#D4AF37]">🎊</div>
               <h3 className="text-xl font-serif text-[#D4AF37]">Resepsi</h3>
-              <p className="mt-3 text-sm text-white/75">{demoEvent.resepsiDate}</p>
-              <p className="text-sm text-white/75">{demoEvent.resepsiTime}</p>
-              <p className="mt-3 text-sm text-white/90">{demoEvent.resepsiLocation}</p>
+              <p className="mt-3 text-sm text-white/75">{data.resepsiDate}</p>
+              <p className="text-sm text-white/75">{data.resepsiTime}</p>
+              <p className="mt-3 text-sm text-white/90">{data.resepsiLocation}</p>
             </div>
           </div>
           <div className="mt-6 text-center">
             <a
-              href={demoEvent.mapUrl}
+              href={data.mapUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-6 py-2.5 text-sm text-[#1a2e1a] transition-colors hover:bg-[#c59d26]"

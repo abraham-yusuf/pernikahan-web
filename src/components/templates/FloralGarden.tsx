@@ -1,8 +1,13 @@
-import { demoEvent } from "@/lib/data";
+import { demoEvent, type WeddingEvent } from "@/lib/data";
 import { CountdownTimer } from "../CountdownTimer";
 import { RSVPForm } from "../RSVPForm";
 
-export function FloralGardenTemplate() {
+interface TemplateProps {
+  event?: WeddingEvent;
+}
+
+export function FloralGardenTemplate({ event }: TemplateProps) {
+  const data = event ?? demoEvent;
   return (
     <div className="min-h-screen bg-[#fdf6f0] text-[#2d4a3e]">
       {/* Hero */}
@@ -25,13 +30,13 @@ export function FloralGardenTemplate() {
             We are getting married
           </p>
           <h1 className="text-5xl sm:text-7xl font-serif mb-3 text-[#2d4a3e]">
-            {demoEvent.bride}
+            {data.bride}
           </h1>
           <div className="text-[#e8a0bf] text-3xl my-3">🌸</div>
           <h1 className="text-5xl sm:text-7xl font-serif mb-8 text-[#2d4a3e]">
-            {demoEvent.groom}
+            {data.groom}
           </h1>
-          <p className="text-[#2d4a3e]/50 text-lg">{demoEvent.akadDate}</p>
+          <p className="text-[#2d4a3e]/50 text-lg">{data.akadDate}</p>
         </div>
       </section>
 
@@ -53,18 +58,18 @@ export function FloralGardenTemplate() {
             <div className="w-32 h-32 mx-auto rounded-full bg-[#e8a0bf]/20 flex items-center justify-center text-4xl mb-4 border-2 border-[#e8a0bf]/30">
               👰
             </div>
-            <h3 className="text-2xl font-serif mb-1">{demoEvent.bride}</h3>
+            <h3 className="text-2xl font-serif mb-1">{data.bride}</h3>
             <p className="text-[#2d4a3e]/50 text-sm">
-              Putri dari {demoEvent.brideParents}
+              Putri dari {data.brideParents}
             </p>
           </div>
           <div className="animate-slide-up">
             <div className="w-32 h-32 mx-auto rounded-full bg-[#e8a0bf]/20 flex items-center justify-center text-4xl mb-4 border-2 border-[#e8a0bf]/30">
               🤵
             </div>
-            <h3 className="text-2xl font-serif mb-1">{demoEvent.groom}</h3>
+            <h3 className="text-2xl font-serif mb-1">{data.groom}</h3>
             <p className="text-[#2d4a3e]/50 text-sm">
-              Putra dari {demoEvent.groomParents}
+              Putra dari {data.groomParents}
             </p>
           </div>
         </div>
@@ -77,7 +82,7 @@ export function FloralGardenTemplate() {
         </p>
         <div className="text-3xl mb-4">💕</div>
         <p className="text-[#2d4a3e]/70 leading-relaxed italic">
-          &ldquo;{demoEvent.story}&rdquo;
+          &ldquo;{data.story}&rdquo;
         </p>
       </section>
 
@@ -93,28 +98,28 @@ export function FloralGardenTemplate() {
               Akad Nikah
             </h3>
             <p className="text-[#2d4a3e]/60 text-sm mb-1">
-              {demoEvent.akadDate}
+              {data.akadDate}
             </p>
             <p className="text-[#2d4a3e]/60 text-sm mb-3">
-              {demoEvent.akadTime}
+              {data.akadTime}
             </p>
-            <p className="text-sm">{demoEvent.akadLocation}</p>
+            <p className="text-sm">{data.akadLocation}</p>
           </div>
           <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#e8a0bf]/20">
             <div className="text-3xl mb-3">🎊</div>
             <h3 className="text-xl font-serif mb-2 text-[#e8a0bf]">Resepsi</h3>
             <p className="text-[#2d4a3e]/60 text-sm mb-1">
-              {demoEvent.resepsiDate}
+              {data.resepsiDate}
             </p>
             <p className="text-[#2d4a3e]/60 text-sm mb-3">
-              {demoEvent.resepsiTime}
+              {data.resepsiTime}
             </p>
-            <p className="text-sm">{demoEvent.resepsiLocation}</p>
+            <p className="text-sm">{data.resepsiLocation}</p>
           </div>
         </div>
         <div className="mt-6 text-center">
           <a
-            href={demoEvent.mapUrl}
+            href={data.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#2d4a3e] text-white hover:bg-[#1d3a2e] transition-colors text-sm"

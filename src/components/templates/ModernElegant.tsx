@@ -1,8 +1,13 @@
-import { demoEvent } from "@/lib/data";
+import { demoEvent, type WeddingEvent } from "@/lib/data";
 import { CountdownTimer } from "../CountdownTimer";
 import { RSVPForm } from "../RSVPForm";
 
-export function ModernElegantTemplate() {
+interface TemplateProps {
+  event?: WeddingEvent;
+}
+
+export function ModernElegantTemplate({ event }: TemplateProps) {
+  const data = event ?? demoEvent;
   return (
     <div className="min-h-screen bg-[#1a1a2e] text-white bg-geometric">
       {/* Hero */}
@@ -13,13 +18,13 @@ export function ModernElegantTemplate() {
             The Wedding of
           </p>
           <h1 className="text-5xl sm:text-7xl font-serif mb-4">
-            {demoEvent.bride}
+            {data.bride}
           </h1>
           <div className="text-[#c9a84c] text-3xl my-2">&amp;</div>
           <h1 className="text-5xl sm:text-7xl font-serif mb-8">
-            {demoEvent.groom}
+            {data.groom}
           </h1>
-          <p className="text-white/60 text-lg">{demoEvent.akadDate}</p>
+          <p className="text-white/60 text-lg">{data.akadDate}</p>
         </div>
       </section>
 
@@ -41,15 +46,15 @@ export function ModernElegantTemplate() {
             <div className="w-32 h-32 mx-auto rounded-full bg-[#c9a84c]/20 flex items-center justify-center text-4xl mb-4">
               👰
             </div>
-            <h3 className="text-2xl font-serif mb-1">{demoEvent.bride}</h3>
-            <p className="text-white/50 text-sm">Putri dari {demoEvent.brideParents}</p>
+            <h3 className="text-2xl font-serif mb-1">{data.bride}</h3>
+            <p className="text-white/50 text-sm">Putri dari {data.brideParents}</p>
           </div>
           <div className="animate-slide-up">
             <div className="w-32 h-32 mx-auto rounded-full bg-[#c9a84c]/20 flex items-center justify-center text-4xl mb-4">
               🤵
             </div>
-            <h3 className="text-2xl font-serif mb-1">{demoEvent.groom}</h3>
-            <p className="text-white/50 text-sm">Putra dari {demoEvent.groomParents}</p>
+            <h3 className="text-2xl font-serif mb-1">{data.groom}</h3>
+            <p className="text-white/50 text-sm">Putra dari {data.groomParents}</p>
           </div>
         </div>
       </section>
@@ -61,7 +66,7 @@ export function ModernElegantTemplate() {
         </p>
         <div className="text-[#c9a84c] text-2xl mb-4">❦</div>
         <p className="text-white/70 leading-relaxed italic">
-          &ldquo;{demoEvent.story}&rdquo;
+          &ldquo;{data.story}&rdquo;
         </p>
       </section>
 
@@ -74,21 +79,21 @@ export function ModernElegantTemplate() {
           <div className="bg-white/5 backdrop-blur rounded-2xl p-6 text-center border border-[#c9a84c]/20">
             <div className="text-[#c9a84c] text-2xl mb-3">🕌</div>
             <h3 className="text-xl font-serif mb-2">Akad Nikah</h3>
-            <p className="text-white/60 text-sm mb-1">{demoEvent.akadDate}</p>
-            <p className="text-white/60 text-sm mb-3">{demoEvent.akadTime}</p>
-            <p className="text-white/80 text-sm">{demoEvent.akadLocation}</p>
+            <p className="text-white/60 text-sm mb-1">{data.akadDate}</p>
+            <p className="text-white/60 text-sm mb-3">{data.akadTime}</p>
+            <p className="text-white/80 text-sm">{data.akadLocation}</p>
           </div>
           <div className="bg-white/5 backdrop-blur rounded-2xl p-6 text-center border border-[#c9a84c]/20">
             <div className="text-[#c9a84c] text-2xl mb-3">🎊</div>
             <h3 className="text-xl font-serif mb-2">Resepsi</h3>
-            <p className="text-white/60 text-sm mb-1">{demoEvent.resepsiDate}</p>
-            <p className="text-white/60 text-sm mb-3">{demoEvent.resepsiTime}</p>
-            <p className="text-white/80 text-sm">{demoEvent.resepsiLocation}</p>
+            <p className="text-white/60 text-sm mb-1">{data.resepsiDate}</p>
+            <p className="text-white/60 text-sm mb-3">{data.resepsiTime}</p>
+            <p className="text-white/80 text-sm">{data.resepsiLocation}</p>
           </div>
         </div>
         <div className="mt-6 text-center">
           <a
-            href={demoEvent.mapUrl}
+            href={data.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#c9a84c]/40 text-[#c9a84c] hover:bg-[#c9a84c]/10 transition-colors text-sm"

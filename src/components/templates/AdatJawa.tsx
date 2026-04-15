@@ -1,8 +1,13 @@
-import { demoEvent } from "@/lib/data";
+import { demoEvent, type WeddingEvent } from "@/lib/data";
 import { CountdownTimer } from "../CountdownTimer";
 import { RSVPForm } from "../RSVPForm";
 
-export function AdatJawaTemplate() {
+interface TemplateProps {
+  event?: WeddingEvent;
+}
+
+export function AdatJawaTemplate({ event }: TemplateProps) {
+  const data = event ?? demoEvent;
   return (
     <div className="min-h-screen bg-[#f8f0e3] text-[#4a1a0a] bg-batik">
       {/* Hero */}
@@ -15,7 +20,7 @@ export function AdatJawaTemplate() {
           </p>
           <div className="border-2 border-[#d4a574]/40 rounded-lg p-8 sm:p-12 bg-white/40 backdrop-blur-sm">
             <h1 className="text-4xl sm:text-6xl font-serif mb-2">
-              {demoEvent.bride}
+              {data.bride}
             </h1>
             <div className="flex items-center justify-center gap-4 my-4">
               <div className="h-px w-16 bg-[#d4a574]" />
@@ -23,9 +28,9 @@ export function AdatJawaTemplate() {
               <div className="h-px w-16 bg-[#d4a574]" />
             </div>
             <h1 className="text-4xl sm:text-6xl font-serif mb-4">
-              {demoEvent.groom}
+              {data.groom}
             </h1>
-            <p className="text-[#4a1a0a]/60">{demoEvent.akadDate}</p>
+            <p className="text-[#4a1a0a]/60">{data.akadDate}</p>
           </div>
         </div>
       </section>
@@ -63,18 +68,18 @@ export function AdatJawaTemplate() {
             <div className="w-28 h-28 mx-auto rounded-full bg-[#d4a574]/20 flex items-center justify-center text-4xl mb-4 border-2 border-[#d4a574]/40">
               👰
             </div>
-            <h3 className="text-2xl font-serif mb-1">{demoEvent.bride}</h3>
+            <h3 className="text-2xl font-serif mb-1">{data.bride}</h3>
             <p className="text-[#4a1a0a]/50 text-sm">
-              Putri dari {demoEvent.brideParents}
+              Putri dari {data.brideParents}
             </p>
           </div>
           <div className="bg-white/50 rounded-2xl p-6 border border-[#d4a574]/30">
             <div className="w-28 h-28 mx-auto rounded-full bg-[#d4a574]/20 flex items-center justify-center text-4xl mb-4 border-2 border-[#d4a574]/40">
               🤵
             </div>
-            <h3 className="text-2xl font-serif mb-1">{demoEvent.groom}</h3>
+            <h3 className="text-2xl font-serif mb-1">{data.groom}</h3>
             <p className="text-[#4a1a0a]/50 text-sm">
-              Putra dari {demoEvent.groomParents}
+              Putra dari {data.groomParents}
             </p>
           </div>
         </div>
@@ -91,7 +96,7 @@ export function AdatJawaTemplate() {
           <div className="h-px w-16 bg-[#d4a574]" />
         </div>
         <p className="text-[#4a1a0a]/70 leading-relaxed italic">
-          &ldquo;{demoEvent.story}&rdquo;
+          &ldquo;{data.story}&rdquo;
         </p>
       </section>
 
@@ -107,28 +112,28 @@ export function AdatJawaTemplate() {
               Akad Nikah
             </h3>
             <p className="text-[#4a1a0a]/60 text-sm mb-1">
-              {demoEvent.akadDate}
+              {data.akadDate}
             </p>
             <p className="text-[#4a1a0a]/60 text-sm mb-3">
-              {demoEvent.akadTime}
+              {data.akadTime}
             </p>
-            <p className="text-sm">{demoEvent.akadLocation}</p>
+            <p className="text-sm">{data.akadLocation}</p>
           </div>
           <div className="bg-white/60 rounded-2xl p-6 text-center border border-[#d4a574]/30">
             <div className="text-3xl mb-3">🎊</div>
             <h3 className="text-xl font-serif mb-2 text-[#8b6914]">Resepsi</h3>
             <p className="text-[#4a1a0a]/60 text-sm mb-1">
-              {demoEvent.resepsiDate}
+              {data.resepsiDate}
             </p>
             <p className="text-[#4a1a0a]/60 text-sm mb-3">
-              {demoEvent.resepsiTime}
+              {data.resepsiTime}
             </p>
-            <p className="text-sm">{demoEvent.resepsiLocation}</p>
+            <p className="text-sm">{data.resepsiLocation}</p>
           </div>
         </div>
         <div className="mt-6 text-center">
           <a
-            href={demoEvent.mapUrl}
+            href={data.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#d4a574]/60 text-[#8b6914] hover:bg-[#d4a574]/10 transition-colors text-sm"

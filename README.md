@@ -27,6 +27,38 @@ Coding tasks dibantu Claude Opus sebagai AI agent untuk generate components/temp
 6. Run dev: `npm run dev`
 7. Deploy: push ke Vercel untuk preview/production.
 
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and fill in your values:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anon/public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key (server-side only) |
+| `NEXT_PUBLIC_APP_URL` | Yes | App URL (e.g. `http://localhost:3000`) |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | For payments | Stripe publishable key |
+| `STRIPE_SECRET_KEY` | For payments | Stripe secret key |
+| `STRIPE_WEBHOOK_SECRET` | For payments | Stripe webhook signing secret |
+| `NEXT_PUBLIC_SENTRY_DSN` | For monitoring | Sentry DSN |
+| `SENTRY_ORG` | For monitoring | Sentry organization slug |
+| `SENTRY_PROJECT` | For monitoring | Sentry project name |
+| `SENTRY_AUTH_TOKEN` | For monitoring | Sentry auth token for source maps |
+
+## CI/CD
+
+GitHub Actions runs on every push to `main` and on all PRs:
+- **Type check**: `tsc --noEmit`
+- **Build**: Full Next.js production build with placeholder env vars
+
+## Deployment
+
+The app is configured for Vercel deployment:
+1. Push to `main` triggers auto-deploy
+2. PRs create preview deployments
+3. CDN caching: public invitation pages cached for 60s with 5min stale-while-revalidate
+4. Region: `sin1` (Singapore, closest to Indonesia)
+
 ## Cara Pakai (untuk Customer)
 - Sign up/login.
 - Pilih template dari library.

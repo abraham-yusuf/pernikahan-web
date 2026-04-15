@@ -312,6 +312,12 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
 
         <div className="flex flex-wrap gap-3">
           <Link
+            href={`/editor/${invitation.$id}`}
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
+          >
+            Editor Visual
+          </Link>
+          <Link
             href={`/dashboard/rsvp/${invitation.$id}`}
             className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
           >

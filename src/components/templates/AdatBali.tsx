@@ -1,19 +1,24 @@
-import { demoEvent } from "@/lib/data";
+import { demoEvent, type WeddingEvent } from "@/lib/data";
 import { CountdownTimer } from "../CountdownTimer";
 import { RSVPForm } from "../RSVPForm";
 
-export function AdatBaliTemplate() {
+interface TemplateProps {
+  event?: WeddingEvent;
+}
+
+export function AdatBaliTemplate({ event }: TemplateProps) {
+  const data = event ?? demoEvent;
   const couples = [
     {
       icon: "👰",
-      name: demoEvent.bride,
-      parents: demoEvent.brideParents,
+      name: data.bride,
+      parents: data.brideParents,
       label: "Putri dari",
     },
     {
       icon: "🤵",
-      name: demoEvent.groom,
-      parents: demoEvent.groomParents,
+      name: data.groom,
+      parents: data.groomParents,
       label: "Putra dari",
     },
   ];
@@ -22,16 +27,16 @@ export function AdatBaliTemplate() {
     {
       icon: "🛕",
       title: "Pawiwahan",
-      date: demoEvent.akadDate,
-      time: demoEvent.akadTime,
-      location: demoEvent.akadLocation,
+      date: data.akadDate,
+      time: data.akadTime,
+      location: data.akadLocation,
     },
     {
       icon: "🌺",
       title: "Resepsi",
-      date: demoEvent.resepsiDate,
-      time: demoEvent.resepsiTime,
-      location: demoEvent.resepsiLocation,
+      date: data.resepsiDate,
+      time: data.resepsiTime,
+      location: data.resepsiLocation,
     },
   ];
 
@@ -49,14 +54,14 @@ export function AdatBaliTemplate() {
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#0F6B5B]/75">
             Pawiwahan Bali
           </p>
-          <h1 className="font-serif text-4xl sm:text-6xl">{demoEvent.bride}</h1>
+          <h1 className="font-serif text-4xl sm:text-6xl">{data.bride}</h1>
           <div className="my-5 flex items-center justify-center gap-4 text-[#D4AF37]">
             <div className="h-px w-16 bg-[#D4AF37]" />
             <span className="text-2xl">✺</span>
             <div className="h-px w-16 bg-[#D4AF37]" />
           </div>
-          <h1 className="font-serif text-4xl sm:text-6xl">{demoEvent.groom}</h1>
-          <p className="mt-5 text-lg text-[#2d1f0e]/70">{demoEvent.akadDate}</p>
+          <h1 className="font-serif text-4xl sm:text-6xl">{data.groom}</h1>
+          <p className="mt-5 text-lg text-[#2d1f0e]/70">{data.akadDate}</p>
         </div>
       </section>
 
@@ -110,7 +115,7 @@ export function AdatBaliTemplate() {
         </p>
         <div className="mb-5 text-3xl text-[#D4AF37]">✧</div>
         <p className="leading-relaxed italic text-[#2d1f0e]/75">
-          &ldquo;{demoEvent.story}&rdquo;
+          &ldquo;{data.story}&rdquo;
         </p>
       </section>
 
@@ -136,7 +141,7 @@ export function AdatBaliTemplate() {
         </div>
         <div className="mt-8 text-center">
           <a
-            href={demoEvent.mapUrl}
+            href={data.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-[#0F6B5B]/35 bg-white/60 px-6 py-2.5 text-sm text-[#0F6B5B] transition-colors hover:bg-[#0F6B5B]/10"

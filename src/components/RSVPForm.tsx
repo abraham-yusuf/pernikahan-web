@@ -1,9 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { RSVPEntry } from "@/lib/data";
 
-export function RSVPForm({ templateId }: { templateId: string }) {
+interface RSVPFormProps {
+  templateId: string;
+  invitationId?: string;
+}
+
+interface RSVPResponsePayload {
+  $id: string;
+  guestName: string;
+  attendance: "hadir" | "tidak_hadir";
+  guestCount: number;
+  message?: string;
+  submittedAt: string;
+  createdAt: string;
+}
+
+interface RSVPListPayload {
+  responses?: RSVPResponsePayload[];
+}
+
+interface RSVPSubmitPayload {
+  error?: string;
+  document?: RSVPResponsePayload;
+}
+
+function mapDocumentToEntry(document: RSVPResponsePayload): RSVPEntry {
+  return {
+    id: document.$id,
+    name: document.guestName,
+    attendance: document.attendance,
+    jumlahTamu: document.guestCount,
+    ucapan: document.message ?? "",
+    createdAt: document.submittedAt || document.createdAt,
+  };
+}
+
+function buildEntryKey(entry: RSVPEntry) {
+  return entry.id;
+}
+
+export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     attendance: "hadir" as "hadir" | "tidak_hadir",
@@ -11,19 +50,165 @@ export function RSVPForm({ templateId }: { templateId: string }) {
     ucapan: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const [entries, setEntries] = useState<RSVPEntry[]>([]);
+  const [remoteEntries, setRemoteEntries] = useState<RSVPEntry[]>([]);
+  const [localEntries, setLocalEntries] = useState<RSVPEntry[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const submitTimeoutRef = useRef<number | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        window.clearTimeout(submitTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const currentInvitationId = invitationId?.trim();
+
+    if (!currentInvitationId) {
+      setRemoteEntries([]);
+      return;
+    }
+
+    const resolvedInvitationId = currentInvitationId;
+    let active = true;
+
+    async function loadResponses() {
+      try {
+        const response = await fetch(
+          `/api/rsvp/${encodeURIComponent(resolvedInvitationId)}?limit=50`,
+          {
+            cache: "no-store",
+            credentials: "same-origin",
+          }
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = (await response.json()) as RSVPListPayload;
+        if (!active) {
+          return;
+        }
+
+        setRemoteEntries((payload.responses ?? []).map(mapDocumentToEntry));
+      } catch {
+        if (active) {
+          setRemoteEntries([]);
+        }
+      }
+    }
+
+    void loadResponses();
+
+    return () => {
+      active = false;
+    };
+  }, [invitationId]);
+
+  const entries = useMemo(() => {
+    const deduped = new Map<string, RSVPEntry>();
+
+    for (const entry of remoteEntries) {
+      deduped.set(buildEntryKey(entry), entry);
+    }
+
+    for (const entry of localEntries) {
+      deduped.set(buildEntryKey(entry), entry);
+    }
+
+    return Array.from(deduped.values()).sort(
+      (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+    );
+  }, [localEntries, remoteEntries]);
+
+  function resetForm() {
+    setFormData({ name: "", attendance: "hadir", jumlahTamu: 1, ucapan: "" });
+  }
+
+  function showSubmittedState() {
+    setSubmitted(true);
+    if (submitTimeoutRef.current) {
+      window.clearTimeout(submitTimeoutRef.current);
+    }
+    submitTimeoutRef.current = window.setTimeout(() => setSubmitted(false), 3000);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const newEntry: RSVPEntry = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-      ...formData,
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const optimisticId =
+      Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const optimisticEntry: RSVPEntry = {
+      id: optimisticId,
+      name: formData.name,
+      attendance: formData.attendance,
+      jumlahTamu: formData.jumlahTamu,
+      ucapan: formData.ucapan,
       createdAt: new Date().toISOString(),
     };
-    setEntries((prev) => [newEntry, ...prev]);
-    setSubmitted(true);
-    setFormData({ name: "", attendance: "hadir", jumlahTamu: 1, ucapan: "" });
-    setTimeout(() => setSubmitted(false), 3000);
+
+    setLocalEntries((prev) => [optimisticEntry, ...prev]);
+
+    const currentInvitationId = invitationId?.trim() ?? "";
+    if (!currentInvitationId) {
+      showSubmittedState();
+      resetForm();
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/rsvp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          invitationId: currentInvitationId,
+          guestName: formData.name,
+          attendance: formData.attendance,
+          guestCount: formData.jumlahTamu,
+          message: formData.ucapan,
+        }),
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | RSVPSubmitPayload
+        | null;
+
+      if (response.status === 503) {
+        showSubmittedState();
+        resetForm();
+        return;
+      }
+
+      if (!response.ok) {
+        setLocalEntries((prev) => prev.filter((entry) => entry.id !== optimisticId));
+        setSubmitError(payload?.error ?? "Gagal mengirim RSVP.");
+        return;
+      }
+
+      if (payload?.document) {
+        const persistedEntry = mapDocumentToEntry(payload.document);
+        setLocalEntries((prev) =>
+          prev.map((entry) => (entry.id === optimisticId ? persistedEntry : entry))
+        );
+      }
+
+      showSubmittedState();
+      resetForm();
+    } catch {
+      setLocalEntries((prev) => prev.filter((entry) => entry.id !== optimisticId));
+      setSubmitError("Gagal mengirim RSVP.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -135,14 +320,21 @@ export function RSVPForm({ templateId }: { templateId: string }) {
 
         <button
           type="submit"
-          className="w-full py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+          disabled={isSubmitting}
+          className="w-full py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Kirim RSVP
+          {isSubmitting ? "Mengirim..." : "Kirim RSVP"}
         </button>
 
         {submitted && (
           <div className="text-center text-green-600 text-sm font-medium animate-fade-in">
             ✓ Terima kasih! RSVP Anda telah terkirim.
+          </div>
+        )}
+
+        {submitError && (
+          <div className="text-center text-red-600 text-sm font-medium animate-fade-in">
+            {submitError}
           </div>
         )}
       </form>

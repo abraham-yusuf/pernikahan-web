@@ -1,54 +1,74 @@
-# Product Requirements Document (PRD) - Wedding Invite SaaS
+# NikahDigital — PRD
 
-## 1. Overview
-### 1.1 Tujuan
-Bangun SaaS untuk jual undangan pernikahan digital dengan library template beragam. Customer bayar untuk akses premium, generate custom invites, manage guests. Target revenue dari subscription/per-use.
+## Product Summary
+NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invitations. Produk menggabungkan wedding invitation builder, RSVP management, dan pembayaran Premium dengan diferensiasi utama pada template adat Indonesia yang terasa lokal, bukan template generik global.
 
-### 1.2 Scope
-- In: Multi-templates, user auth, customization editor, payment, RSVP/guest mgmt, admin dashboard.
-- Out: Live streaming (tambah later).
+## Target Users
+- Pasangan Indonesia yang ingin undangan digital cepat, cantik, dan mudah dibagikan
+- Wedding organizer atau freelancer yang membantu pasangan setup undangan
 
-### 1.3 Target Audience
-- Pasangan menikah/customer di Indonesia (fokus theme lokal seperti adat Jawa).
-- Freelancer/desainer yang jual service via platform.
+## Current Product State
+- [x] Landing page, template gallery, pricing, and CTA flow
+- [x] 3 live demo templates: Modern Elegant, Adat Jawa, Floral Garden
+- [x] Appwrite auth: email/password, Google OAuth, session cookies
+- [x] Basic protected dashboard shell
+- [ ] Persistent Appwrite Database collections
+- [ ] Invitation CRUD and template editor
+- [ ] Persistent RSVP backend
+- [ ] Stripe checkout
+- [ ] Admin dashboard
+- [ ] Production deployment
 
-## 2. Fitur SaaS
-### 2.1 User Dashboard
-- Sign up/login (email/Google via Appwrite).
-- Library templates: 20+ wedding themes (upload/edit via admin).
+## Core Differentiators
+- Indonesian cultural theme library: Jawa, Sunda, Minang, Bali, Batak, Bugis-Makassar, Betawi, Dayak, Aceh, Toraja, Papua, dan lainnya
+- Bilingual UX style: English technical clarity + Bahasa Indonesia product copy
+- Fast mobile-first invitation pages for WhatsApp sharing
+- Simple Premium pricing: `Rp 99.000/invitation`
 
-### 2.2 Template Editor
-- Pilih theme, customize teks/foto/colors.
-- Preview real-time.
-- Integrate Bannerbear untuk generate personalized invites dari CSV (bulk send).
+## Scope for v2.0 MVP (8 weeks)
+### Phase 1 — Foundation
+- [ ] Appwrite collections: Users, Invitations, RSVPResponses, Templates, Payments, Analytics
+- [ ] RSVP backend with persistent storage
+- [ ] Auth hardening and typed server helpers
 
-### 2.3 RSVP & Guest Management
-- Form RSVP, track responses.
-- Guest list import/export.
+### Phase 2 — Theme Library
+- [ ] Add 10 new Indonesian themes in core build phase
+- [ ] Store template metadata in Appwrite Database
+- [ ] Reach 15+ total templates by launch
 
-### 2.4 Payment & Monetisasi
-- Stripe checkout untuk tier premium.
-- Free trial: 1 template basic.
+### Phase 3 — Dashboard
+- [ ] Invitation CRUD
+- [ ] RSVP viewer with analytics
+- [ ] User settings and tier display
 
-### 2.5 Admin Dashboard
-- Manage templates, users, analytics (revenue, usage).
+### Phase 4 — Editor
+- [ ] Visual template editor
+- [ ] Real-time preview
+- [ ] Photo upload and draft/publish flow
 
-## 3. Persyaratan Teknis
-- **Architecture**: Next.js frontend, Appwrite backend.
-- **Scalability**: Cloud hosting via DigitalOcean.
-- **Security**: Auth, HTTPS, data encryption.
-- **Integration**: Zapier untuk automate email/send via WhatsApp.
+### Phase 5 — Monetization
+- [ ] Stripe checkout
+- [ ] Premium template gating
+- [ ] Payment-to-entitlement sync in Appwrite
 
-## 4. Assumptions
-- Gunakan GitHub Pack untuk nol biaya awal.
-- AI (Claude) untuk generate new templates.
+### Phase 6 — Admin + Launch
+- [ ] Admin dashboard for users, templates, analytics
+- [ ] Vercel deployment, custom domain, Sentry, CI/CD
+- [ ] Public invitation slug route `/u/[slug]`
 
-## 5. Risks
-- Risk: Payment fraud → Mitigation: Stripe fraud tools.
-- Risk: Scalability → Mitigation: Cloud credits.
+## Tech Stack
+- Frontend: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4
+- Backend/Auth/DB: Appwrite with session cookies and Appwrite Database collections
+- Payments: Stripe
+- Deployment: Vercel
 
-## 6. Success Metrics
-- 100 user sign-up bulan pertama.
-- $500 revenue dari sales.
+## Success Metrics
+- [ ] Month 1: 100 signups, 10 paid (Rp 990.000)
+- [ ] Month 3: 500 signups, 50 paid (Rp 4.950.000)
+- [ ] Month 6: 2000 signups, 200 paid (Rp 19.800.000)
+- [ ] Launch KPI: 15+ templates live, persistent RSVP, Stripe test checkout, admin ops ready
 
-Versi: 2.0 (Maret 2026).
+## Non-Goals for v2.0
+- [ ] Native mobile app
+- [ ] Expansion beyond wedding invitations
+- [ ] User-uploaded custom template marketplace

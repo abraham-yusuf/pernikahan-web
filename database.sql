@@ -14,6 +14,7 @@ create table public.users (
   id uuid primary key default uuid_generate_v4(),
   auth_user_id uuid not null unique references auth.users(id) on delete cascade,
   email text not null,
+  role text not null default 'user' check (role in ('user', 'admin')),
   full_name text not null,
   tier text not null default 'free' check (tier in ('free', 'premium')),
   subscription_status text not null default 'none' check (subscription_status in ('none', 'pending', 'active', 'past_due', 'cancelled')),
@@ -129,6 +130,7 @@ create table public.analytics (
 
 -- users indexes
 create index idx_users_email on public.users(email);
+create index idx_users_role on public.users(role);
 create index idx_users_tier_status on public.users(tier, subscription_status);
 
 -- invitations indexes
@@ -179,6 +181,24 @@ create policy "Users can insert own profile"
   on public.users for insert
   with check (auth.uid() = auth_user_id);
 
+create policy "Admins can read all users"
+  on public.users for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
+create policy "Admins can update all users"
+  on public.users for update
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
 -- invitations policies
 create policy "Users can read own invitations"
   on public.invitations for select
@@ -199,6 +219,15 @@ create policy "Users can delete own invitations"
 create policy "Published invitations are publicly readable"
   on public.invitations for select
   using (status = 'published');
+
+create policy "Admins can read all invitations"
+  on public.invitations for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
 
 -- rsvp_responses policies
 create policy "Anyone can submit RSVP to published invitations"
@@ -223,10 +252,55 @@ create policy "Anyone can read RSVPs for published invitations"
     invitation_id in (select id from public.invitations where status = 'published')
   );
 
+create policy "Admins can read all rsvp_responses"
+  on public.rsvp_responses for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
 -- templates policies
 create policy "Anyone can read active templates"
   on public.templates for select
   using (status = 'active');
+
+create policy "Admins can read all templates"
+  on public.templates for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
+create policy "Admins can insert templates"
+  on public.templates for insert
+  with check (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
+create policy "Admins can update templates"
+  on public.templates for update
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
+create policy "Admins can delete templates"
+  on public.templates for delete
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
 
 -- payments policies
 create policy "Users can read own payments"
@@ -237,6 +311,15 @@ create policy "Users can insert own payments"
   on public.payments for insert
   with check (user_id in (select id from public.users where auth_user_id = auth.uid()));
 
+create policy "Admins can read all payments"
+  on public.payments for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
+    )
+  );
+
 -- analytics policies
 create policy "Users can read own analytics"
   on public.analytics for select
@@ -245,6 +328,15 @@ create policy "Users can read own analytics"
       select i.id from public.invitations i
       join public.users u on u.id = i.user_id
       where u.auth_user_id = auth.uid()
+    )
+  );
+
+create policy "Admins can read all analytics"
+  on public.analytics for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.auth_user_id = auth.uid() and u.role = 'admin'
     )
   );
 

@@ -482,7 +482,8 @@ Files to create/modify:
 - [ ] `src/lib/admin.ts`
 
 Tasks:
-- [ ] Add admin role guard based on Supabase app metadata or `users` table flag
+- [x] Admin role & permissions system
+- [x] Admin API routes (users, templates, analytics)
 - [ ] Build user list with tier and subscription status
 - [ ] Build template activation and sort-order management
 - [ ] Build admin analytics for signups, paid conversions, and RSVP volume

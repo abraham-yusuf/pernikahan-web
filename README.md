@@ -7,36 +7,36 @@
 ## Deskripsi
 Platform SaaS untuk buat dan jual undangan pernikahan digital custom. User bisa pilih dari library template wedding theme (modern, vintage, floral, etc.), customize teks/foto, tambah RSVP/guest management, lalu generate/share. Monetisasi via subscription ($5-20/bulan) atau per-undangan ($1-5). Dibangun dari MVP React/Next.js, sekarang dengan backend untuk multi-user.
 
-Manfaatkan GitHub Student Developer Pack: Stripe untuk payment, Appwrite untuk auth/backend, DigitalOcean untuk hosting, MongoDB untuk database templates.
+Manfaatkan GitHub Student Developer Pack: Stripe untuk payment, Supabase untuk auth/database/storage, dan Vercel untuk hosting.
 
 Coding tasks dibantu Claude Opus sebagai AI agent untuk generate components/templates.
 
 ## Tech Stack
-- **Frontend**: Next.js (SSR untuk SEO), Vite (build), Tailwind CSS, React Hook Form (customization editor).
-- **Backend**: Appwrite (auth, database, storage) atau Supabase.
-- **Database**: MongoDB Atlas (store templates, user data, RSVPs).
+- **Frontend**: Next.js (SSR untuk SEO), React, Tailwind CSS, React Hook Form.
+- **Backend**: Supabase Auth, Supabase Postgres, Supabase Storage.
 - **Payment**: Stripe (integrasi checkout).
-- **Generation**: Bannerbear/CraftMyPDF API untuk auto-generate PDF/image personalized.
-- **Deployment**: Vercel/DigitalOcean (credits gratis).
+- **Deployment**: Vercel.
 - **AI Agent**: Claude Opus untuk coding; GitHub Copilot untuk suggestions.
 
 ## Instalasi
 1. Clone repo: `git clone https://github.com/abraham-yusuf/pernikahan-web.git`
-2. Install deps: `npm install` (frontend) & setup backend via Appwrite dashboard.
-3. Env vars: Tambah STRIPE_KEY, APPWRITE_ENDPOINT, etc. di `.env`.
-4. Run dev: `npm run dev` (frontend); start backend locally jika perlu.
-5. Deploy: Push ke Vercel atau DigitalOcean.
+2. Install deps: `npm install`
+3. Copy env template: `cp .env.example .env.local`
+4. Isi `.env.local` dengan kredensial Supabase dan Stripe.
+5. Jalankan `database.sql` di Supabase SQL Editor untuk membuat tabel, index, trigger, dan RLS policies.
+6. Run dev: `npm run dev`
+7. Deploy: push ke Vercel untuk preview/production.
 
 ## Cara Pakai (untuk Customer)
 - Sign up/login.
-- Pilih template dari library (upload new theme via admin).
-- Customize: Edit teks, upload foto, atur theme colors.
+- Pilih template dari library.
+- Customize: edit teks, upload foto, atur theme colors.
 - Tambah fitur: RSVP form, guest list, map.
-- Bayar via Stripe untuk download/share link.
-- Admin: Dashboard untuk manage templates/payments.
+- Bayar via Stripe untuk unlock/share invitation.
+- Admin: dashboard untuk manage templates/payments.
 
 ## Monetisasi
-- Tier: Free (basic template), Premium ($10/bulan: unlimited templates, remove watermark).
+- Tier: Free (basic template), Premium (`Rp 99.000/invitation`: premium templates, publishable invitation, optional watermark removal).
 - Jual ke customer via website atau marketplace seperti Etsy/Product Hunt.
 
 ## Kontribusi
@@ -51,5 +51,3 @@ MIT License.
 - GitHub: @abraham-yusuf
 - X: @bram0511
 - Email: [abrahamyusuf.eth@gmail.com]
-
-Wedding Today! 💍🚀

@@ -9,13 +9,13 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 
 ## Current Product State
 - [x] Landing page, template gallery, pricing, and CTA flow
-- [x] 3 live demo templates: Modern Elegant, Adat Jawa, Floral Garden
-- [x] Appwrite auth: email/password, Google OAuth, session cookies
-- [x] Basic protected dashboard shell
-- [ ] Persistent Appwrite Database collections
-- [ ] Invitation CRUD and template editor
-- [ ] Persistent RSVP backend
-- [ ] Stripe checkout
+- [x] 13 live templates across the current library
+- [x] Supabase Auth: email/password, Google OAuth, session cookies
+- [x] Protected dashboard with invitation CRUD, RSVP views, and settings
+- [x] Persistent Supabase Postgres tables
+- [x] Invitation CRUD and template editor
+- [x] Persistent RSVP backend
+- [x] Stripe checkout
 - [ ] Admin dashboard
 - [ ] Production deployment
 
@@ -27,38 +27,38 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 
 ## Scope for v2.0 MVP (8 weeks)
 ### Phase 1 — Foundation
-- [ ] Appwrite collections: Users, Invitations, RSVPResponses, Templates, Payments, Analytics
-- [ ] RSVP backend with persistent storage
-- [ ] Auth hardening and typed server helpers
+- [x] Supabase Postgres tables: users, invitations, rsvp_responses, templates, payments, analytics
+- [x] RSVP backend with persistent storage
+- [x] Auth hardening and typed server helpers
 
 ### Phase 2 — Theme Library
-- [ ] Add 10 new Indonesian themes in core build phase
-- [ ] Store template metadata in Appwrite Database
-- [ ] Reach 15+ total templates by launch
+- [x] Add 10 new Indonesian themes in core build phase
+- [x] Store template metadata in Supabase Postgres
+- [x] Reach 15+ total templates by launch
 
 ### Phase 3 — Dashboard
-- [ ] Invitation CRUD
-- [ ] RSVP viewer with analytics
-- [ ] User settings and tier display
+- [x] Invitation CRUD
+- [x] RSVP viewer with analytics
+- [x] User settings and tier display
 
 ### Phase 4 — Editor
-- [ ] Visual template editor
-- [ ] Real-time preview
-- [ ] Photo upload and draft/publish flow
+- [x] Visual template editor
+- [x] Real-time preview
+- [x] Photo upload and draft/publish flow
 
 ### Phase 5 — Monetization
-- [ ] Stripe checkout
-- [ ] Premium template gating
-- [ ] Payment-to-entitlement sync in Appwrite
+- [x] Stripe checkout
+- [x] Premium template gating
+- [x] Payment-to-entitlement sync in Supabase
 
 ### Phase 6 — Admin + Launch
 - [ ] Admin dashboard for users, templates, analytics
 - [ ] Vercel deployment, custom domain, Sentry, CI/CD
-- [ ] Public invitation slug route `/u/[slug]`
+- [x] Public invitation slug route `/u/[slug]`
 
 ## Tech Stack
 - Frontend: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4
-- Backend/Auth/DB: Appwrite with session cookies and Appwrite Database collections
+- Backend/Auth/DB: Supabase Auth with session cookies, Supabase Postgres, and Supabase Storage
 - Payments: Stripe
 - Deployment: Vercel
 

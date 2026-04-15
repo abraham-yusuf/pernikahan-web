@@ -14,7 +14,10 @@ import { AdatAcehTemplate } from "@/components/templates/AdatAceh";
 import { IslamicElegantTemplate } from "@/components/templates/IslamicElegant";
 import { RusticNusantaraTemplate } from "@/components/templates/RusticNusantara";
 
-export type TemplateComponentProps = { event?: WeddingEvent };
+export type TemplateComponentProps = {
+  event?: WeddingEvent;
+  invitationId?: string;
+};
 export type TemplateComponent = ComponentType<TemplateComponentProps>;
 
 export const templateComponents: Record<string, TemplateComponent> = {

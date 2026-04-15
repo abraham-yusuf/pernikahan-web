@@ -53,19 +53,56 @@ body {
   }
 }
 
-/* Batik pattern for Javanese theme */
 .bg-batik {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a574' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Floral decorative border */
 .border-floral {
   border-image: linear-gradient(135deg, #e8a0bf, #f5d5e0, #e8a0bf) 1;
 }
 
-/* Geometric pattern for modern theme */
 .bg-geometric {
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a84c' fill-opacity='0.06'%3E%3Cpath d='M20 0L40 20L20 40L0 20z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-mega-mendung {
+  background-image: url("data:image/svg+xml,%3Csvg width='72' height='48' viewBox='0 0 72 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%237CB7D9' fill-opacity='0.09'%3E%3Cpath d='M0 12c10-8 20-8 30 0s20 8 30 0v6c-10 8-20 8-30 0S10 10 0 18z'/%3E%3Cpath d='M12 28c8-6 16-6 24 0s16 6 24 0v6c-8 6-16 6-24 0s-16-6-24 0z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-minang-ukir {
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239B1D20' fill-opacity='0.09'%3E%3Cpath d='M8 32c8-14 16-14 24 0-8 14-16 14-24 0zm24 0c8-14 16-14 24 0-8 14-16 14-24 0z'/%3E%3Cpath d='M20 8c6 8 6 16 0 24-6-8-6-16 0-24zm24 24c6 8 6 16 0 24-6-8-6-16 0-24z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-bali-relief {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.08'%3E%3Cpath d='M8 52V16l8-8 8 8v36H8zm28 0V16l8-8 8 8v36H36z'/%3E%3Cpath d='M18 8h24v6H18z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-gorga {
+  background-image: url("data:image/svg+xml,%3Csvg width='56' height='56' viewBox='0 0 56 56' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238B1E1E' fill-opacity='0.1'%3E%3Cpath d='M28 4l12 12-12 12-12-12L28 4zm0 24l12 12-12 12-12-12 12-12z'/%3E%3Cpath d='M4 28l12-12 12 12-12 12L4 28zm24 0l12-12 12 12-12 12-12-12z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-lontara {
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A227' fill-opacity='0.09'%3E%3Cpath d='M8 12h16v8H16v12H8V12zm32 0h16v20H40v-8h8v-4h-8V12zM8 40h16v12h8v8H8V40zm32 0h8v12h8v8H40V40z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-gigi-balang {
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23F28C28' fill-opacity='0.1'%3E%3Cpath d='M0 12l6-6 6 6 6-6 6 6 6-6 6 6 6-6 6 6v6H0v-6zm0 24l6-6 6 6 6-6 6 6 6-6 6 6 6-6 6 6v6H0v-6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-dayak-shield {
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C46B2D' fill-opacity='0.1'%3E%3Ccircle cx='32' cy='32' r='16'/%3E%3Cpath d='M28 8h8v16h16v8H36v24h-8V32H12v-8h16V8z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-aceh-arabesque {
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.08'%3E%3Cpath d='M16 0l4 12 12 4-12 4-4 12-4-12L0 16l12-4zM48 32l4 12 12 4-12 4-4 12-4-12-12-4 12-4z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-mashrabiya {
+  background-image: url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.08'%3E%3Cpath d='M18 0l9 9-9 9-9-9 9-9zm36 0l9 9-9 9-9-9 9-9zM18 36l9 9-9 9-9-9 9-9zm36 0l9 9-9 9-9-9 9-9zM36 18l9 9-9 9-9-9 9-9zm0 36l9 9-9 9-9-9 9-9z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-wood-grain {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='40' viewBox='0 0 80 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A77D' fill-opacity='0.09'%3E%3Cpath d='M0 8c10-4 20-4 30 0s20 4 30 0 14-4 20 0v4c-6-4-10-4-20 0s-20 4-30 0-20-4-30 0zM0 24c8-4 16-4 24 0s16 4 24 0 16-4 32 0v4c-16-4-24-4-32 0s-16 4-24 0-16-4-24 0z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .ornament-divider {

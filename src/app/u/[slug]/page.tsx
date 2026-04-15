@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getInvitationBySlug } from "@/lib/appwrite-db";
+import { getInvitationBySlug } from "@/lib/db";
 import type { WeddingEvent } from "@/lib/data";
 import { templateComponents } from "@/lib/template-registry";
 
@@ -20,19 +20,21 @@ async function getPublishedInvitation(slug: string) {
   }
 }
 
-function mapInvitationToWeddingEvent(invitation: NonNullable<Awaited<ReturnType<typeof getInvitationBySlug>>>): WeddingEvent {
+function mapInvitationToWeddingEvent(
+  invitation: NonNullable<Awaited<ReturnType<typeof getInvitationBySlug>>>
+): WeddingEvent {
   return {
     bride: invitation.bride,
     groom: invitation.groom,
-    brideParents: invitation.brideParents,
-    groomParents: invitation.groomParents,
-    akadDate: invitation.akadDate,
-    akadTime: invitation.akadTime,
-    akadLocation: invitation.akadLocation,
-    resepsiDate: invitation.resepsiDate,
-    resepsiTime: invitation.resepsiTime,
-    resepsiLocation: invitation.resepsiLocation,
-    mapUrl: invitation.mapUrl ?? "",
+    brideParents: invitation.bride_parents,
+    groomParents: invitation.groom_parents,
+    akadDate: invitation.akad_date,
+    akadTime: invitation.akad_time,
+    akadLocation: invitation.akad_location,
+    resepsiDate: invitation.resepsi_date,
+    resepsiTime: invitation.resepsi_time,
+    resepsiLocation: invitation.resepsi_location,
+    mapUrl: invitation.map_url ?? "",
     story: invitation.story ?? "",
   };
 }
@@ -50,7 +52,7 @@ export async function generateMetadata({
   }
 
   const title = `${invitation.bride} & ${invitation.groom} - Undangan Pernikahan`;
-  const description = `Anda diundang ke pernikahan ${invitation.bride} & ${invitation.groom}. ${invitation.akadDate} di ${invitation.akadLocation}.`;
+  const description = `Anda diundang ke pernikahan ${invitation.bride} & ${invitation.groom}. ${invitation.akad_date} di ${invitation.akad_location}.`;
 
   return {
     title,
@@ -75,7 +77,7 @@ export default async function PublicInvitationPage({
     notFound();
   }
 
-  const TemplateComponent = templateComponents[invitation.templateId];
+  const TemplateComponent = templateComponents[invitation.template_id];
 
   if (!TemplateComponent) {
     notFound();
@@ -83,5 +85,5 @@ export default async function PublicInvitationPage({
 
   const event = mapInvitationToWeddingEvent(invitation);
 
-  return <TemplateComponent event={event} invitationId={invitation.$id} />;
+  return <TemplateComponent event={event} invitationId={invitation.id} />;
 }

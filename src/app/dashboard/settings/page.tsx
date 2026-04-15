@@ -4,6 +4,8 @@ import { LogoutButton } from "@/components/LogoutButton";
 
 export default async function DashboardSettingsPage() {
   const user = await getLoggedInUser();
+  const displayName =
+    user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "-";
 
   return (
     <div className="space-y-6">
@@ -19,7 +21,7 @@ export default async function DashboardSettingsPage() {
         <dl className="mt-4 space-y-3 text-sm">
           <div className="flex items-center justify-between gap-4 border-b border-gray-50 py-2">
             <dt className="text-gray-500">Display name</dt>
-            <dd className="font-medium text-gray-900">{user?.name || "-"}</dd>
+            <dd className="font-medium text-gray-900">{displayName}</dd>
           </div>
           <div className="flex items-center justify-between gap-4 py-2">
             <dt className="text-gray-500">Email</dt>

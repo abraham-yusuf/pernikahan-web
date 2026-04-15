@@ -14,13 +14,13 @@ interface InvitationPayload {
 }
 
 interface RSVPResponseItem {
-  $id: string;
-  guestName: string;
+  id: string;
+  guest_name: string;
   attendance: Attendance;
-  guestCount: number;
-  message?: string;
-  submittedAt?: string;
-  createdAt?: string;
+  guest_count: number;
+  message?: string | null;
+  submitted_at?: string;
+  created_at?: string;
 }
 
 interface RSVPPayload {
@@ -113,17 +113,13 @@ export function RSVPViewer({ invitationId }: { invitationId: string }) {
         }
 
         if (!invitationResponse.ok || !rsvpResponse.ok) {
-          setError(
-            invitationPayload?.error ?? rsvpPayload?.error ?? "Gagal memuat RSVP."
-          );
+          setError(invitationPayload?.error ?? rsvpPayload?.error ?? "Gagal memuat RSVP.");
           return;
         }
 
         setTitle(invitationPayload?.invitation?.title ?? "RSVP Viewer");
         setResponses(rsvpPayload?.responses ?? []);
-        setSummary(
-          rsvpPayload?.summary ?? { total: 0, attending: 0, notAttending: 0 }
-        );
+        setSummary(rsvpPayload?.summary ?? { total: 0, attending: 0, notAttending: 0 });
       } catch {
         if (active) {
           setError("Gagal memuat RSVP.");
@@ -143,7 +139,7 @@ export function RSVPViewer({ invitationId }: { invitationId: string }) {
   }, [invitationId]);
 
   const totalGuests = useMemo(
-    () => responses.reduce((total, response) => total + response.guestCount, 0),
+    () => responses.reduce((total, response) => total + response.guest_count, 0),
     [responses]
   );
 
@@ -167,8 +163,8 @@ export function RSVPViewer({ invitationId }: { invitationId: string }) {
   if (disconnected) {
     return (
       <EmptyInvitations
-        title="Hubungkan database Appwrite Anda"
-        description="Hubungkan database Appwrite Anda untuk melihat RSVP secara real-time. Dashboard tetap dapat dinavigasi penuh tanpa koneksi database aktif."
+        title="Koneksi database belum tersedia"
+        description="Sambungkan database untuk melihat RSVP secara real-time. Dashboard tetap dapat dinavigasi penuh tanpa koneksi database aktif."
         ctaHref="/dashboard/invitations"
         ctaLabel="Kembali ke undangan"
       />
@@ -255,9 +251,9 @@ export function RSVPViewer({ invitationId }: { invitationId: string }) {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {responses.map((response) => (
-                  <tr key={response.$id}>
+                  <tr key={response.id}>
                     <td className="px-5 py-4 font-medium text-gray-900">
-                      {response.guestName}
+                      {response.guest_name}
                     </td>
                     <td className="px-5 py-4">
                       <span
@@ -269,12 +265,12 @@ export function RSVPViewer({ invitationId }: { invitationId: string }) {
                         {getAttendanceLabel(response.attendance)}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-gray-700">{response.guestCount}</td>
+                    <td className="px-5 py-4 text-gray-700">{response.guest_count}</td>
                     <td className="px-5 py-4 text-gray-600">
                       {response.message?.trim() ? response.message : "-"}
                     </td>
                     <td className="px-5 py-4 text-gray-500">
-                      {formatDate(response.submittedAt ?? response.createdAt)}
+                      {formatDate(response.submitted_at ?? response.created_at)}
                     </td>
                   </tr>
                 ))}

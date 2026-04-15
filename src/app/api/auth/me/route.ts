@@ -1,18 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createSessionClient, SESSION_COOKIE_NAME } from "@/lib/appwrite";
+import { NextResponse } from "next/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export async function GET(request: NextRequest) {
-  try {
-    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
-      return NextResponse.json({ user: null }, { status: 200 });
-    }
+export async function GET() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    const { account } = createSessionClient(sessionToken);
-    const user = await account.get();
-
-    return NextResponse.json({ user });
-  } catch {
-    return NextResponse.json({ user: null }, { status: 200 });
+  if (!user) {
+    return NextResponse.json({ user: null });
   }
+
+  return NextResponse.json({ user });
 }

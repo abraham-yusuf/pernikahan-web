@@ -6,12 +6,11 @@ import { templates } from "@/lib/data";
 import { EmptyInvitations } from "@/components/dashboard/EmptyInvitations";
 
 interface InvitationItem {
-  $id: string;
+  id: string;
   title: string;
-  templateId: string;
+  template_id: string;
   status: "draft" | "published" | "archived";
-  createdAt?: string;
-  $createdAt?: string;
+  created_at?: string;
 }
 
 interface InvitationsPayload {
@@ -131,7 +130,7 @@ export function DashboardRecentInvitations() {
         title="Buat Undangan Pertama Anda"
         description={
           disconnected
-            ? "Hubungkan database Appwrite Anda untuk mulai membuat undangan. Anda tetap bisa menelusuri template dan alur dashboard saat ini."
+            ? "Koneksi database belum tersedia. Anda tetap bisa menelusuri template dan alur dashboard saat ini."
             : "Pilih template, sesuaikan detail acara, lalu bagikan undangan digital Anda ke seluruh tamu."
         }
         ctaHref="/#templates"
@@ -161,13 +160,13 @@ export function DashboardRecentInvitations() {
       <div className="mt-6 space-y-3">
         {invitations.map((invitation) => (
           <div
-            key={invitation.$id}
+            key={invitation.id}
             className="flex flex-col gap-3 rounded-xl border border-gray-100 p-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
               <p className="font-medium text-gray-900">{invitation.title}</p>
               <p className="mt-1 text-sm text-gray-500">
-                {templateNameMap.get(invitation.templateId) ?? invitation.templateId} · {formatDate(invitation.createdAt ?? invitation.$createdAt)}
+                {templateNameMap.get(invitation.template_id) ?? invitation.template_id} · {formatDate(invitation.created_at)}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -180,7 +179,7 @@ export function DashboardRecentInvitations() {
                 {getStatusLabel(invitation.status)}
               </span>
               <Link
-                href={`/dashboard/invitations/${invitation.$id}`}
+                href={`/dashboard/invitations/${invitation.id}`}
                 className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
               >
                 Edit

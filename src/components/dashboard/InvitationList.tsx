@@ -6,14 +6,13 @@ import { templates } from "@/lib/data";
 import { EmptyInvitations } from "@/components/dashboard/EmptyInvitations";
 
 interface InvitationItem {
-  $id: string;
+  id: string;
   title: string;
   bride: string;
   groom: string;
-  templateId: string;
+  template_id: string;
   status: "draft" | "published" | "archived";
-  createdAt?: string;
-  $createdAt?: string;
+  created_at?: string;
 }
 
 interface InvitationsPayload {
@@ -139,8 +138,8 @@ export function InvitationList() {
   if (disconnected) {
     return (
       <EmptyInvitations
-        title="Hubungkan database Appwrite Anda"
-        description="Hubungkan database Appwrite Anda untuk mulai membuat undangan. Dashboard tetap dapat dinavigasi penuh dalam mode tanpa koneksi ini."
+        title="Koneksi database belum tersedia"
+        description="Sambungkan database untuk mulai membuat undangan. Dashboard tetap dapat dinavigasi penuh dalam mode tanpa koneksi ini."
         ctaHref="/#templates"
         ctaLabel="Lihat Template"
       />
@@ -162,7 +161,7 @@ export function InvitationList() {
     <div className="grid gap-4 xl:grid-cols-2">
       {invitations.map((invitation) => (
         <article
-          key={invitation.$id}
+          key={invitation.id}
           className="rounded-2xl border border-gray-100 bg-white p-6"
         >
           <div className="flex items-start justify-between gap-4">
@@ -187,27 +186,25 @@ export function InvitationList() {
               <div className="flex items-center justify-between gap-4">
                 <dt className="text-gray-500">Template</dt>
                 <dd className="font-medium text-gray-900">
-                  {templateNameMap.get(invitation.templateId) ?? invitation.templateId}
+                  {templateNameMap.get(invitation.template_id) ?? invitation.template_id}
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-4">
                 <dt className="text-gray-500">Dibuat</dt>
-                <dd className="text-gray-700">
-                  {formatDate(invitation.createdAt ?? invitation.$createdAt)}
-                </dd>
+                <dd className="text-gray-700">{formatDate(invitation.created_at)}</dd>
               </div>
             </dl>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              href={`/dashboard/invitations/${invitation.$id}`}
+              href={`/dashboard/invitations/${invitation.id}`}
               className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
             >
               Edit
             </Link>
             <Link
-              href={`/dashboard/rsvp/${invitation.$id}`}
+              href={`/dashboard/rsvp/${invitation.id}`}
               className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
             >
               Lihat RSVP

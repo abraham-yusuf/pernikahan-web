@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 interface InvitationSummary {
-  $id: string;
+  id: string;
   status: "draft" | "published" | "archived";
 }
 
@@ -163,7 +163,7 @@ export function DashboardStats() {
           invitations.map(async (invitation) => {
             try {
               const rsvpResponse = await fetch(
-                `/api/rsvp/${encodeURIComponent(invitation.$id)}?limit=1`,
+                `/api/rsvp/${encodeURIComponent(invitation.id)}?limit=1`,
                 {
                   cache: "no-store",
                   credentials: "same-origin",
@@ -251,7 +251,7 @@ export function DashboardStats() {
     <div className="space-y-3">
       {state.disconnected ? (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Hubungkan database Appwrite Anda untuk mulai membuat undangan.
+          Koneksi database belum tersedia.
         </div>
       ) : null}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

@@ -3,16 +3,31 @@ import {
   countRSVPsByInvitation,
   getInvitationById,
   listRSVPsByInvitation,
-} from "@/lib/appwrite-db";
-import { createSessionClient } from "@/lib/appwrite";
-import { getSessionToken } from "@/lib/auth";
-import { RSVP_STORAGE_CONFIGURED } from "@/lib/collections";
+} from "@/lib/db";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const APPWRITE_SERVER_CONFIGURED = Boolean(
-  process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT &&
-    process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID &&
-    process.env.APPWRITE_API_KEY
-);
+async function getAuthenticatedProfile(): Promise<{ id: string } | null> {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const { data: profile, error } = await supabase
+    .from("users")
+    .select("id")
+    .eq("auth_user_id", user.id)
+    .single();
+
+  if (error || !profile) {
+    return null;
+  }
+
+  return profile;
+}
 
 type Params = Promise<{ invitationId: string }>;
 
@@ -20,22 +35,17 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Params }
 ) {
-  if (!RSVP_STORAGE_CONFIGURED || !APPWRITE_SERVER_CONFIGURED) {
-    return NextResponse.json({ error: "Database not configured." }, { status: 503 });
-  }
+  const profile = await getAuthenticatedProfile();
 
-  const sessionToken = await getSessionToken();
-  if (!sessionToken) {
+  if (!profile) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
   try {
-    const { account } = createSessionClient(sessionToken);
-    const user = await account.get();
     const { invitationId } = await params;
-
     const invitation = await getInvitationById(invitationId);
-    if (!invitation || invitation.userId !== user.$id) {
+
+    if (!invitation || invitation.user_id !== profile.id) {
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     }
 

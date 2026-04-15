@@ -1,35 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  createInvitation,
-  listInvitationsByUser,
-} from "@/lib/appwrite-db";
-import { createSessionClient } from "@/lib/appwrite";
-import { getSessionToken } from "@/lib/auth";
-import { INVITATION_STORAGE_CONFIGURED } from "@/lib/collections";
+import { createInvitation, listInvitationsByUser } from "@/lib/db";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   generateSlug,
   validateCreateInvitationInput,
 } from "@/lib/invitations";
 
-const APPWRITE_SERVER_CONFIGURED = Boolean(
-  process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT &&
-    process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID &&
-    process.env.APPWRITE_API_KEY
-);
+async function getAuthenticatedProfile(): Promise<{ id: string } | null> {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-export async function POST(request: NextRequest) {
-  if (!INVITATION_STORAGE_CONFIGURED || !APPWRITE_SERVER_CONFIGURED) {
-    return NextResponse.json({ error: "Database not configured." }, { status: 503 });
+  if (!user) {
+    return null;
   }
 
-  const sessionToken = await getSessionToken();
-  if (!sessionToken) {
+  const { data: profile, error } = await supabase
+    .from("users")
+    .select("id")
+    .eq("auth_user_id", user.id)
+    .single();
+
+  if (error || !profile) {
+    return null;
+  }
+
+  return profile;
+}
+
+export async function POST(request: NextRequest) {
+  const profile = await getAuthenticatedProfile();
+
+  if (!profile) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
   try {
-    const { account } = createSessionClient(sessionToken);
-    const user = await account.get();
     const body = await request.json();
     const { data, error } = validateCreateInvitationInput(body);
 
@@ -38,25 +45,29 @@ export async function POST(request: NextRequest) {
     }
 
     const invitation = await createInvitation({
-      userId: user.$id,
-      templateId: data.templateId,
+      user_id: profile.id,
+      template_id: data.templateId,
       slug: generateSlug(data.bride, data.groom),
       title: data.title,
       status: "draft",
       bride: data.bride,
       groom: data.groom,
-      brideParents: data.brideParents,
-      groomParents: data.groomParents,
-      akadDate: data.akadDate,
-      akadTime: data.akadTime,
-      akadLocation: data.akadLocation,
-      resepsiDate: data.resepsiDate,
-      resepsiTime: data.resepsiTime,
-      resepsiLocation: data.resepsiLocation,
-      mapUrl: data.mapUrl,
-      story: data.story,
-      rsvpEnabled: true,
-      watermarkEnabled: true,
+      bride_parents: data.brideParents,
+      groom_parents: data.groomParents,
+      akad_date: data.akadDate,
+      akad_time: data.akadTime,
+      akad_location: data.akadLocation,
+      resepsi_date: data.resepsiDate,
+      resepsi_time: data.resepsiTime,
+      resepsi_location: data.resepsiLocation,
+      map_url: data.mapUrl || null,
+      story: data.story || null,
+      custom_primary_color: null,
+      custom_accent_color: null,
+      cover_image_url: null,
+      gallery_urls: null,
+      rsvp_enabled: true,
+      watermark_enabled: true,
     });
 
     return NextResponse.json({ invitation }, { status: 201 });
@@ -70,18 +81,13 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  if (!INVITATION_STORAGE_CONFIGURED || !APPWRITE_SERVER_CONFIGURED) {
-    return NextResponse.json({ error: "Database not configured." }, { status: 503 });
-  }
+  const profile = await getAuthenticatedProfile();
 
-  const sessionToken = await getSessionToken();
-  if (!sessionToken) {
+  if (!profile) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
   try {
-    const { account } = createSessionClient(sessionToken);
-    const user = await account.get();
     const url = new URL(request.url);
     const rawLimit = Number(url.searchParams.get("limit") ?? 20);
     const rawOffset = Number(url.searchParams.get("offset") ?? 0);
@@ -92,7 +98,7 @@ export async function GET(request: NextRequest) {
       ? Math.max(Math.trunc(rawOffset), 0)
       : 0;
 
-    const invitations = await listInvitationsByUser(user.$id, limit, offset);
+    const invitations = await listInvitationsByUser(profile.id, limit, offset);
 
     return NextResponse.json({
       invitations: invitations.documents,

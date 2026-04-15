@@ -14,7 +14,12 @@ export default async function DashboardLayout({
   }
 
   return (
-    <DashboardShell user={{ name: user.name, email: user.email }}>
+    <DashboardShell
+      user={{
+        name: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
+        email: user.email ?? "",
+      }}
+    >
       {children}
     </DashboardShell>
   );

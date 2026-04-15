@@ -336,9 +336,9 @@ Dependencies:
 - [x] Supabase Postgres tables from section 3 are defined first
 
 Files to create/modify:
-- [x] `src/lib/appwrite.ts`
-- [x] `src/lib/collections.ts`
-- [x] `src/lib/appwrite-db.ts`
+- [x] `src/lib/supabase/server.ts`
+- [x] `src/lib/supabase/types.ts`
+- [x] `src/lib/db.ts`
 - [x] `src/lib/validators/rsvp.ts`
 - [x] `src/app/api/rsvp/route.ts`
 - [x] `src/app/api/rsvp/[invitationId]/route.ts`

@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const user = await getLoggedInUser();
-  const firstName = user?.name?.split(" ")[0] ?? "Pengguna";
+  const fullName =
+    user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "Pengguna";
+  const firstName = fullName.split(" ")[0] ?? "Pengguna";
 
   return (
     <div className="space-y-8">
@@ -31,7 +33,7 @@ export default async function DashboardPage() {
         <dl className="mt-4 space-y-3 text-sm">
           <div className="flex items-center justify-between gap-4 border-b border-gray-50 py-2">
             <dt className="text-gray-500">Nama</dt>
-            <dd className="font-medium text-gray-900">{user?.name || "-"}</dd>
+            <dd className="font-medium text-gray-900">{fullName || "-"}</dd>
           </div>
           <div className="flex items-center justify-between gap-4 border-b border-gray-50 py-2">
             <dt className="text-gray-500">Email</dt>

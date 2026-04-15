@@ -13,7 +13,7 @@ import {
 
 interface CreateInvitationPayload {
   invitation?: {
-    $id: string;
+    id: string;
   };
   error?: string;
 }
@@ -47,16 +47,16 @@ export function CreateInvitationPage() {
         | null;
 
       if (response.status === 503) {
-        setError("Database belum dikonfigurasi.");
+        setError("Database belum tersedia.");
         return;
       }
 
-      if (!response.ok || !payload?.invitation?.$id) {
+      if (!response.ok || !payload?.invitation?.id) {
         setError(payload?.error ?? "Gagal menyimpan undangan.");
         return;
       }
 
-      router.push(`/dashboard/invitations/${payload.invitation.$id}`);
+      router.push(`/dashboard/invitations/${payload.invitation.id}`);
       router.refresh();
     } catch {
       setError("Gagal menyimpan undangan.");

@@ -1,553 +1,522 @@
-# Comprehensive TODO.md - NikahDigital Wedding Invitation SaaS Platform
+# NikahDigital — TODO Master Plan
 
-**Project:** Wedding Invitation SaaS Platform (NikahDigital)  
-**Status:** MVP Migration Phase (v2.0) - Q1 2026  
-**Target:** Multi-user SaaS with authentication, payment, and advanced features
+- Project: NikahDigital
+- One-liner: SaaS platform for beautiful Indonesian digital wedding invitations
+- Current status (2026-04-15): Public marketing site is live in code, 3 demo templates render from hard-coded data, Appwrite auth works, dashboard is still a protected shell, and no production data layer exists yet.
+- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Appwrite (Auth/Databases/Storage), Stripe (planned), Vercel (planned)
 
----
+## 1. Current State Checklist
 
-## 📋 PROJECT OVERVIEW
-
-### Vision
-Build a SaaS platform to create, customize, and sell digital wedding invitations with:
-- Multiple wedding themes (modern, traditional, floral, etc.)
-- Full RSVP & guest management
-- Payment processing via Stripe
-- Admin dashboard for template/user management
-- Monetization via subscription tiers and per-invitation sales
-
-### Tech Stack
-- **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS v4
-- **Backend:** Appwrite (auth, database, storage) or Supabase
-- **Database:** MongoDB Atlas (templates, user data, RSVPs)
-- **Payment:** Stripe
-- **PDF Generation:** Bannerbear/CraftMyPDF API
-- **Deployment:** Vercel (primary) or DigitalOcean
-- **CI/CD:** GitHub Actions (auto-deploy on merge)
-
----
-
-## 📁 PROJECT STRUCTURE
-
-### Current Source Files
-```
-src/
-├── app/
-│   ├── layout.tsx              # Root layout, metadata
-│   ├── page.tsx                # Landing page
-│   ├── globals.css             # Global styles
-│   ├── not-found.tsx           # 404 page
-│   ├── favicon.ico
-│   └── undangan/[id]/
-│       └── page.tsx            # Dynamic template
-├── components/
-│   ├── Navbar.tsx              # Navigation
-│   ├── Footer.tsx              # Footer
-│   ├── TemplateCard.tsx        # Template card
-│   ├── CountdownTimer.tsx      # Client countdown
-│   ├── RSVPForm.tsx            # RSVP form
-│   └── templates/
-│       ├── ModernElegant.tsx
-│       ├── AdatJawa.tsx
-│       └── FloralGarden.tsx
-└── lib/
-    └── data.ts                 # Interfaces & demo data
-```
-
----
-
-## 🎯 CURRENT FEATURES (MVP)
-
-✅ **Completed:**
-- Landing page with hero, features, templates, pricing
-- 3 wedding templates (Modern Elegant, Adat Jawa, Floral Garden)
-- Template gallery with preview cards
-- Dynamic template pages
-- Countdown timer (client-side)
-- RSVP form (client-side storage)
-- Guest management display
-- Mobile-responsive design
-- SEO metadata
-
-❌ **Missing (Required for v2.0):**
-- User authentication
-- User dashboard
-- Database integration
-- Template editor
-- Stripe payment integration
-- Admin dashboard
-- Email notifications
-- Production deployment
-
----
-
-## 🔑 DATA MODELS
-
-### WeddingTemplate (3 templates)
-```typescript
-{
-  id: string              // "modern-elegant", "adat-jawa", "floral-garden"
-  name: string
-  description: string
-  category: string        // "Modern", "Tradisional", "Romantis"
-  previewColor: string    // Hex color
-  accentColor: string
-  bgPattern: string       // "geometric", "batik", "floral"
-}
-```
-
-### WeddingEvent (Demo Data)
-- **Couple:** Anisa Rahma & Budi Santoso
-- **Date:** June 15, 2026
-- **Akad:** 08:00-10:00, Masjid Al-Ikhlas, Jakarta Selatan
-- **Resepsi:** 11:00-14:00, Ballroom Hotel Grand Sahid, Jakarta
-
-### RSVPEntry (Client-side only)
-```typescript
-{
-  id: string
-  name: string
-  attendance: "hadir" | "tidak_hadir"
-  jumlahTamu: number
-  ucapan: string          // Wishes
-  createdAt: string
-}
-```
-
----
-
-## 📊 TEMPLATE DETAILS
-
-### 1. Modern Elegant
-- **Color Scheme:** Dark navy (#1a1a2e) + Gold (#c9a84c)
-- **Pattern:** Geometric SVG background
-- **Font:** Serif for headings
-- **Style:** Minimalist, corporate, elegant
-
-### 2. Adat Jawa
-- **Color Scheme:** Cream (#f8f0e0) + Tan (#d4a574)
-- **Pattern:** Batik SVG background
-- **Font:** Serif for headings
-- **Features:** Quranic verse (QS. Ar-Rum: 21), ornamental dividers
-- **Style:** Cultural, traditional, formal
-
-### 3. Floral Garden
-- **Color Scheme:** Light cream (#fdf6f0) + Pink (#e8a0bf)
-- **Pattern:** Floral emoji decorations
-- **Font:** Serif for headings
-- **Style:** Romantic, whimsical, garden-themed
-
----
-
-## 🚀 HIGH PRIORITY TASKS (v2.0)
-
-### 1. Authentication System
-- [x] Setup Appwrite project
-  - [x] Configure email/password auth
-  - [x] Add Google OAuth
-  - [x] Create user schema (using Appwrite User Preferences)
-- [x] Build login/signup pages
-- [x] Implement session management
-- [x] Add middleware/proxy for protected routes
-- [x] Add logout functionality
-
-### 2. Database Setup
-- [ ] Design Appwrite/MongoDB collections
-  - [ ] Users
-  - [ ] Invitations
-  - [ ] RSVP Responses
-  - [ ] Templates
-  - [ ] Payments
-- [ ] Create indexes
-- [ ] Implement validation rules
-
-### 3. User Dashboard
-- [ ] Dashboard layout (`/dashboard`)
-- [ ] My Invitations list page
-- [ ] Create new invitation flow
-- [ ] Edit invitation page
-- [ ] View RSVP responses
-- [ ] User profile/settings
-
-### 4. Template Editor
-- [ ] Editor page (`/editor/[templateId]`)
-- [ ] Form fields:
-  - [ ] Couple names, parents
-  - [ ] Event dates, times, locations
-  - [ ] Love story text
-  - [ ] Color scheme selector
-  - [ ] Photo uploads
-- [ ] Real-time preview
-- [ ] Save draft to database
-- [ ] Publish invitation
-
-### 5. Payment Integration
-- [ ] Setup Stripe account
-- [ ] Implement Stripe API routes
-  - [ ] Checkout session creation
-  - [ ] Webhook handling
-  - [ ] Subscription management
-- [ ] Payment flow pages
-- [ ] Database payment tracking
-
-### 6. RSVP Backend
-- [ ] Move RSVP from client to database
-- [ ] API routes:
-  - [ ] POST /api/rsvp
-  - [ ] GET /api/rsvp/[invitationId]
-  - [ ] DELETE /api/rsvp/[responseId]
-- [ ] Guest analytics
-- [ ] CSV export
-
-### 7. Admin Dashboard
-- [ ] Admin auth & role checks
-- [ ] User management page
-- [ ] Template management page
-- [ ] Analytics/revenue dashboard
-- [ ] Template upload interface
-
-### 8. Deployment
-- [ ] Configure Vercel deployment
-- [ ] Set environment variables
-- [ ] GitHub Actions CI/CD
-- [ ] Custom domain setup
-- [ ] SSL/HTTPS
-- [ ] Error monitoring (Sentry)
-
----
-
-## 🗂️ NEW ROUTES & PAGES TO CREATE
-
-```
-src/app/
-├── auth/
-│   ├── login/page.tsx
-│   ├── signup/page.tsx
-│   └── verify/page.tsx
-├── dashboard/
-│   ├── page.tsx
-│   ├── invitations/
-│   │   ├── page.tsx
-│   │   ├── [id]/edit.tsx
-│   │   └── new/page.tsx
-│   ├── rsvp/[id]/page.tsx
-│   └── settings/page.tsx
-├── editor/
-│   └── [templateId]/page.tsx
-├── payment/
-│   ├── checkout/page.tsx
-│   ├── success/page.tsx
-│   └── cancel/page.tsx
-├── admin/
-│   ├── page.tsx
-│   ├── users/page.tsx
-│   ├── templates/page.tsx
-│   └── analytics/page.tsx
-└── api/
-    ├── auth/[...auth].ts
-    ├── invitations/route.ts
-    ├── rsvp/route.ts
-    ├── templates/route.ts
-    ├── payment/checkout.ts
-    ├── payment/webhook.ts
-    └── admin/analytics.ts
-```
-
----
-
-## 💾 DATABASE SCHEMA
-
-### Users Collection
-```
-- id: string (primary)
-- email: string (unique, indexed)
-- name: string
-- passwordHash: string
-- googleId: string (optional)
-- tier: "free" | "premium"
-- subscriptionId: string (optional)
-- createdAt: datetime
-- updatedAt: datetime
-```
-
-### Invitations Collection
-```
-- id: string (primary)
-- userId: string (FK → Users)
-- templateId: string (FK → Templates)
-- coupleNames: { bride, groom }
-- coupleParents: { bride, groom }
-- events: { akad: {date, time, location}, resepsi: {...} }
-- customColors: { primary, accent }
-- loveStory: string
-- mapUrl: string
-- customUrl: string (unique, short link)
-- status: "draft" | "published" | "archived"
-- viewCount: number
-- createdAt: datetime
-- updatedAt: datetime
-```
-
-### RSVPResponses Collection
-```
-- id: string (primary)
-- invitationId: string (FK → Invitations)
-- name: string (indexed)
-- email: string (optional)
-- phone: string (optional)
-- attendance: "hadir" | "tidak_hadir"
-- guestCount: number
-- wishes: string
-- createdAt: datetime
-- updatedAt: datetime
-```
-
-### Templates Collection
-```
-- id: string (primary)
-- name: string
-- description: string
-- category: string (indexed)
-- previewColor: string
-- accentColor: string
-- bgPattern: string
-- componentPath: string (e.g., "ModernElegant")
-- uploadedBy: string (optional FK → Users)
-- isPublic: boolean
-- status: "active" | "inactive" | "pending_review"
-- createdAt: datetime
-```
-
-### Payments Collection
-```
-- id: string (primary)
-- userId: string (FK → Users)
-- stripePaymentId: string
-- amount: number
-- currency: string (e.g., "usd", "idr")
-- tier: "premium"
-- status: "completed" | "pending" | "failed"
-- invitationId: string (optional)
-- createdAt: datetime
-```
-
----
-
-## 🎨 COMPONENT CHECKLIST
-
-### Auth Components
-- [x] LoginForm.tsx
-- [x] SignupForm.tsx
-- [x] ProtectedRoute.tsx (implemented via src/proxy.ts)
-
-### Dashboard Components
-- [ ] InvitationList.tsx
-- [ ] CreateInvitationCard.tsx
-- [ ] RSVPSummary.tsx
-- [ ] InvitationCard.tsx
-
-### Editor Components
-- [ ] TemplateEditor.tsx
-- [ ] ColorSelector.tsx
-- [ ] PhotoUpload.tsx
-- [ ] EventDetailsForm.tsx
-- [ ] EditorPreview.tsx
-
-### Payment Components
-- [ ] PricingCards.tsx
-- [ ] CheckoutForm.tsx
-- [ ] PaymentStatus.tsx
-
-### Admin Components
-- [ ] UserTable.tsx
-- [ ] TemplateUploadForm.tsx
-- [ ] AnalyticsDashboard.tsx
-- [ ] RevenueChart.tsx
-
-### Shared Components
-- [ ] Layout.tsx (dashboard layout)
-- [ ] ProtectedLayout.tsx
-- [ ] LoadingSpinner.tsx
-
----
-
-## 📝 API ENDPOINTS TO BUILD
+### Landing & Marketing
+- [x] Landing page with hero, features, template gallery, pricing, and CTA sections
+- [x] Template gallery driven by hard-coded template metadata
+- [x] Template preview cards with hover interaction
+- [x] Auth-aware navbar state for guest vs logged-in user
+- [x] Mobile-responsive navigation with hamburger menu
+- [x] Root SEO metadata for public site
+- [ ] Testimonial/social proof section
+- [ ] FAQ section
+- [ ] Production analytics tracking
 
 ### Authentication
-- [x] POST `/api/auth/signup` - Register user
-- [x] POST `/api/auth/login` - Login user
-- [x] POST `/api/auth/logout` - Logout user
-- [x] GET `/api/auth/me` - Get current user
-- [ ] POST `/api/auth/refresh` - Refresh token
-
-### Invitations
-- GET `/api/invitations` - List user's invitations
-- POST `/api/invitations` - Create new invitation
-- GET `/api/invitations/[id]` - Get invitation details
-- PUT `/api/invitations/[id]` - Update invitation
-- DELETE `/api/invitations/[id]` - Delete invitation
-- GET `/api/invitations/[id]/preview` - Get public preview
-
-### RSVP
-- POST `/api/rsvp/[invitationId]` - Submit RSVP
-- GET `/api/rsvp/[invitationId]` - Get all responses
-- DELETE `/api/rsvp/[responseId]` - Remove response
-- GET `/api/rsvp/[invitationId]/stats` - Get RSVP statistics
+- [x] Email/password signup API with Appwrite session cookie
+- [x] Email/password login API with Appwrite session cookie
+- [x] Google OAuth start route and callback route
+- [x] Login page
+- [x] Signup page
+- [x] Verify page UI copy
+- [x] Logout action
+- [x] Protected dashboard access via server-side auth check
+- [ ] Password reset flow
+- [ ] Role-based access control for admin
+- [ ] Persistent user profile collection in Appwrite Database
 
 ### Templates
-- GET `/api/templates` - List all templates
-- POST `/api/templates` - Upload new template (admin only)
-- PUT `/api/templates/[id]` - Update template (admin only)
-- DELETE `/api/templates/[id]` - Delete template (admin only)
+- [x] 3 templates implemented: Modern Elegant, Adat Jawa, Floral Garden
+- [x] Dynamic demo route for template pages
+- [x] Countdown timer component
+- [x] Shared hard-coded template metadata model
+- [ ] 15+ template library
+- [ ] Template metadata stored in Appwrite Database
+- [ ] Template access gating by pricing tier
+- [ ] Public invitation route by custom slug
+- [ ] Visual editor for template customization
+
+### RSVP
+- [x] RSVP form UI with validation and success state
+- [x] Guest wishes list rendered on client after submit
+- [ ] RSVP submissions persisted to Appwrite Database
+- [ ] Public RSVP API route
+- [ ] RSVP retrieval for invitation owner
+- [ ] RSVP analytics/export
+- [ ] Spam/rate-limit protection
+
+### Dashboard
+- [x] Basic dashboard shell with welcome banner, placeholder stats, and account card
+- [x] Dashboard requires logged-in session
+- [ ] Invitation CRUD pages
+- [ ] Real user stats from database
+- [ ] RSVP management view
+- [ ] Settings page
+- [ ] Draft/publish workflow
 
 ### Payments
-- POST `/api/payment/checkout` - Create checkout session
-- POST `/api/payment/webhook` - Stripe webhook
-- GET `/api/payment/history` - Get user payment history
+- [x] Pricing model is visible on the landing page
+- [ ] Stripe package and env wiring
+- [ ] Checkout session route
+- [ ] Webhook handler
+- [ ] Premium entitlement sync to Appwrite
+- [ ] Payment success/cancel pages
 
 ### Admin
-- GET `/api/admin/users` - List all users
-- GET `/api/admin/analytics` - Get analytics data
-- POST `/api/admin/templates` - Upload template
-- PUT `/api/admin/templates/[id]` - Edit template
+- [ ] Admin routes
+- [ ] Admin role guard
+- [ ] User management
+- [ ] Template management
+- [ ] Revenue analytics dashboard
 
----
+### Infrastructure
+- [x] Environment variable template exists
+- [x] Appwrite client helpers for admin and session usage exist
+- [ ] Appwrite collections created
+- [ ] Appwrite indexes created
+- [ ] Appwrite storage buckets configured
+- [ ] Vercel deployment pipeline
+- [ ] GitHub Actions CI/CD
+- [ ] Sentry error monitoring
+- [ ] Production domain and DNS
 
-## 📋 MEDIUM PRIORITY (v2.1)
+## 2. Indonesian Theme Library Plan
 
-### Bulk RSVP & Messaging
-- [ ] Bannerbear API integration
-- [ ] Zapier WhatsApp integration
-- [ ] CSV RSVP import
-- [ ] Bulk invitation sending
+Status target: minimum 15 live templates for launch; current baseline is 3 built templates, so 12+ additional themes are still required.
 
-### Mobile PWA
-- [ ] manifest.json
-- [ ] Service worker
-- [ ] Install to home screen
-- [ ] Offline support
+- [x] `Adat Jawa` — Origin: Jawa Tengah & Yogyakarta; Palette: `#4A1A0A`, `#D4A574`, `#F8F0E0`; Elements: batik kawung, wayang gunungan, ukiran kayu; Tag: `tradisional`
+- [x] `Modern Elegant` — Origin: urban contemporary Indonesia; Palette: `#1A1A2E`, `#C9A84C`, `#F7F5EF`; Elements: geometric lines, serif headline, clean border frame; Tag: `modern`
+- [x] `Floral Garden` — Origin: romantic outdoor style; Palette: `#2D4A3E`, `#E8A0BF`, `#FDF6F0`; Elements: floral spray, watercolor leaves, soft paper texture; Tag: `romantis`
+- [ ] `Adat Sunda` — Origin: Jawa Barat; Palette: `#7CB7D9`, `#DCEEF8`, `#F4C95D`; Elements: mega mendung, angklung ornament, awi bamboo border; Tag: `tradisional`
+- [ ] `Adat Minang` — Origin: Sumatera Barat; Palette: `#9B1D20`, `#D4AF37`, `#2C1B12`; Elements: rumah gadang silhouette, ukiran Minang, gonjong frame; Tag: `tradisional`
+- [ ] `Adat Bali` — Origin: Bali; Palette: `#0F6B5B`, `#D4AF37`, `#F5E6C8`; Elements: candi bentar, tropical leaves, gold temple relief; Tag: `tradisional`
+- [ ] `Adat Batak` — Origin: Sumatera Utara; Palette: `#8B1E1E`, `#111111`, `#F5F5F5`; Elements: ulos weave, gorga ornament, bold geometric trim; Tag: `tradisional`
+- [ ] `Adat Bugis-Makassar` — Origin: Sulawesi Selatan; Palette: `#6E1E2A`, `#C9A227`, `#F6E7D7`; Elements: lontara script accent, royal arch, kapal pinisi detail; Tag: `tradisional`
+- [ ] `Adat Betawi` — Origin: DKI Jakarta; Palette: `#F28C28`, `#2E8B57`, `#FFF1D6`; Elements: ondel-ondel silhouette, gigi balang border, lenong color blocking; Tag: `tradisional`
+- [ ] `Adat Dayak` — Origin: Kalimantan; Palette: `#5A3E2B`, `#C46B2D`, `#E7D7B6`; Elements: shield motif, hornbill pattern, tribal geometry; Tag: `etnik`
+- [ ] `Adat Aceh` — Origin: Aceh; Palette: `#0B6E4F`, `#D4AF37`, `#FAF3E0`; Elements: pinto Aceh gate, arabesque motif, kaligrafi detail; Tag: `islami`
+- [ ] `Adat Manado/Minahasa` — Origin: Sulawesi Utara; Palette: `#1E8C8C`, `#FF7F6A`, `#FFF4E8`; Elements: wale house silhouette, sea breeze gradient, coconut leaf pattern; Tag: `pesisir`
+- [ ] `Adat Toraja` — Origin: Sulawesi Selatan; Palette: `#7A1F1F`, `#111111`, `#D8B36A`; Elements: tongkonan roofline, carved panel motif, ceremonial stripe; Tag: `etnik`
+- [ ] `Adat Papua` — Origin: Papua; Palette: `#A65E2E`, `#6D4C41`, `#E9C46A`; Elements: tifa drum motif, tribal linework, bark texture; Tag: `etnik`
+- [ ] `Islamic Elegant` — Origin: pan-Islamic Indonesian wedding style; Palette: `#0F766E`, `#D4AF37`, `#F8F5EE`; Elements: arabic calligraphy, mashrabiya geometry, crescent accents; Tag: `islami`
+- [ ] `Rustic Nusantara` — Origin: destination wedding Indonesia; Palette: `#8C6A43`, `#C9A77D`, `#F7F0E6`; Elements: wood grain, batik accent strip, dried foliage; Tag: `rustic`
+- [ ] `Palembang Songket` — Origin: Sumatera Selatan; Palette: `#7B1023`, `#E0B84F`, `#FCEFD7`; Elements: songket weave, limas house accent, floral gold filigree; Tag: `songket`
+- [ ] `Sasak Lombok` — Origin: Nusa Tenggara Barat; Palette: `#355070`, `#E76F51`, `#F4E1C1`; Elements: tenun Sasak stripe, lumbung silhouette, woven border; Tag: `tenun`
+- [ ] `Melayu Riau` — Origin: Riau & Kepulauan Riau; Palette: `#1F6F50`, `#E8C547`, `#FFF8E7`; Elements: selembayung roof, pucuk rebung motif, songket linework; Tag: `melayu`
+- [ ] `Banjarmasin Sasirangan` — Origin: Kalimantan Selatan; Palette: `#2A9D8F`, `#E9C46A`, `#F4A261`; Elements: sasirangan dye pattern, river flow curves, woven diamonds; Tag: `etnik`
 
-### Guest Analytics
-- [ ] RSVP statistics dashboard
-- [ ] Real-time tracking
-- [ ] Export analytics
-- [ ] Charts/visualizations
+## 3. Database Schema (Appwrite Collections)
 
-### Email Notifications
-- [ ] RSVP confirmation emails
-- [ ] Reminder emails
-- [ ] Payment receipts
-- [ ] Email service integration
+Principle MVP: keep Appwrite Auth as source of truth for login, then add Appwrite Database collections for product data, billing, and analytics.
 
----
+### `Users`
+Purpose: extend Appwrite Auth with billing, tier, and product preferences.
 
-## 🌍 MONETIZATION
+Fields:
+- `authUserId` — `string`, required, unique; bridge to Appwrite Auth user id
+- `email` — `email`, required
+- `fullName` — `string`, required
+- `tier` — `enum(free,premium)`, required, default `free`
+- `subscriptionStatus` — `enum(none,pending,active,past_due,cancelled)`, required, default `none`
+- `preferredLanguage` — `enum(id,en)`, required, default `id`
+- `whatsappNumber` — `string`, optional
+- `defaultTemplateId` — `relationship -> Templates`, optional
+- `createdAt` — `datetime`, required
+- `updatedAt` — `datetime`, required
 
-### Free Tier
-- 1 basic template
-- RSVP online
-- Countdown timer
-- **Watermark:** NikahDigital
-- **Limit:** 1 invitation/month
+Indexes:
+- `authUserId_unique` — unique on `authUserId`
+- `email_idx` — on `email`
+- `tier_subscription_idx` — on `tier`, `subscriptionStatus`
 
-### Premium Tier
-- All templates
-- RSVP & guest management
-- No watermark
-- Custom domain (optional)
-- Photo gallery
-- Bulk WhatsApp RSVP
-- Analytics
+Relationships:
+- `defaultTemplateId -> Templates.$id`
+- one Appwrite Auth account maps to one `Users` document via `authUserId`
 
-### Pricing Options
-1. **Subscription:** $10/month (unlimited)
-2. **Per-Invitation:** $99,000 IDR (~$6 USD)
-3. **Add-ons:** Custom domain, gallery, video
+### `Invitations`
+Purpose: store each user-created invitation and its custom wedding data.
 
----
+Fields:
+- `userId` — `relationship -> Users`, required
+- `templateId` — `relationship -> Templates`, required
+- `slug` — `string`, required, unique
+- `title` — `string`, required
+- `status` — `enum(draft,published,archived)`, required, default `draft`
+- `bride` — `string`, required
+- `groom` — `string`, required
+- `brideParents` — `string`, required
+- `groomParents` — `string`, required
+- `akadDate` — `datetime`, required
+- `akadTime` — `string`, required
+- `akadLocation` — `string`, required
+- `resepsiDate` — `datetime`, required
+- `resepsiTime` — `string`, required
+- `resepsiLocation` — `string`, required
+- `mapUrl` — `url`, optional
+- `story` — `string`, optional
+- `customPrimaryColor` — `string`, optional
+- `customAccentColor` — `string`, optional
+- `coverImageFileId` — `string`, optional
+- `galleryFileIds` — `string[]`, optional
+- `rsvpEnabled` — `boolean`, required, default `true`
+- `watermarkEnabled` — `boolean`, required, default `true`
+- `publishedAt` — `datetime`, optional
+- `lastViewedAt` — `datetime`, optional
+- `createdAt` — `datetime`, required
+- `updatedAt` — `datetime`, required
 
-## ✅ CHECKLIST FOR LAUNCH
+Indexes:
+- `slug_unique` — unique on `slug`
+- `user_status_idx` — on `userId`, `status`
+- `template_idx` — on `templateId`
+- `publishedAt_idx` — on `publishedAt`
 
-### Code Quality
-- [ ] All pages tested on mobile/desktop
-- [ ] Cross-browser testing (Chrome, Firefox, Safari, Edge)
-- [ ] Lighthouse score 90+
-- [ ] No console errors/warnings
-- [ ] TypeScript strict mode passing
-- [ ] ESLint passes all files
-- [ ] Code review completed
+Relationships:
+- `userId -> Users.$id`
+- `templateId -> Templates.$id`
+- one invitation has many `RSVPResponses`, `Payments`, and `Analytics` rows
 
-### Security
-- [ ] OWASP vulnerabilities checked
-- [ ] Input validation on all forms
-- [ ] CSRF tokens implemented
-- [ ] Environment variables secured
-- [ ] Database queries sanitized
-- [ ] Rate limiting on API routes
-- [ ] HTTPS enforced
+### `RSVPResponses`
+Purpose: persist guest submissions from the public invitation page.
 
-### Testing
-- [ ] Unit tests for utilities
-- [ ] Integration tests for API routes
-- [ ] E2E tests for user flows
-- [ ] Load testing (1000+ concurrent users)
-- [ ] Payment flow tested
-- [ ] RSVP flow tested
+Fields:
+- `invitationId` — `relationship -> Invitations`, required
+- `guestName` — `string`, required
+- `attendance` — `enum(hadir,tidak_hadir)`, required
+- `guestCount` — `integer`, required, default `1`
+- `message` — `string`, optional
+- `guestPhone` — `string`, optional
+- `guestTag` — `string`, optional
+- `submittedAt` — `datetime`, required
+- `createdAt` — `datetime`, required
 
-### Performance
-- [ ] Database queries optimized
-- [ ] Images optimized/lazy-loaded
-- [ ] Bundle size < 200KB gzipped
-- [ ] First Contentful Paint < 2s
-- [ ] API response time < 500ms
-- [ ] CSS-in-JS eliminated
+Indexes:
+- `invitation_submittedAt_idx` — on `invitationId`, `submittedAt`
+- `invitation_attendance_idx` — on `invitationId`, `attendance`
+- `guestName_idx` — on `guestName`
 
-### Deployment
-- [ ] Environment variables set
-- [ ] Database migrations run
-- [ ] Backups configured
-- [ ] Monitoring/alerting setup
-- [ ] Error tracking (Sentry) enabled
-- [ ] Analytics configured
-- [ ] Custom domain working
+Relationships:
+- `invitationId -> Invitations.$id`
 
----
+### `Templates`
+Purpose: move template metadata out of hard-coded arrays and make it manageable by admin.
 
-## 📞 RESOURCES
+Fields:
+- `templateKey` — `string`, required, unique
+- `name` — `string`, required
+- `description` — `string`, required
+- `region` — `string`, required
+- `category` — `string`, required
+- `previewColor` — `string`, required
+- `accentColor` — `string`, required
+- `bgPattern` — `string`, required
+- `componentName` — `string`, required
+- `tierAccess` — `enum(free,premium)`, required, default `premium`
+- `status` — `enum(active,draft,archived)`, required, default `draft`
+- `sortOrder` — `integer`, required, default `100`
+- `thumbnailFileId` — `string`, optional
+- `isFeatured` — `boolean`, required, default `false`
+- `createdByUserId` — `relationship -> Users`, optional
+- `createdAt` — `datetime`, required
+- `updatedAt` — `datetime`, required
 
-- **GitHub:** https://github.com/abraham-yusuf/pernikahan-web
-- **Creator:** Abraham Yusuf (@bram0511)
-- **Email:** abrahamyusuf.eth@gmail.com
+Indexes:
+- `templateKey_unique` — unique on `templateKey`
+- `status_sort_idx` — on `status`, `sortOrder`
+- `category_region_idx` — on `category`, `region`
+- `tierAccess_idx` — on `tierAccess`
 
-### Documentation Links
-- [Next.js](https://nextjs.org/docs)
-- [Tailwind CSS v4](https://tailwindcss.com/docs)
-- [Appwrite](https://appwrite.io/docs)
-- [Stripe API](https://stripe.com/docs/api)
-- [React 19](https://react.dev)
+Relationships:
+- `createdByUserId -> Users.$id`
+- one template can be referenced by many `Invitations`
 
----
+### `Payments`
+Purpose: record Stripe checkout activity and premium purchases.
 
-## 📈 SUCCESS METRICS
+Fields:
+- `userId` — `relationship -> Users`, required
+- `invitationId` — `relationship -> Invitations`, optional
+- `stripeCheckoutSessionId` — `string`, required, unique
+- `stripePaymentIntentId` — `string`, optional
+- `stripeCustomerId` — `string`, optional
+- `amount` — `integer`, required
+- `currency` — `enum(idr)`, required, default `idr`
+- `plan` — `enum(premium_invitation)`, required
+- `status` — `enum(pending,paid,failed,refunded,expired)`, required, default `pending`
+- `paidAt` — `datetime`, optional
+- `createdAt` — `datetime`, required
+- `updatedAt` — `datetime`, required
 
-### Month 1 Goals
-- [ ] 100 user sign-ups
-- [ ] $500 revenue
-- [ ] First paying customer
-- [ ] 40+ RSVP submissions
-- [ ] 95%+ uptime
-- [ ] Sub-3s page load
+Indexes:
+- `checkout_unique` — unique on `stripeCheckoutSessionId`
+- `user_status_idx` — on `userId`, `status`
+- `invitation_idx` — on `invitationId`
+- `paidAt_idx` — on `paidAt`
 
-### KPIs
-- User acquisition rate
-- Free → Premium conversion rate
-- RSVP completion rate
-- Template popularity
-- Revenue per user
-- Customer satisfaction (NPS)
-- Churn rate
+Relationships:
+- `userId -> Users.$id`
+- `invitationId -> Invitations.$id`
 
----
+### `Analytics`
+Purpose: simple daily aggregate for page views and RSVP counts per invitation.
 
-**License:** MIT  
-**Last Updated:** 2026-03-14
+Fields:
+- `invitationId` — `relationship -> Invitations`, required
+- `dateKey` — `string`, required; format `YYYY-MM-DD`
+- `pageViews` — `integer`, required, default `0`
+- `uniqueVisitors` — `integer`, required, default `0`
+- `rsvpCount` — `integer`, required, default `0`
+- `lastViewedAt` — `datetime`, optional
+- `lastRsvpAt` — `datetime`, optional
+- `createdAt` — `datetime`, required
+- `updatedAt` — `datetime`, required
+
+Indexes:
+- `invitation_date_unique` — unique on `invitationId`, `dateKey`
+- `date_idx` — on `dateKey`
+- `views_idx` — on `pageViews`
+
+Relationships:
+- `invitationId -> Invitations.$id`
+
+## 4. API Routes Plan
+
+### Public + Authenticated Product APIs
+- [ ] `POST /api/invitations` and `GET /api/invitations` — create/list invitations for current user
+- [ ] `GET /api/invitations/[id]`, `PATCH /api/invitations/[id]`, `DELETE /api/invitations/[id]` — single invitation operations
+- [ ] `POST /api/rsvp` — public RSVP submit without login, validated against invitation slug or id
+- [ ] `GET /api/rsvp/[invitationId]` — owner-only RSVP list and summary stats
+- [ ] `GET /api/templates` — list active templates with tier gating metadata
+
+### Payments APIs
+- [ ] `POST /api/payments/checkout` — create Stripe Checkout session for Premium invitation purchase
+- [ ] `POST /api/payments/webhook` — process Stripe events and sync payment status to Appwrite
+
+### Admin APIs
+- [ ] `GET /api/admin/users` — admin user management
+- [ ] `GET /api/admin/templates`, `POST /api/admin/templates`, `PATCH /api/admin/templates/[id]` — admin template management
+- [ ] `GET /api/admin/analytics` — admin analytics for usage, RSVP volume, and revenue
+
+## 5. Page Routes Plan
+
+- [ ] `/dashboard` — overview with real stats and recent invitations
+- [ ] `/dashboard/invitations` — my invitations list
+- [ ] `/dashboard/invitations/new` — create new invitation
+- [ ] `/dashboard/invitations/[id]` — edit invitation
+- [ ] `/dashboard/rsvp/[id]` — view RSVPs for invitation
+- [ ] `/dashboard/settings` — user settings and billing profile
+- [ ] `/editor/[templateId]` — visual template editor
+- [ ] `/payment/checkout` — Stripe checkout handoff page
+- [ ] `/payment/success` — payment success state
+- [ ] `/payment/cancel` — payment cancelled state
+- [ ] `/admin` — admin dashboard
+- [ ] `/admin/users` — manage users
+- [ ] `/admin/templates` — manage templates
+- [ ] `/admin/analytics` — revenue and usage analytics
+- [ ] `/u/[slug]` — public invitation view with custom URL
+
+## 6. Phase-by-Phase Task Breakdown
+
+### Phase 1 — Database & RSVP Backend (Week 1)
+Goal: move RSVP and invitation data from in-memory demo state to persistent Appwrite-backed data.
+
+Dependencies:
+- [x] Appwrite auth routes and session helpers already exist
+- [ ] Appwrite Database collections from section 3 must be created first
+
+Files to create/modify:
+- [ ] `src/lib/appwrite.ts`
+- [ ] `src/lib/collections.ts`
+- [ ] `src/lib/appwrite-db.ts`
+- [ ] `src/lib/validators/rsvp.ts`
+- [ ] `src/app/api/rsvp/route.ts`
+- [ ] `src/app/api/rsvp/[invitationId]/route.ts`
+- [ ] `src/components/RSVPForm.tsx`
+- [ ] `src/app/undangan/[id]/page.tsx`
+
+Tasks:
+- [ ] Create typed collection ids and query helpers for Appwrite Databases
+- [ ] Build `POST /api/rsvp` with input validation and invitation lookup
+- [ ] Build `GET /api/rsvp/[invitationId]` for invitation owners only
+- [ ] Replace local RSVP state in form with API submission flow
+- [ ] Persist guest wishes and load latest responses from database
+- [ ] Increment analytics counters when RSVP is submitted
+
+### Phase 2 — Indonesian Theme Library, 10 New Themes (Week 2-3)
+Goal: expand from 3 static templates to a culturally differentiated library that feels local-first untuk pasar Indonesia.
+
+Dependencies:
+- [ ] Phase 1 complete
+
+Files to create/modify:
+- [ ] `src/lib/data.ts`
+- [ ] `src/components/TemplateCard.tsx`
+- [ ] `src/components/templates/AdatSunda.tsx`
+- [ ] `src/components/templates/AdatMinang.tsx`
+- [ ] `src/components/templates/AdatBali.tsx`
+- [ ] `src/components/templates/AdatBatak.tsx`
+- [ ] `src/components/templates/AdatBugisMakassar.tsx`
+- [ ] `src/components/templates/AdatBetawi.tsx`
+- [ ] `src/components/templates/AdatDayak.tsx`
+- [ ] `src/components/templates/AdatAceh.tsx`
+- [ ] `src/components/templates/AdatMinahasa.tsx`
+- [ ] `src/components/templates/AdatToraja.tsx`
+- [ ] `src/app/undangan/[id]/page.tsx`
+- [ ] `src/app/api/templates/route.ts`
+
+Tasks:
+- [ ] Implement 10 new template components with shared data contract
+- [ ] Add richer preview metadata, region labels, and tier tags
+- [ ] Expose active templates through `GET /api/templates`
+- [ ] Keep 3 existing templates as launch-ready baseline
+- [ ] Reserve final launch additions (`Islamic Elegant`, `Rustic Nusantara`) for Phase 7 to reach 15+ live templates
+
+### Phase 3 — User Dashboard & Invitation Management (Week 3-4)
+Goal: turn the current dashboard shell into the main SaaS workspace untuk couples.
+
+Dependencies:
+- [ ] Phase 1 complete
+- [ ] Template metadata available from Phase 2
+
+Files to create/modify:
+- [ ] `src/app/dashboard/page.tsx`
+- [ ] `src/app/dashboard/layout.tsx`
+- [ ] `src/app/dashboard/invitations/page.tsx`
+- [ ] `src/app/dashboard/invitations/new/page.tsx`
+- [ ] `src/app/dashboard/invitations/[id]/page.tsx`
+- [ ] `src/app/dashboard/rsvp/[id]/page.tsx`
+- [ ] `src/app/dashboard/settings/page.tsx`
+- [ ] `src/app/api/invitations/route.ts`
+- [ ] `src/app/api/invitations/[id]/route.ts`
+- [ ] `src/components/dashboard/InvitationList.tsx`
+- [ ] `src/components/dashboard/InvitationStats.tsx`
+- [ ] `src/components/dashboard/EmptyInvitations.tsx`
+- [ ] `src/lib/invitations.ts`
+
+Tasks:
+- [ ] Replace placeholder stats with live invitation + RSVP counts
+- [ ] Build invitation list page with draft/published badges
+- [ ] Build create invitation flow from selected template
+- [ ] Build invitation edit page backed by Appwrite
+- [ ] Show RSVP list and summary per invitation
+- [ ] Add settings page for profile, WhatsApp number, and default language
+
+### Phase 4 — Template Editor & Customization (Week 4-5)
+Goal: enable users to customize invitation content without touching code.
+
+Dependencies:
+- [ ] Phase 3 complete
+
+Files to create/modify:
+- [ ] `src/app/editor/[templateId]/page.tsx`
+- [ ] `src/components/editor/TemplateEditor.tsx`
+- [ ] `src/components/editor/EditorPreview.tsx`
+- [ ] `src/components/editor/CoupleDetailsForm.tsx`
+- [ ] `src/components/editor/EventDetailsForm.tsx`
+- [ ] `src/components/editor/ThemeControls.tsx`
+- [ ] `src/components/editor/PhotoUploader.tsx`
+- [ ] `src/components/templates/ModernElegant.tsx`
+- [ ] `src/components/templates/AdatJawa.tsx`
+- [ ] `src/components/templates/FloralGarden.tsx`
+
+Tasks:
+- [ ] Refactor templates to accept invitation props instead of demo-only data
+- [ ] Add real-time preview with editable couple, venue, and story fields
+- [ ] Support custom colors per invitation where theme allows
+- [ ] Add photo upload via Appwrite Storage
+- [ ] Add save draft and publish actions
+
+### Phase 5 — Stripe Payment Integration (Week 5-6)
+Goal: monetize Premium invitation purchases with a clean checkout flow.
+
+Dependencies:
+- [ ] Phase 3 complete
+
+Files to create/modify:
+- [ ] `src/app/api/payments/checkout/route.ts`
+- [ ] `src/app/api/payments/webhook/route.ts`
+- [ ] `src/app/payment/checkout/page.tsx`
+- [ ] `src/app/payment/success/page.tsx`
+- [ ] `src/app/payment/cancel/page.tsx`
+- [ ] `src/components/payment/PricingCards.tsx`
+- [ ] `src/components/payment/CheckoutSummary.tsx`
+- [ ] `src/lib/payments.ts`
+- [ ] `src/app/page.tsx`
+
+Tasks:
+- [ ] Install and configure Stripe SDK
+- [ ] Create Checkout session for `Premium` at `Rp 99.000/invitation`
+- [ ] Persist Stripe session, payment intent, and final payment status in Appwrite
+- [ ] Unlock premium template access after successful payment
+- [ ] Surface paid/free state inside dashboard and editor
+
+### Phase 6 — Admin Dashboard (Week 6-7)
+Goal: give the operator a lightweight back office for users, templates, and revenue.
+
+Dependencies:
+- [ ] Phases 2, 3, and 5 complete
+
+Files to create/modify:
+- [ ] `src/app/admin/page.tsx`
+- [ ] `src/app/admin/users/page.tsx`
+- [ ] `src/app/admin/templates/page.tsx`
+- [ ] `src/app/admin/analytics/page.tsx`
+- [ ] `src/app/api/admin/users/route.ts`
+- [ ] `src/app/api/admin/templates/route.ts`
+- [ ] `src/app/api/admin/templates/[id]/route.ts`
+- [ ] `src/app/api/admin/analytics/route.ts`
+- [ ] `src/components/admin/UserTable.tsx`
+- [ ] `src/components/admin/TemplateTable.tsx`
+- [ ] `src/components/admin/RevenueOverview.tsx`
+- [ ] `src/lib/admin.ts`
+
+Tasks:
+- [ ] Add admin role guard based on Appwrite prefs or `Users` collection flag
+- [ ] Build user list with tier and subscription status
+- [ ] Build template activation and sort-order management
+- [ ] Build admin analytics for signups, paid conversions, and RSVP volume
+
+### Phase 7 — Production Deployment & Polish (Week 7-8)
+Goal: ship a production-ready MVP on Vercel with launch-quality UX, monitoring, and the last template gap closed.
+
+Dependencies:
+- [ ] Phases 1 through 6 complete
+
+Files to create/modify:
+- [ ] `src/app/u/[slug]/page.tsx`
+- [ ] `src/app/sitemap.ts`
+- [ ] `src/app/robots.ts`
+- [ ] `src/components/templates/IslamicElegant.tsx`
+- [ ] `src/components/templates/RusticNusantara.tsx`
+- [ ] `src/components/seo/InvitationJsonLd.tsx`
+- [ ] `src/lib/monitoring.ts`
+- [ ] `src/instrumentation.ts`
+
+Tasks:
+- [ ] Add public slug route `/u/[slug]` for published invitations
+- [ ] Deliver final 2 launch templates to reach 15+ live options
+- [ ] Add invitation SEO metadata, robots, sitemap, and share card strategy
+- [ ] Wire Sentry for runtime and API monitoring
+- [ ] Prepare Vercel production config, domain setup, and smoke checks
+- [ ] Add CI steps for build, lint, and route-level regression coverage
+
+## 7. Launch Checklist
+
+- [ ] All Appwrite collections created with indexes
+- [ ] 15+ templates live and rendering correctly
+- [ ] RSVP data persisting to database
+- [ ] Stripe checkout working in test mode
+- [ ] Admin can manage templates and users
+- [ ] Custom invitation URLs working (`/u/[slug]`)
+- [ ] Mobile responsive across all templates
+- [ ] SEO metadata on all public pages
+- [ ] Error monitoring (Sentry)
+- [ ] Vercel production deployment
+- [ ] Custom domain configured
+- [ ] GitHub Actions CI/CD

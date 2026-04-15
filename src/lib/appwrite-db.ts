@@ -234,3 +234,59 @@ export async function getInvitationById(
     throw error;
   }
 }
+
+export async function createInvitation(
+  data: Omit<
+    InvitationDoc,
+    "createdAt" | "updatedAt" | "publishedAt" | "lastViewedAt"
+  >
+): Promise<InvitationDocument> {
+  const { databases } = createAdminClient();
+  const now = new Date().toISOString();
+
+  return databases.createDocument<InvitationDocument>(
+    DATABASE_ID,
+    COLLECTIONS.INVITATIONS,
+    ID.unique(),
+    { ...data, createdAt: now, updatedAt: now }
+  );
+}
+
+export async function listInvitationsByUser(
+  userId: string,
+  limit = 20,
+  offset = 0
+): Promise<AppwriteDocumentList<InvitationDoc>> {
+  const { databases } = createAdminClient();
+
+  return databases.listDocuments<InvitationDocument>(
+    DATABASE_ID,
+    COLLECTIONS.INVITATIONS,
+    [
+      Query.equal("userId", userId),
+      Query.orderDesc("updatedAt"),
+      Query.limit(limit),
+      Query.offset(offset),
+    ]
+  );
+}
+
+export async function updateInvitation(
+  id: string,
+  data: Partial<Omit<InvitationDoc, "userId" | "createdAt">>
+): Promise<InvitationDocument> {
+  const { databases } = createAdminClient();
+
+  return databases.updateDocument<InvitationDocument>(
+    DATABASE_ID,
+    COLLECTIONS.INVITATIONS,
+    id,
+    { ...data, updatedAt: new Date().toISOString() }
+  );
+}
+
+export async function deleteInvitation(id: string): Promise<void> {
+  const { databases } = createAdminClient();
+
+  await databases.deleteDocument(DATABASE_ID, COLLECTIONS.INVITATIONS, id);
+}

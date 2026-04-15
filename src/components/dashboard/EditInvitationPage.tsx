@@ -13,23 +13,23 @@ import {
 type InvitationStatus = "draft" | "published" | "archived";
 
 interface InvitationDetail {
-  $id: string;
+  id: string;
   title: string;
   bride: string;
   groom: string;
-  brideParents: string;
-  groomParents: string;
-  akadDate: string;
-  akadTime: string;
-  akadLocation: string;
-  resepsiDate: string;
-  resepsiTime: string;
-  resepsiLocation: string;
-  mapUrl?: string;
-  story?: string;
+  bride_parents: string;
+  groom_parents: string;
+  akad_date: string;
+  akad_time: string;
+  akad_location: string;
+  resepsi_date: string;
+  resepsi_time: string;
+  resepsi_location: string;
+  map_url?: string | null;
+  story?: string | null;
   slug: string;
   status: InvitationStatus;
-  templateId: string;
+  template_id: string;
 }
 
 interface InvitationPayload {
@@ -82,13 +82,10 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
       setError(null);
 
       try {
-        const response = await fetch(
-          `/api/invitations/${encodeURIComponent(invitationId)}`,
-          {
-            cache: "no-store",
-            credentials: "same-origin",
-          }
-        );
+        const response = await fetch(`/api/invitations/${encodeURIComponent(invitationId)}`, {
+          cache: "no-store",
+          credentials: "same-origin",
+        });
         const payload = (await response.json().catch(() => null)) as
           | InvitationPayload
           | null;
@@ -140,10 +137,10 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
       return null;
     }
 
-    const template = templates.find((item) => item.id === invitation.templateId);
+    const template = templates.find((item) => item.id === invitation.template_id);
 
     return {
-      name: template?.name ?? invitation.templateId,
+      name: template?.name ?? invitation.template_id,
       description: template?.description ?? "",
     };
   }, [invitation]);
@@ -161,7 +158,7 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
       | null;
 
     if (response.status === 503) {
-      setError("Database belum dikonfigurasi.");
+      setError("Database belum tersedia.");
       return null;
     }
 
@@ -218,7 +215,7 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
         | null;
 
       if (response.status === 503) {
-        setError("Database belum dikonfigurasi.");
+        setError("Database belum tersedia.");
         return;
       }
 
@@ -265,8 +262,8 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
   if (disconnected) {
     return (
       <EmptyInvitations
-        title="Hubungkan database Appwrite Anda"
-        description="Hubungkan database Appwrite Anda untuk mulai membuat undangan. Halaman edit tetap dapat diakses dalam mode navigasi tanpa koneksi database."
+        title="Koneksi database belum tersedia"
+        description="Sambungkan database untuk mulai membuat undangan. Halaman edit tetap dapat diakses dalam mode navigasi tanpa koneksi database."
         ctaHref="/dashboard/invitations"
         ctaLabel="Kembali ke daftar undangan"
       />
@@ -305,20 +302,18 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
               {getStatusLabel(invitation.status)}
             </span>
           </div>
-          <p className="mt-1 text-sm text-gray-500">
-            {invitation.title}
-          </p>
+          <p className="mt-1 text-sm text-gray-500">{invitation.title}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
           <Link
-            href={`/editor/${invitation.$id}`}
+            href={`/editor/${invitation.id}`}
             className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
           >
             Editor Visual
           </Link>
           <Link
-            href={`/dashboard/rsvp/${invitation.$id}`}
+            href={`/dashboard/rsvp/${invitation.id}`}
             className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
           >
             Lihat RSVP
@@ -349,7 +344,7 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
       <div className="rounded-2xl border border-gray-100 bg-white p-6">
         <p className="text-sm font-medium text-gray-500">Template digunakan</p>
         <h2 className="mt-1 text-lg font-semibold text-gray-900">
-          {selectedTemplate?.name ?? invitation.templateId}
+          {selectedTemplate?.name ?? invitation.template_id}
         </h2>
         {selectedTemplate?.description ? (
           <p className="mt-2 text-sm text-gray-500">{selectedTemplate.description}</p>
@@ -388,15 +383,15 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
           title: invitation.title,
           bride: invitation.bride,
           groom: invitation.groom,
-          brideParents: invitation.brideParents,
-          groomParents: invitation.groomParents,
-          akadDate: invitation.akadDate,
-          akadTime: invitation.akadTime,
-          akadLocation: invitation.akadLocation,
-          resepsiDate: invitation.resepsiDate,
-          resepsiTime: invitation.resepsiTime,
-          resepsiLocation: invitation.resepsiLocation,
-          mapUrl: invitation.mapUrl ?? "",
+          brideParents: invitation.bride_parents,
+          groomParents: invitation.groom_parents,
+          akadDate: invitation.akad_date,
+          akadTime: invitation.akad_time,
+          akadLocation: invitation.akad_location,
+          resepsiDate: invitation.resepsi_date,
+          resepsiTime: invitation.resepsi_time,
+          resepsiLocation: invitation.resepsi_location,
+          mapUrl: invitation.map_url ?? "",
           story: invitation.story ?? "",
         }}
         onSubmit={handleSave}

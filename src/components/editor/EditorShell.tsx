@@ -11,12 +11,24 @@ import { EditorToolbar } from "@/components/editor/EditorToolbar";
 type InvitationStatus = "draft" | "published" | "archived";
 type MobileTab = "edit" | "preview";
 
-interface InvitationDetail extends WeddingEvent {
-  $id: string;
+interface InvitationDetail {
+  id: string;
   title: string;
   slug: string;
   status: InvitationStatus;
-  templateId: string;
+  template_id: string;
+  bride: string;
+  groom: string;
+  bride_parents: string;
+  groom_parents: string;
+  akad_date: string;
+  akad_time: string;
+  akad_location: string;
+  resepsi_date: string;
+  resepsi_time: string;
+  resepsi_location: string;
+  map_url?: string | null;
+  story?: string | null;
 }
 
 interface InvitationPayload {
@@ -43,15 +55,15 @@ function getEditorState(invitation: InvitationDetail): EditorState {
   return {
     bride: invitation.bride,
     groom: invitation.groom,
-    brideParents: invitation.brideParents,
-    groomParents: invitation.groomParents,
-    akadDate: invitation.akadDate,
-    akadTime: invitation.akadTime,
-    akadLocation: invitation.akadLocation,
-    resepsiDate: invitation.resepsiDate,
-    resepsiTime: invitation.resepsiTime,
-    resepsiLocation: invitation.resepsiLocation,
-    mapUrl: invitation.mapUrl ?? "",
+    brideParents: invitation.bride_parents,
+    groomParents: invitation.groom_parents,
+    akadDate: invitation.akad_date,
+    akadTime: invitation.akad_time,
+    akadLocation: invitation.akad_location,
+    resepsiDate: invitation.resepsi_date,
+    resepsiTime: invitation.resepsi_time,
+    resepsiLocation: invitation.resepsi_location,
+    mapUrl: invitation.map_url ?? "",
     story: invitation.story ?? "",
   };
 }
@@ -73,7 +85,7 @@ function LoadingSkeleton() {
           </div>
         </div>
       </div>
-      <div className="flex-1 lg:grid lg:grid-cols-[420px_minmax(0,1fr)] lg:min-h-0">
+      <div className="flex-1 lg:grid lg:min-h-0 lg:grid-cols-[420px_minmax(0,1fr)]">
         <div className="space-y-4 border-r border-gray-200 bg-white p-4 sm:p-6 lg:overflow-y-auto lg:p-6">
           <div className="h-16 animate-pulse rounded-2xl bg-gray-100" />
           <div className="h-44 animate-pulse rounded-2xl bg-gray-100" />
@@ -230,8 +242,8 @@ export function EditorShell({ invitationId }: { invitationId: string }) {
       <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-3xl">
           <EmptyInvitations
-            title="Hubungkan database Appwrite Anda"
-            description="Hubungkan database Appwrite Anda untuk mulai mengedit undangan secara visual. Halaman editor tetap tersedia sebagai navigasi saat database belum dikonfigurasi."
+            title="Koneksi database belum tersedia"
+            description="Sambungkan database untuk mulai mengedit undangan secara visual. Halaman editor tetap tersedia sebagai navigasi saat database belum tersedia."
             ctaHref="/dashboard/invitations"
             ctaLabel="Kembali ke daftar undangan"
           />
@@ -321,7 +333,7 @@ export function EditorShell({ invitationId }: { invitationId: string }) {
             mobileTab === "edit" ? "hidden lg:block" : "block",
           ].join(" ")}
         >
-          <EditorPreview templateId={invitation.templateId} event={previewEvent} />
+          <EditorPreview templateId={invitation.template_id} event={previewEvent} />
         </section>
       </div>
     </div>

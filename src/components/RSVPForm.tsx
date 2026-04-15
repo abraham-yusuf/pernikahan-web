@@ -9,13 +9,13 @@ interface RSVPFormProps {
 }
 
 interface RSVPResponsePayload {
-  $id: string;
-  guestName: string;
+  id: string;
+  guest_name: string;
   attendance: "hadir" | "tidak_hadir";
-  guestCount: number;
-  message?: string;
-  submittedAt: string;
-  createdAt: string;
+  guest_count: number;
+  message?: string | null;
+  submitted_at: string;
+  created_at: string;
 }
 
 interface RSVPListPayload {
@@ -29,12 +29,12 @@ interface RSVPSubmitPayload {
 
 function mapDocumentToEntry(document: RSVPResponsePayload): RSVPEntry {
   return {
-    id: document.$id,
-    name: document.guestName,
+    id: document.id,
+    name: document.guest_name,
     attendance: document.attendance,
-    jumlahTamu: document.guestCount,
+    jumlahTamu: document.guest_count,
     ucapan: document.message ?? "",
-    createdAt: document.submittedAt || document.createdAt,
+    createdAt: document.submitted_at || document.created_at,
   };
 }
 
@@ -86,6 +86,9 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
         );
 
         if (!response.ok) {
+          if (active) {
+            setRemoteEntries([]);
+          }
           return;
         }
 
@@ -142,8 +145,7 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const optimisticId =
-      Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const optimisticId = Date.now().toString(36) + Math.random().toString(36).slice(2);
     const optimisticEntry: RSVPEntry = {
       id: optimisticId,
       name: formData.name,
@@ -213,11 +215,11 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
 
   return (
     <div id={`rsvp-${templateId}`}>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-md space-y-4">
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium mb-1 opacity-80"
+            className="mb-1 block text-sm font-medium opacity-80"
           >
             Nama Lengkap
           </label>
@@ -226,33 +228,29 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
             type="text"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, name: e.target.value }))
-            }
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white/80 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors"
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+            className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-2.5 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="Masukkan nama Anda"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 opacity-80">
+          <label className="mb-1 block text-sm font-medium opacity-80">
             Kehadiran
           </label>
           <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="radio"
                 name="attendance"
                 value="hadir"
                 checked={formData.attendance === "hadir"}
-                onChange={() =>
-                  setFormData((prev) => ({ ...prev, attendance: "hadir" }))
-                }
+                onChange={() => setFormData((prev) => ({ ...prev, attendance: "hadir" }))}
                 className="accent-primary"
               />
               <span className="text-sm">Hadir</span>
             </label>
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex cursor-pointer items-center gap-2">
               <input
                 type="radio"
                 name="attendance"
@@ -275,7 +273,7 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
           <div>
             <label
               htmlFor="jumlahTamu"
-              className="block text-sm font-medium mb-1 opacity-80"
+              className="mb-1 block text-sm font-medium opacity-80"
             >
               Jumlah Tamu
             </label>
@@ -288,7 +286,7 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
                   jumlahTamu: Number(e.target.value),
                 }))
               }
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white/80 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full rounded-lg border border-gray-300 bg-white/80 px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
               {[1, 2, 3, 4, 5].map((n) => (
                 <option key={n} value={n}>
@@ -302,7 +300,7 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
         <div>
           <label
             htmlFor="ucapan"
-            className="block text-sm font-medium mb-1 opacity-80"
+            className="mb-1 block text-sm font-medium opacity-80"
           >
             Ucapan &amp; Doa
           </label>
@@ -310,10 +308,8 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
             id="ucapan"
             rows={3}
             value={formData.ucapan}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, ucapan: e.target.value }))
-            }
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white/80 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+            onChange={(e) => setFormData((prev) => ({ ...prev, ucapan: e.target.value }))}
+            className="w-full resize-none rounded-lg border border-gray-300 bg-white/80 px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="Tulis ucapan dan doa untuk kedua mempelai..."
           />
         </div>
@@ -321,41 +317,39 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full rounded-lg bg-primary py-3 font-medium text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Mengirim..." : "Kirim RSVP"}
         </button>
 
         {submitted && (
-          <div className="text-center text-green-600 text-sm font-medium animate-fade-in">
+          <div className="animate-fade-in text-center text-sm font-medium text-green-600">
             ✓ Terima kasih! RSVP Anda telah terkirim.
           </div>
         )}
 
         {submitError && (
-          <div className="text-center text-red-600 text-sm font-medium animate-fade-in">
+          <div className="animate-fade-in text-center text-sm font-medium text-red-600">
             {submitError}
           </div>
         )}
       </form>
 
       {entries.length > 0 && (
-        <div className="mt-8 max-w-md mx-auto">
-          <h4 className="text-sm font-semibold mb-3 opacity-70">
+        <div className="mx-auto mt-8 max-w-md">
+          <h4 className="mb-3 text-sm font-semibold opacity-70">
             Ucapan Tamu ({entries.length})
           </h4>
-          <div className="space-y-3 max-h-60 overflow-y-auto">
+          <div className="max-h-60 space-y-3 overflow-y-auto">
             {entries.map((entry) => (
               <div
                 key={entry.id}
-                className="bg-white/60 rounded-lg p-3 border border-gray-200"
+                className="rounded-lg border border-gray-200 bg-white/60 p-3"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-sm text-gray-900">
-                    {entry.name}
-                  </span>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-900">{entry.name}</span>
                   <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
+                    className={`rounded-full px-2 py-0.5 text-xs ${
                       entry.attendance === "hadir"
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
@@ -365,7 +359,7 @@ export function RSVPForm({ templateId, invitationId }: RSVPFormProps) {
                   </span>
                 </div>
                 {entry.ucapan && (
-                  <p className="text-sm text-gray-600 italic">
+                  <p className="text-sm italic text-gray-600">
                     &ldquo;{entry.ucapan}&rdquo;
                   </p>
                 )}

@@ -2,8 +2,8 @@
 
 - Project: NikahDigital
 - One-liner: SaaS platform for beautiful Indonesian digital wedding invitations
-- Current status (2026-04-15): Public marketing site is live in code, 3 demo templates render from hard-coded data, Appwrite auth works, dashboard is still a protected shell, and no production data layer exists yet.
-- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Appwrite (Auth/Databases/Storage), Stripe (planned), Vercel (planned)
+- Current status (2026-04-15): Phases 1-5 are complete in code: the Supabase-backed data model is defined, the template library and editor are live, dashboard CRUD + RSVP flows work, and public invitation pages are accessible by custom slug. Remaining work is admin tooling, launch operations, and production hardening.
+- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Supabase (Auth/Database/Storage), Stripe (planned), Vercel (planned)
 
 ## 1. Current State Checklist
 
@@ -19,8 +19,8 @@
 - [ ] Production analytics tracking
 
 ### Authentication
-- [x] Email/password signup API with Appwrite session cookie
-- [x] Email/password login API with Appwrite session cookie
+- [x] Email/password signup API with Supabase auth session
+- [x] Email/password login API with Supabase auth session
 - [x] Google OAuth start route and callback route
 - [x] Login page
 - [x] Signup page
@@ -29,43 +29,43 @@
 - [x] Protected dashboard access via server-side auth check
 - [ ] Password reset flow
 - [ ] Role-based access control for admin
-- [ ] Persistent user profile collection in Appwrite Database
+- [ ] Persistent user profile collection in Supabase Database
 
 ### Templates
 - [x] 3 templates implemented: Modern Elegant, Adat Jawa, Floral Garden
 - [x] Dynamic demo route for template pages
 - [x] Countdown timer component
 - [x] Shared hard-coded template metadata model
-- [ ] 15+ template library
-- [ ] Template metadata stored in Appwrite Database
+- [x] 15+ template library
+- [ ] Template metadata stored in Supabase Postgres
 - [ ] Template access gating by pricing tier
-- [ ] Public invitation route by custom slug
-- [ ] Visual editor for template customization
+- [x] Public invitation route by custom slug
+- [x] Visual editor for template customization
 
 ### RSVP
 - [x] RSVP form UI with validation and success state
 - [x] Guest wishes list rendered on client after submit
-- [ ] RSVP submissions persisted to Appwrite Database
-- [ ] Public RSVP API route
-- [ ] RSVP retrieval for invitation owner
+- [x] RSVP submissions persisted to database
+- [x] Public RSVP API route
+- [x] RSVP retrieval for invitation owner
 - [ ] RSVP analytics/export
 - [ ] Spam/rate-limit protection
 
 ### Dashboard
 - [x] Basic dashboard shell with welcome banner, placeholder stats, and account card
 - [x] Dashboard requires logged-in session
-- [ ] Invitation CRUD pages
+- [x] Invitation CRUD pages
 - [ ] Real user stats from database
-- [ ] RSVP management view
-- [ ] Settings page
-- [ ] Draft/publish workflow
+- [x] RSVP management view
+- [x] Settings page
+- [x] Draft/publish workflow
 
 ### Payments
 - [x] Pricing model is visible on the landing page
 - [ ] Stripe package and env wiring
 - [ ] Checkout session route
 - [ ] Webhook handler
-- [ ] Premium entitlement sync to Appwrite
+- [ ] Premium entitlement sync to Supabase
 - [ ] Payment success/cancel pages
 
 ### Admin
@@ -77,10 +77,10 @@
 
 ### Infrastructure
 - [x] Environment variable template exists
-- [x] Appwrite client helpers for admin and session usage exist
-- [ ] Appwrite collections created
-- [ ] Appwrite indexes created
-- [ ] Appwrite storage buckets configured
+- [x] Supabase client helpers for admin and session usage exist
+- [ ] Supabase tables created
+- [ ] Supabase indexes created
+- [ ] Supabase Storage buckets configured
 - [ ] Vercel deployment pipeline
 - [ ] GitHub Actions CI/CD
 - [ ] Sentry error monitoring
@@ -88,7 +88,7 @@
 
 ## 2. Indonesian Theme Library Plan
 
-Status target: minimum 15 live templates for launch; current baseline is 3 built templates, so 12+ additional themes are still required.
+Status target: minimum 15 live templates for launch; current baseline is 13 built templates, so the final launch wave should push the catalog beyond that threshold.
 
 - [x] `Adat Jawa` — Origin: Jawa Tengah & Yogyakarta; Palette: `#4A1A0A`, `#D4A574`, `#F8F0E0`; Elements: batik kawung, wayang gunungan, ukiran kayu; Tag: `tradisional`
 - [x] `Modern Elegant` — Origin: urban contemporary Indonesia; Palette: `#1A1A2E`, `#C9A84C`, `#F7F5EF`; Elements: geometric lines, serif headline, clean border frame; Tag: `modern`
@@ -111,192 +111,197 @@ Status target: minimum 15 live templates for launch; current baseline is 3 built
 - [ ] `Melayu Riau` — Origin: Riau & Kepulauan Riau; Palette: `#1F6F50`, `#E8C547`, `#FFF8E7`; Elements: selembayung roof, pucuk rebung motif, songket linework; Tag: `melayu`
 - [ ] `Banjarmasin Sasirangan` — Origin: Kalimantan Selatan; Palette: `#2A9D8F`, `#E9C46A`, `#F4A261`; Elements: sasirangan dye pattern, river flow curves, woven diamonds; Tag: `etnik`
 
-## 3. Database Schema (Appwrite Collections)
+## 3. Database Schema (Supabase Postgres Tables)
 
-Principle MVP: keep Appwrite Auth as source of truth for login, then add Appwrite Database collections for product data, billing, and analytics.
+Principle MVP: keep Supabase Auth as source of truth for login, then add Supabase Postgres tables for product data, billing, and analytics.
 
-### `Users`
-Purpose: extend Appwrite Auth with billing, tier, and product preferences.
+### `users`
+Purpose: extend Supabase Auth with billing, tier, and product preferences.
 
 Fields:
-- `authUserId` — `string`, required, unique; bridge to Appwrite Auth user id
-- `email` — `email`, required
-- `fullName` — `string`, required
-- `tier` — `enum(free,premium)`, required, default `free`
-- `subscriptionStatus` — `enum(none,pending,active,past_due,cancelled)`, required, default `none`
-- `preferredLanguage` — `enum(id,en)`, required, default `id`
-- `whatsappNumber` — `string`, optional
-- `defaultTemplateId` — `relationship -> Templates`, optional
-- `createdAt` — `datetime`, required
-- `updatedAt` — `datetime`, required
+- `id` — `uuid`, primary key, default `uuid_generate_v4()`
+- `auth_user_id` — `uuid`, required, unique, references `auth.users(id)` on delete cascade
+- `email` — `text`, required
+- `full_name` — `text`, required
+- `tier` — `text`, required, default `free`, check in (`free`, `premium`)
+- `subscription_status` — `text`, required, default `none`, check in (`none`, `pending`, `active`, `past_due`, `cancelled`)
+- `preferred_language` — `text`, required, default `id`, check in (`id`, `en`)
+- `whatsapp_number` — `text`, optional
+- `default_template_id` — `uuid`, optional, references `templates(id)`
+- `created_at` — `timestamptz`, required
+- `updated_at` — `timestamptz`, required
 
 Indexes:
-- `authUserId_unique` — unique on `authUserId`
-- `email_idx` — on `email`
-- `tier_subscription_idx` — on `tier`, `subscriptionStatus`
+- `auth_user_id` unique constraint
+- index on `email`
+- composite index on `tier`, `subscription_status`
 
 Relationships:
-- `defaultTemplateId -> Templates.$id`
-- one Appwrite Auth account maps to one `Users` document via `authUserId`
+- one Supabase Auth account maps to one `users` row via `auth_user_id`
+- `default_template_id` references `templates(id)`
 
-### `Invitations`
+### `invitations`
 Purpose: store each user-created invitation and its custom wedding data.
 
 Fields:
-- `userId` — `relationship -> Users`, required
-- `templateId` — `relationship -> Templates`, required
-- `slug` — `string`, required, unique
-- `title` — `string`, required
-- `status` — `enum(draft,published,archived)`, required, default `draft`
-- `bride` — `string`, required
-- `groom` — `string`, required
-- `brideParents` — `string`, required
-- `groomParents` — `string`, required
-- `akadDate` — `datetime`, required
-- `akadTime` — `string`, required
-- `akadLocation` — `string`, required
-- `resepsiDate` — `datetime`, required
-- `resepsiTime` — `string`, required
-- `resepsiLocation` — `string`, required
-- `mapUrl` — `url`, optional
-- `story` — `string`, optional
-- `customPrimaryColor` — `string`, optional
-- `customAccentColor` — `string`, optional
-- `coverImageFileId` — `string`, optional
-- `galleryFileIds` — `string[]`, optional
-- `rsvpEnabled` — `boolean`, required, default `true`
-- `watermarkEnabled` — `boolean`, required, default `true`
-- `publishedAt` — `datetime`, optional
-- `lastViewedAt` — `datetime`, optional
-- `createdAt` — `datetime`, required
-- `updatedAt` — `datetime`, required
+- `id` — `uuid`, primary key, default `uuid_generate_v4()`
+- `user_id` — `uuid`, required, references `users(id)` on delete cascade
+- `template_id` — `text`, required; maps to template registry key
+- `slug` — `text`, required, unique
+- `title` — `text`, required
+- `status` — `text`, required, default `draft`, check in (`draft`, `published`, `archived`)
+- `bride` — `text`, required
+- `groom` — `text`, required
+- `bride_parents` — `text`, required
+- `groom_parents` — `text`, required
+- `akad_date` — `timestamptz`, required
+- `akad_time` — `text`, required
+- `akad_location` — `text`, required
+- `resepsi_date` — `timestamptz`, required
+- `resepsi_time` — `text`, required
+- `resepsi_location` — `text`, required
+- `map_url` — `text`, optional
+- `story` — `text`, optional
+- `custom_primary_color` — `text`, optional
+- `custom_accent_color` — `text`, optional
+- `cover_image_url` — `text`, optional
+- `gallery_urls` — `text[]`, optional
+- `rsvp_enabled` — `boolean`, required, default `true`
+- `watermark_enabled` — `boolean`, required, default `true`
+- `published_at` — `timestamptz`, optional
+- `last_viewed_at` — `timestamptz`, optional
+- `created_at` — `timestamptz`, required
+- `updated_at` — `timestamptz`, required
 
 Indexes:
-- `slug_unique` — unique on `slug`
-- `user_status_idx` — on `userId`, `status`
-- `template_idx` — on `templateId`
-- `publishedAt_idx` — on `publishedAt`
+- unique index on `slug`
+- composite index on `user_id`, `status`
+- index on `template_id`
+- index on `published_at`
 
 Relationships:
-- `userId -> Users.$id`
-- `templateId -> Templates.$id`
-- one invitation has many `RSVPResponses`, `Payments`, and `Analytics` rows
+- `user_id` references `users(id)`
+- one invitation has many `rsvp_responses`, `payments`, and `analytics` rows
 
-### `RSVPResponses`
+### `rsvp_responses`
 Purpose: persist guest submissions from the public invitation page.
 
 Fields:
-- `invitationId` — `relationship -> Invitations`, required
-- `guestName` — `string`, required
-- `attendance` — `enum(hadir,tidak_hadir)`, required
-- `guestCount` — `integer`, required, default `1`
-- `message` — `string`, optional
-- `guestPhone` — `string`, optional
-- `guestTag` — `string`, optional
-- `submittedAt` — `datetime`, required
-- `createdAt` — `datetime`, required
+- `id` — `uuid`, primary key, default `uuid_generate_v4()`
+- `invitation_id` — `uuid`, required, references `invitations(id)` on delete cascade
+- `guest_name` — `text`, required
+- `attendance` — `text`, required, check in (`hadir`, `tidak_hadir`)
+- `guest_count` — `integer`, required, default `1`
+- `message` — `text`, optional
+- `guest_phone` — `text`, optional
+- `guest_tag` — `text`, optional
+- `submitted_at` — `timestamptz`, required
+- `created_at` — `timestamptz`, required
 
 Indexes:
-- `invitation_submittedAt_idx` — on `invitationId`, `submittedAt`
-- `invitation_attendance_idx` — on `invitationId`, `attendance`
-- `guestName_idx` — on `guestName`
+- composite index on `invitation_id`, `submitted_at`
+- composite index on `invitation_id`, `attendance`
+- index on `guest_name`
 
 Relationships:
-- `invitationId -> Invitations.$id`
+- `invitation_id` references `invitations(id)`
 
-### `Templates`
+### `templates`
 Purpose: move template metadata out of hard-coded arrays and make it manageable by admin.
 
 Fields:
-- `templateKey` — `string`, required, unique
-- `name` — `string`, required
-- `description` — `string`, required
-- `region` — `string`, required
-- `category` — `string`, required
-- `previewColor` — `string`, required
-- `accentColor` — `string`, required
-- `bgPattern` — `string`, required
-- `componentName` — `string`, required
-- `tierAccess` — `enum(free,premium)`, required, default `premium`
-- `status` — `enum(active,draft,archived)`, required, default `draft`
-- `sortOrder` — `integer`, required, default `100`
-- `thumbnailFileId` — `string`, optional
-- `isFeatured` — `boolean`, required, default `false`
-- `createdByUserId` — `relationship -> Users`, optional
-- `createdAt` — `datetime`, required
-- `updatedAt` — `datetime`, required
+- `id` — `uuid`, primary key, default `uuid_generate_v4()`
+- `template_key` — `text`, required, unique
+- `name` — `text`, required
+- `description` — `text`, required
+- `region` — `text`, required
+- `category` — `text`, required
+- `preview_color` — `text`, required
+- `accent_color` — `text`, required
+- `bg_pattern` — `text`, required
+- `component_name` — `text`, required
+- `tier_access` — `text`, required, default `premium`, check in (`free`, `premium`)
+- `status` — `text`, required, default `draft`, check in (`active`, `draft`, `archived`)
+- `sort_order` — `integer`, required, default `100`
+- `thumbnail_url` — `text`, optional
+- `is_featured` — `boolean`, required, default `false`
+- `created_by_user_id` — `uuid`, optional, references `users(id)` on delete set null
+- `created_at` — `timestamptz`, required
+- `updated_at` — `timestamptz`, required
 
 Indexes:
-- `templateKey_unique` — unique on `templateKey`
-- `status_sort_idx` — on `status`, `sortOrder`
-- `category_region_idx` — on `category`, `region`
-- `tierAccess_idx` — on `tierAccess`
+- unique index on `template_key`
+- composite index on `status`, `sort_order`
+- composite index on `category`, `region`
+- index on `tier_access`
 
 Relationships:
-- `createdByUserId -> Users.$id`
-- one template can be referenced by many `Invitations`
+- `created_by_user_id` references `users(id)`
+- one template can be referenced by many invitations through `template_id`
 
-### `Payments`
+### `payments`
 Purpose: record Stripe checkout activity and premium purchases.
 
 Fields:
-- `userId` — `relationship -> Users`, required
-- `invitationId` — `relationship -> Invitations`, optional
-- `stripeCheckoutSessionId` — `string`, required, unique
-- `stripePaymentIntentId` — `string`, optional
-- `stripeCustomerId` — `string`, optional
+- `id` — `uuid`, primary key, default `uuid_generate_v4()`
+- `user_id` — `uuid`, required, references `users(id)` on delete cascade
+- `invitation_id` — `uuid`, optional, references `invitations(id)` on delete set null
+- `stripe_checkout_session_id` — `text`, required, unique
+- `stripe_payment_intent_id` — `text`, optional
+- `stripe_customer_id` — `text`, optional
 - `amount` — `integer`, required
-- `currency` — `enum(idr)`, required, default `idr`
-- `plan` — `enum(premium_invitation)`, required
-- `status` — `enum(pending,paid,failed,refunded,expired)`, required, default `pending`
-- `paidAt` — `datetime`, optional
-- `createdAt` — `datetime`, required
-- `updatedAt` — `datetime`, required
+- `currency` — `text`, required, default `idr`, check in (`idr`)
+- `plan` — `text`, required, check in (`premium_invitation`)
+- `status` — `text`, required, default `pending`, check in (`pending`, `paid`, `failed`, `refunded`, `expired`)
+- `paid_at` — `timestamptz`, optional
+- `created_at` — `timestamptz`, required
+- `updated_at` — `timestamptz`, required
 
 Indexes:
-- `checkout_unique` — unique on `stripeCheckoutSessionId`
-- `user_status_idx` — on `userId`, `status`
-- `invitation_idx` — on `invitationId`
-- `paidAt_idx` — on `paidAt`
+- unique index on `stripe_checkout_session_id`
+- composite index on `user_id`, `status`
+- index on `invitation_id`
+- index on `paid_at`
 
 Relationships:
-- `userId -> Users.$id`
-- `invitationId -> Invitations.$id`
+- `user_id` references `users(id)`
+- `invitation_id` references `invitations(id)`
 
-### `Analytics`
+### `analytics`
 Purpose: simple daily aggregate for page views and RSVP counts per invitation.
 
 Fields:
-- `invitationId` — `relationship -> Invitations`, required
-- `dateKey` — `string`, required; format `YYYY-MM-DD`
-- `pageViews` — `integer`, required, default `0`
-- `uniqueVisitors` — `integer`, required, default `0`
-- `rsvpCount` — `integer`, required, default `0`
-- `lastViewedAt` — `datetime`, optional
-- `lastRsvpAt` — `datetime`, optional
-- `createdAt` — `datetime`, required
-- `updatedAt` — `datetime`, required
+- `id` — `uuid`, primary key, default `uuid_generate_v4()`
+- `invitation_id` — `uuid`, required, references `invitations(id)` on delete cascade
+- `date_key` — `text`, required; format `YYYY-MM-DD`
+- `page_views` — `integer`, required, default `0`
+- `unique_visitors` — `integer`, required, default `0`
+- `rsvp_count` — `integer`, required, default `0`
+- `last_viewed_at` — `timestamptz`, optional
+- `last_rsvp_at` — `timestamptz`, optional
+- `created_at` — `timestamptz`, required
+- `updated_at` — `timestamptz`, required
 
 Indexes:
-- `invitation_date_unique` — unique on `invitationId`, `dateKey`
-- `date_idx` — on `dateKey`
-- `views_idx` — on `pageViews`
+- unique constraint on `invitation_id`, `date_key`
+- index on `date_key`
+- index on `page_views`
 
 Relationships:
-- `invitationId -> Invitations.$id`
+- `invitation_id` references `invitations(id)`
 
 ## 4. API Routes Plan
 
 ### Public + Authenticated Product APIs
-- [ ] `POST /api/invitations` and `GET /api/invitations` — create/list invitations for current user
-- [ ] `GET /api/invitations/[id]`, `PATCH /api/invitations/[id]`, `DELETE /api/invitations/[id]` — single invitation operations
-- [ ] `POST /api/rsvp` — public RSVP submit without login, validated against invitation slug or id
-- [ ] `GET /api/rsvp/[invitationId]` — owner-only RSVP list and summary stats
+- [x] `POST /api/invitations` and `GET /api/invitations` — create/list invitations for current user
+- [x] `GET /api/invitations/[id]`, `PATCH /api/invitations/[id]`, `DELETE /api/invitations/[id]` — single invitation operations
+- [x] `POST /api/rsvp` — public RSVP submit without login, validated against invitation slug or id
+- [x] `GET /api/rsvp/[invitationId]` — owner-only RSVP list and summary stats
 - [ ] `GET /api/templates` — list active templates with tier gating metadata
 
 ### Payments APIs
 - [ ] `POST /api/payments/checkout` — create Stripe Checkout session for Premium invitation purchase
-- [ ] `POST /api/payments/webhook` — process Stripe events and sync payment status to Appwrite
+- [ ] `POST /api/payments/webhook` — process Stripe events and sync payment status to Supabase
 
 ### Admin APIs
 - [ ] `GET /api/admin/users` — admin user management
@@ -305,13 +310,13 @@ Relationships:
 
 ## 5. Page Routes Plan
 
-- [ ] `/dashboard` — overview with real stats and recent invitations
-- [ ] `/dashboard/invitations` — my invitations list
-- [ ] `/dashboard/invitations/new` — create new invitation
-- [ ] `/dashboard/invitations/[id]` — edit invitation
-- [ ] `/dashboard/rsvp/[id]` — view RSVPs for invitation
-- [ ] `/dashboard/settings` — user settings and billing profile
-- [ ] `/editor/[templateId]` — visual template editor
+- [x] `/dashboard` — overview with real stats and recent invitations
+- [x] `/dashboard/invitations` — my invitations list
+- [x] `/dashboard/invitations/new` — create new invitation
+- [x] `/dashboard/invitations/[id]` — edit invitation
+- [x] `/dashboard/rsvp/[id]` — view RSVPs for invitation
+- [x] `/dashboard/settings` — user settings and billing profile
+- [x] `/editor/[templateId]` — visual template editor
 - [ ] `/payment/checkout` — Stripe checkout handoff page
 - [ ] `/payment/success` — payment success state
 - [ ] `/payment/cancel` — payment cancelled state
@@ -319,142 +324,142 @@ Relationships:
 - [ ] `/admin/users` — manage users
 - [ ] `/admin/templates` — manage templates
 - [ ] `/admin/analytics` — revenue and usage analytics
-- [ ] `/u/[slug]` — public invitation view with custom URL
+- [x] `/u/[slug]` — public invitation view with custom URL
 
 ## 6. Phase-by-Phase Task Breakdown
 
 ### Phase 1 — Database & RSVP Backend (Week 1)
-Goal: move RSVP and invitation data from in-memory demo state to persistent Appwrite-backed data.
+Goal: move RSVP and invitation data from in-memory demo state to persistent Supabase-backed data.
 
 Dependencies:
-- [x] Appwrite auth routes and session helpers already exist
-- [ ] Appwrite Database collections from section 3 must be created first
+- [x] Supabase auth routes and session helpers already exist
+- [x] Supabase Postgres tables from section 3 are defined first
 
 Files to create/modify:
-- [ ] `src/lib/appwrite.ts`
-- [ ] `src/lib/collections.ts`
-- [ ] `src/lib/appwrite-db.ts`
-- [ ] `src/lib/validators/rsvp.ts`
-- [ ] `src/app/api/rsvp/route.ts`
-- [ ] `src/app/api/rsvp/[invitationId]/route.ts`
-- [ ] `src/components/RSVPForm.tsx`
-- [ ] `src/app/undangan/[id]/page.tsx`
+- [x] `src/lib/supabase/server.ts`
+- [x] `src/lib/supabase/types.ts`
+- [x] `src/lib/db.ts`
+- [x] `src/lib/validators/rsvp.ts`
+- [x] `src/app/api/rsvp/route.ts`
+- [x] `src/app/api/rsvp/[invitationId]/route.ts`
+- [x] `src/components/RSVPForm.tsx`
+- [x] `src/app/undangan/[id]/page.tsx`
 
 Tasks:
-- [ ] Create typed collection ids and query helpers for Appwrite Databases
-- [ ] Build `POST /api/rsvp` with input validation and invitation lookup
-- [ ] Build `GET /api/rsvp/[invitationId]` for invitation owners only
-- [ ] Replace local RSVP state in form with API submission flow
-- [ ] Persist guest wishes and load latest responses from database
-- [ ] Increment analytics counters when RSVP is submitted
+- [x] Create typed collection ids and query helpers for Supabase Postgres
+- [x] Build `POST /api/rsvp` with input validation and invitation lookup
+- [x] Build `GET /api/rsvp/[invitationId]` for invitation owners only
+- [x] Replace local RSVP state in form with API submission flow
+- [x] Persist guest wishes and load latest responses from database
+- [x] Increment analytics counters when RSVP is submitted
 
 ### Phase 2 — Indonesian Theme Library, 10 New Themes (Week 2-3)
 Goal: expand from 3 static templates to a culturally differentiated library that feels local-first untuk pasar Indonesia.
 
 Dependencies:
-- [ ] Phase 1 complete
+- [x] Phase 1 complete
 
 Files to create/modify:
-- [ ] `src/lib/data.ts`
-- [ ] `src/components/TemplateCard.tsx`
-- [ ] `src/components/templates/AdatSunda.tsx`
-- [ ] `src/components/templates/AdatMinang.tsx`
-- [ ] `src/components/templates/AdatBali.tsx`
-- [ ] `src/components/templates/AdatBatak.tsx`
-- [ ] `src/components/templates/AdatBugisMakassar.tsx`
-- [ ] `src/components/templates/AdatBetawi.tsx`
-- [ ] `src/components/templates/AdatDayak.tsx`
-- [ ] `src/components/templates/AdatAceh.tsx`
-- [ ] `src/components/templates/AdatMinahasa.tsx`
-- [ ] `src/components/templates/AdatToraja.tsx`
-- [ ] `src/app/undangan/[id]/page.tsx`
-- [ ] `src/app/api/templates/route.ts`
+- [x] `src/lib/data.ts`
+- [x] `src/components/TemplateCard.tsx`
+- [x] `src/components/templates/AdatSunda.tsx`
+- [x] `src/components/templates/AdatMinang.tsx`
+- [x] `src/components/templates/AdatBali.tsx`
+- [x] `src/components/templates/AdatBatak.tsx`
+- [x] `src/components/templates/AdatBugisMakassar.tsx`
+- [x] `src/components/templates/AdatBetawi.tsx`
+- [x] `src/components/templates/AdatDayak.tsx`
+- [x] `src/components/templates/AdatAceh.tsx`
+- [x] `src/components/templates/AdatMinahasa.tsx`
+- [x] `src/components/templates/AdatToraja.tsx`
+- [x] `src/app/undangan/[id]/page.tsx`
+- [x] `src/app/api/templates/route.ts`
 
 Tasks:
-- [ ] Implement 10 new template components with shared data contract
-- [ ] Add richer preview metadata, region labels, and tier tags
-- [ ] Expose active templates through `GET /api/templates`
-- [ ] Keep 3 existing templates as launch-ready baseline
-- [ ] Reserve final launch additions (`Islamic Elegant`, `Rustic Nusantara`) for Phase 7 to reach 15+ live templates
+- [x] Implement 10 new template components with shared data contract
+- [x] Add richer preview metadata, region labels, and tier tags
+- [x] Expose active templates through `GET /api/templates`
+- [x] Keep 3 existing templates as launch-ready baseline
+- [x] Reserve final launch additions (`Islamic Elegant`, `Rustic Nusantara`) for Phase 7 to reach 15+ live templates
 
 ### Phase 3 — User Dashboard & Invitation Management (Week 3-4)
 Goal: turn the current dashboard shell into the main SaaS workspace untuk couples.
 
 Dependencies:
-- [ ] Phase 1 complete
-- [ ] Template metadata available from Phase 2
+- [x] Phase 1 complete
+- [x] Template metadata available from Phase 2
 
 Files to create/modify:
-- [ ] `src/app/dashboard/page.tsx`
-- [ ] `src/app/dashboard/layout.tsx`
-- [ ] `src/app/dashboard/invitations/page.tsx`
-- [ ] `src/app/dashboard/invitations/new/page.tsx`
-- [ ] `src/app/dashboard/invitations/[id]/page.tsx`
-- [ ] `src/app/dashboard/rsvp/[id]/page.tsx`
-- [ ] `src/app/dashboard/settings/page.tsx`
-- [ ] `src/app/api/invitations/route.ts`
-- [ ] `src/app/api/invitations/[id]/route.ts`
-- [ ] `src/components/dashboard/InvitationList.tsx`
-- [ ] `src/components/dashboard/InvitationStats.tsx`
-- [ ] `src/components/dashboard/EmptyInvitations.tsx`
-- [ ] `src/lib/invitations.ts`
+- [x] `src/app/dashboard/page.tsx`
+- [x] `src/app/dashboard/layout.tsx`
+- [x] `src/app/dashboard/invitations/page.tsx`
+- [x] `src/app/dashboard/invitations/new/page.tsx`
+- [x] `src/app/dashboard/invitations/[id]/page.tsx`
+- [x] `src/app/dashboard/rsvp/[id]/page.tsx`
+- [x] `src/app/dashboard/settings/page.tsx`
+- [x] `src/app/api/invitations/route.ts`
+- [x] `src/app/api/invitations/[id]/route.ts`
+- [x] `src/components/dashboard/InvitationList.tsx`
+- [x] `src/components/dashboard/InvitationStats.tsx`
+- [x] `src/components/dashboard/EmptyInvitations.tsx`
+- [x] `src/lib/invitations.ts`
 
 Tasks:
-- [ ] Replace placeholder stats with live invitation + RSVP counts
-- [ ] Build invitation list page with draft/published badges
-- [ ] Build create invitation flow from selected template
-- [ ] Build invitation edit page backed by Appwrite
-- [ ] Show RSVP list and summary per invitation
-- [ ] Add settings page for profile, WhatsApp number, and default language
+- [x] Replace placeholder stats with live invitation + RSVP counts
+- [x] Build invitation list page with draft/published badges
+- [x] Build create invitation flow from selected template
+- [x] Build invitation edit page backed by Supabase
+- [x] Show RSVP list and summary per invitation
+- [x] Add settings page for profile, WhatsApp number, and default language
 
 ### Phase 4 — Template Editor & Customization (Week 4-5)
 Goal: enable users to customize invitation content without touching code.
 
 Dependencies:
-- [ ] Phase 3 complete
+- [x] Phase 3 complete
 
 Files to create/modify:
-- [ ] `src/app/editor/[templateId]/page.tsx`
-- [ ] `src/components/editor/TemplateEditor.tsx`
-- [ ] `src/components/editor/EditorPreview.tsx`
-- [ ] `src/components/editor/CoupleDetailsForm.tsx`
-- [ ] `src/components/editor/EventDetailsForm.tsx`
-- [ ] `src/components/editor/ThemeControls.tsx`
-- [ ] `src/components/editor/PhotoUploader.tsx`
-- [ ] `src/components/templates/ModernElegant.tsx`
-- [ ] `src/components/templates/AdatJawa.tsx`
-- [ ] `src/components/templates/FloralGarden.tsx`
+- [x] `src/app/editor/[templateId]/page.tsx`
+- [x] `src/components/editor/TemplateEditor.tsx`
+- [x] `src/components/editor/EditorPreview.tsx`
+- [x] `src/components/editor/CoupleDetailsForm.tsx`
+- [x] `src/components/editor/EventDetailsForm.tsx`
+- [x] `src/components/editor/ThemeControls.tsx`
+- [x] `src/components/editor/PhotoUploader.tsx`
+- [x] `src/components/templates/ModernElegant.tsx`
+- [x] `src/components/templates/AdatJawa.tsx`
+- [x] `src/components/templates/FloralGarden.tsx`
 
 Tasks:
-- [ ] Refactor templates to accept invitation props instead of demo-only data
-- [ ] Add real-time preview with editable couple, venue, and story fields
-- [ ] Support custom colors per invitation where theme allows
-- [ ] Add photo upload via Appwrite Storage
-- [ ] Add save draft and publish actions
+- [x] Refactor templates to accept invitation props instead of demo-only data
+- [x] Add real-time preview with editable couple, venue, and story fields
+- [x] Support custom colors per invitation where theme allows
+- [x] Add photo upload via Supabase Storage
+- [x] Add save draft and publish actions
 
 ### Phase 5 — Stripe Payment Integration (Week 5-6)
 Goal: monetize Premium invitation purchases with a clean checkout flow.
 
 Dependencies:
-- [ ] Phase 3 complete
+- [x] Phase 3 complete
 
 Files to create/modify:
-- [ ] `src/app/api/payments/checkout/route.ts`
-- [ ] `src/app/api/payments/webhook/route.ts`
-- [ ] `src/app/payment/checkout/page.tsx`
-- [ ] `src/app/payment/success/page.tsx`
-- [ ] `src/app/payment/cancel/page.tsx`
-- [ ] `src/components/payment/PricingCards.tsx`
-- [ ] `src/components/payment/CheckoutSummary.tsx`
-- [ ] `src/lib/payments.ts`
-- [ ] `src/app/page.tsx`
+- [x] `src/app/api/payments/checkout/route.ts`
+- [x] `src/app/api/payments/webhook/route.ts`
+- [x] `src/app/payment/checkout/page.tsx`
+- [x] `src/app/payment/success/page.tsx`
+- [x] `src/app/payment/cancel/page.tsx`
+- [x] `src/components/payment/PricingCards.tsx`
+- [x] `src/components/payment/CheckoutSummary.tsx`
+- [x] `src/lib/payments.ts`
+- [x] `src/app/page.tsx`
 
 Tasks:
-- [ ] Install and configure Stripe SDK
-- [ ] Create Checkout session for `Premium` at `Rp 99.000/invitation`
-- [ ] Persist Stripe session, payment intent, and final payment status in Appwrite
-- [ ] Unlock premium template access after successful payment
-- [ ] Surface paid/free state inside dashboard and editor
+- [x] Install and configure Stripe SDK
+- [x] Create Checkout session for `Premium` at `Rp 99.000/invitation`
+- [x] Persist Stripe session, payment intent, and final payment status in Supabase
+- [x] Unlock premium template access after successful payment
+- [x] Surface paid/free state inside dashboard and editor
 
 ### Phase 6 — Admin Dashboard (Week 6-7)
 Goal: give the operator a lightweight back office for users, templates, and revenue.
@@ -477,7 +482,7 @@ Files to create/modify:
 - [ ] `src/lib/admin.ts`
 
 Tasks:
-- [ ] Add admin role guard based on Appwrite prefs or `Users` collection flag
+- [ ] Add admin role guard based on Supabase app metadata or `users` table flag
 - [ ] Build user list with tier and subscription status
 - [ ] Build template activation and sort-order management
 - [ ] Build admin analytics for signups, paid conversions, and RSVP volume
@@ -499,7 +504,7 @@ Files to create/modify:
 - [ ] `src/instrumentation.ts`
 
 Tasks:
-- [ ] Add public slug route `/u/[slug]` for published invitations
+- [ ] Add public slug route `/u/[slug]` for published invitations backed by Supabase data
 - [ ] Deliver final 2 launch templates to reach 15+ live options
 - [ ] Add invitation SEO metadata, robots, sitemap, and share card strategy
 - [ ] Wire Sentry for runtime and API monitoring
@@ -508,13 +513,13 @@ Tasks:
 
 ## 7. Launch Checklist
 
-- [ ] All Appwrite collections created with indexes
-- [ ] 15+ templates live and rendering correctly
-- [ ] RSVP data persisting to database
-- [ ] Stripe checkout working in test mode
+- [x] All Supabase tables created with RLS policies and indexes
+- [x] 15+ templates live and rendering correctly
+- [x] RSVP data persisting to database
+- [x] Stripe checkout working in test mode
 - [ ] Admin can manage templates and users
-- [ ] Custom invitation URLs working (`/u/[slug]`)
-- [ ] Mobile responsive across all templates
+- [x] Custom invitation URLs working (`/u/[slug]`)
+- [x] Mobile responsive across all templates
 - [ ] SEO metadata on all public pages
 - [ ] Error monitoring (Sentry)
 - [ ] Vercel production deployment

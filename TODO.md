@@ -2,8 +2,8 @@
 
 - Project: NikahDigital
 - One-liner: SaaS platform for beautiful Indonesian digital wedding invitations
-- Current status (2026-04-15): All 7 phases complete. The platform is production-ready with Supabase database, 13 Indonesian wedding templates, user dashboard with invitation CRUD, visual editor, public invitation pages, admin dashboard with user/template/analytics management, SEO infrastructure, Sentry monitoring, and GitHub Actions CI/CD. Remaining: custom domain DNS configuration.
-- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Supabase (Auth/Database/Storage), Stripe (planned), Vercel (planned)
+- Current status (2026-04-15): Core product, admin dashboard, SEO infrastructure, Sentry monitoring, and GitHub Actions CI/CD are implemented. The current catalog has 13 registered templates (3 original + 10 cultural themes), public invitation pages via `/u/[slug]`, and live dashboard stats. Remaining gaps in the repo: Stripe payment flow, custom domain DNS configuration, and 7 planned future cultural themes.
+- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Supabase (Auth/Database/Storage), Vercel, Sentry, GitHub Actions CI/CD, Stripe (planned)
 
 ## 1. Current State Checklist
 
@@ -36,7 +36,7 @@
 - [x] Dynamic demo route for template pages
 - [x] Countdown timer component
 - [x] Shared hard-coded template metadata model
-- [x] 15+ template library
+- [x] 13-template library (3 original + 10 cultural themes)
 - [x] Template metadata stored in Supabase Postgres
 - [ ] Template access gating by pricing tier
 - [x] Public invitation route by custom slug
@@ -55,7 +55,7 @@
 - [x] Basic dashboard shell with welcome banner, placeholder stats, and account card
 - [x] Dashboard requires logged-in session
 - [x] Invitation CRUD pages
-- [ ] Real user stats from database
+- [x] Real user stats from database
 - [x] RSVP management view
 - [x] Settings page
 - [x] Draft/publish workflow
@@ -88,24 +88,24 @@
 
 ## 2. Indonesian Theme Library Plan
 
-Status target: minimum 15 live templates for launch; current baseline is 13 built templates, so the final launch wave should push the catalog beyond that threshold.
+Status target: minimum 15 live templates for launch. Current state: 13 templates implemented and registered (3 original + 10 cultural themes). 7 additional themes planned for future expansion.
 
 - [x] `Adat Jawa` — Origin: Jawa Tengah & Yogyakarta; Palette: `#4A1A0A`, `#D4A574`, `#F8F0E0`; Elements: batik kawung, wayang gunungan, ukiran kayu; Tag: `tradisional`
 - [x] `Modern Elegant` — Origin: urban contemporary Indonesia; Palette: `#1A1A2E`, `#C9A84C`, `#F7F5EF`; Elements: geometric lines, serif headline, clean border frame; Tag: `modern`
 - [x] `Floral Garden` — Origin: romantic outdoor style; Palette: `#2D4A3E`, `#E8A0BF`, `#FDF6F0`; Elements: floral spray, watercolor leaves, soft paper texture; Tag: `romantis`
-- [ ] `Adat Sunda` — Origin: Jawa Barat; Palette: `#7CB7D9`, `#DCEEF8`, `#F4C95D`; Elements: mega mendung, angklung ornament, awi bamboo border; Tag: `tradisional`
-- [ ] `Adat Minang` — Origin: Sumatera Barat; Palette: `#9B1D20`, `#D4AF37`, `#2C1B12`; Elements: rumah gadang silhouette, ukiran Minang, gonjong frame; Tag: `tradisional`
-- [ ] `Adat Bali` — Origin: Bali; Palette: `#0F6B5B`, `#D4AF37`, `#F5E6C8`; Elements: candi bentar, tropical leaves, gold temple relief; Tag: `tradisional`
-- [ ] `Adat Batak` — Origin: Sumatera Utara; Palette: `#8B1E1E`, `#111111`, `#F5F5F5`; Elements: ulos weave, gorga ornament, bold geometric trim; Tag: `tradisional`
-- [ ] `Adat Bugis-Makassar` — Origin: Sulawesi Selatan; Palette: `#6E1E2A`, `#C9A227`, `#F6E7D7`; Elements: lontara script accent, royal arch, kapal pinisi detail; Tag: `tradisional`
-- [ ] `Adat Betawi` — Origin: DKI Jakarta; Palette: `#F28C28`, `#2E8B57`, `#FFF1D6`; Elements: ondel-ondel silhouette, gigi balang border, lenong color blocking; Tag: `tradisional`
-- [ ] `Adat Dayak` — Origin: Kalimantan; Palette: `#5A3E2B`, `#C46B2D`, `#E7D7B6`; Elements: shield motif, hornbill pattern, tribal geometry; Tag: `etnik`
-- [ ] `Adat Aceh` — Origin: Aceh; Palette: `#0B6E4F`, `#D4AF37`, `#FAF3E0`; Elements: pinto Aceh gate, arabesque motif, kaligrafi detail; Tag: `islami`
+- [x] `Adat Sunda` — Origin: Jawa Barat; Palette: `#7CB7D9`, `#DCEEF8`, `#F4C95D`; Elements: mega mendung, angklung ornament, awi bamboo border; Tag: `tradisional`
+- [x] `Adat Minang` — Origin: Sumatera Barat; Palette: `#9B1D20`, `#D4AF37`, `#2C1B12`; Elements: rumah gadang silhouette, ukiran Minang, gonjong frame; Tag: `tradisional`
+- [x] `Adat Bali` — Origin: Bali; Palette: `#0F6B5B`, `#D4AF37`, `#F5E6C8`; Elements: candi bentar, tropical leaves, gold temple relief; Tag: `tradisional`
+- [x] `Adat Batak` — Origin: Sumatera Utara; Palette: `#8B1E1E`, `#111111`, `#F5F5F5`; Elements: ulos weave, gorga ornament, bold geometric trim; Tag: `tradisional`
+- [x] `Adat Bugis-Makassar` — Origin: Sulawesi Selatan; Palette: `#6E1E2A`, `#C9A227`, `#F6E7D7`; Elements: lontara script accent, royal arch, kapal pinisi detail; Tag: `tradisional`
+- [x] `Adat Betawi` — Origin: DKI Jakarta; Palette: `#F28C28`, `#2E8B57`, `#FFF1D6`; Elements: ondel-ondel silhouette, gigi balang border, lenong color blocking; Tag: `tradisional`
+- [x] `Adat Dayak` — Origin: Kalimantan; Palette: `#5A3E2B`, `#C46B2D`, `#E7D7B6`; Elements: shield motif, hornbill pattern, tribal geometry; Tag: `etnik`
+- [x] `Adat Aceh` — Origin: Aceh; Palette: `#0B6E4F`, `#D4AF37`, `#FAF3E0`; Elements: pinto Aceh gate, arabesque motif, kaligrafi detail; Tag: `islami`
 - [ ] `Adat Manado/Minahasa` — Origin: Sulawesi Utara; Palette: `#1E8C8C`, `#FF7F6A`, `#FFF4E8`; Elements: wale house silhouette, sea breeze gradient, coconut leaf pattern; Tag: `pesisir`
 - [ ] `Adat Toraja` — Origin: Sulawesi Selatan; Palette: `#7A1F1F`, `#111111`, `#D8B36A`; Elements: tongkonan roofline, carved panel motif, ceremonial stripe; Tag: `etnik`
 - [ ] `Adat Papua` — Origin: Papua; Palette: `#A65E2E`, `#6D4C41`, `#E9C46A`; Elements: tifa drum motif, tribal linework, bark texture; Tag: `etnik`
-- [ ] `Islamic Elegant` — Origin: pan-Islamic Indonesian wedding style; Palette: `#0F766E`, `#D4AF37`, `#F8F5EE`; Elements: arabic calligraphy, mashrabiya geometry, crescent accents; Tag: `islami`
-- [ ] `Rustic Nusantara` — Origin: destination wedding Indonesia; Palette: `#8C6A43`, `#C9A77D`, `#F7F0E6`; Elements: wood grain, batik accent strip, dried foliage; Tag: `rustic`
+- [x] `Islamic Elegant` — Origin: pan-Islamic Indonesian wedding style; Palette: `#0F766E`, `#D4AF37`, `#F8F5EE`; Elements: arabic calligraphy, mashrabiya geometry, crescent accents; Tag: `islami`
+- [x] `Rustic Nusantara` — Origin: destination wedding Indonesia; Palette: `#8C6A43`, `#C9A77D`, `#F7F0E6`; Elements: wood grain, batik accent strip, dried foliage; Tag: `rustic`
 - [ ] `Palembang Songket` — Origin: Sumatera Selatan; Palette: `#7B1023`, `#E0B84F`, `#FCEFD7`; Elements: songket weave, limas house accent, floral gold filigree; Tag: `songket`
 - [ ] `Sasak Lombok` — Origin: Nusa Tenggara Barat; Palette: `#355070`, `#E76F51`, `#F4E1C1`; Elements: tenun Sasak stripe, lumbung silhouette, woven border; Tag: `tenun`
 - [ ] `Melayu Riau` — Origin: Riau & Kepulauan Riau; Palette: `#1F6F50`, `#E8C547`, `#FFF8E7`; Elements: selembayung roof, pucuk rebung motif, songket linework; Tag: `melayu`
@@ -122,6 +122,7 @@ Fields:
 - `id` — `uuid`, primary key, default `uuid_generate_v4()`
 - `auth_user_id` — `uuid`, required, unique, references `auth.users(id)` on delete cascade
 - `email` — `text`, required
+- `role` — `text`, required, default `user`, check in (`user`, `admin`)
 - `full_name` — `text`, required
 - `tier` — `text`, required, default `free`, check in (`free`, `premium`)
 - `subscription_status` — `text`, required, default `none`, check in (`none`, `pending`, `active`, `past_due`, `cancelled`)
@@ -134,6 +135,7 @@ Fields:
 Indexes:
 - `auth_user_id` unique constraint
 - index on `email`
+- index on `role`
 - composite index on `tier`, `subscription_status`
 
 Relationships:
@@ -297,7 +299,7 @@ Relationships:
 - [x] `GET /api/invitations/[id]`, `PATCH /api/invitations/[id]`, `DELETE /api/invitations/[id]` — single invitation operations
 - [x] `POST /api/rsvp` — public RSVP submit without login, validated against invitation slug or id
 - [x] `GET /api/rsvp/[invitationId]` — owner-only RSVP list and summary stats
-- [ ] `GET /api/templates` — list active templates with tier gating metadata
+- [x] `GET /api/templates` — list active templates with tier gating metadata
 
 ### Payments APIs
 - [ ] `POST /api/payments/checkout` — create Stripe Checkout session for Premium invitation purchase
@@ -370,8 +372,8 @@ Files to create/modify:
 - [x] `src/components/templates/AdatBetawi.tsx`
 - [x] `src/components/templates/AdatDayak.tsx`
 - [x] `src/components/templates/AdatAceh.tsx`
-- [x] `src/components/templates/AdatMinahasa.tsx`
-- [x] `src/components/templates/AdatToraja.tsx`
+- [ ] `src/components/templates/AdatMinahasa.tsx`
+- [ ] `src/components/templates/AdatToraja.tsx`
 - [x] `src/app/undangan/[id]/page.tsx`
 - [x] `src/app/api/templates/route.ts`
 
@@ -380,7 +382,7 @@ Tasks:
 - [x] Add richer preview metadata, region labels, and tier tags
 - [x] Expose active templates through `GET /api/templates`
 - [x] Keep 3 existing templates as launch-ready baseline
-- [x] Reserve final launch additions (`Islamic Elegant`, `Rustic Nusantara`) for Phase 7 to reach 15+ live templates
+- [x] Reserve final launch additions (`Islamic Elegant`, `Rustic Nusantara`) for Phase 7 to bring the catalog to 13 live templates
 
 ### Phase 3 — User Dashboard & Invitation Management (Week 3-4)
 Goal: turn the current dashboard shell into the main SaaS workspace untuk couples.
@@ -444,28 +446,28 @@ Dependencies:
 - [x] Phase 3 complete
 
 Files to create/modify:
-- [x] `src/app/api/payments/checkout/route.ts`
-- [x] `src/app/api/payments/webhook/route.ts`
-- [x] `src/app/payment/checkout/page.tsx`
-- [x] `src/app/payment/success/page.tsx`
-- [x] `src/app/payment/cancel/page.tsx`
-- [x] `src/components/payment/PricingCards.tsx`
-- [x] `src/components/payment/CheckoutSummary.tsx`
-- [x] `src/lib/payments.ts`
+- [ ] `src/app/api/payments/checkout/route.ts`
+- [ ] `src/app/api/payments/webhook/route.ts`
+- [ ] `src/app/payment/checkout/page.tsx`
+- [ ] `src/app/payment/success/page.tsx`
+- [ ] `src/app/payment/cancel/page.tsx`
+- [ ] `src/components/payment/PricingCards.tsx`
+- [ ] `src/components/payment/CheckoutSummary.tsx`
+- [ ] `src/lib/payments.ts`
 - [x] `src/app/page.tsx`
 
 Tasks:
-- [x] Install and configure Stripe SDK
-- [x] Create Checkout session for `Premium` at `Rp 99.000/invitation`
-- [x] Persist Stripe session, payment intent, and final payment status in Supabase
-- [x] Unlock premium template access after successful payment
-- [x] Surface paid/free state inside dashboard and editor
+- [ ] Install and configure Stripe SDK
+- [ ] Create Checkout session for `Premium` at `Rp 99.000/invitation`
+- [ ] Persist Stripe session, payment intent, and final payment status in Supabase
+- [ ] Unlock premium template access after successful payment
+- [ ] Surface paid/free state inside dashboard and editor
 
 ### Phase 6 — Admin Dashboard (Week 6-7)
 Goal: give the operator a lightweight back office for users, templates, and revenue.
 
 Dependencies:
-- [x] Phases 2, 3, and 5 complete
+- [x] Phases 2 and 3 complete
 
 Files to create/modify:
 - [x] `src/app/admin/page.tsx`
@@ -490,24 +492,24 @@ Tasks:
 - [x] Revenue analytics with charts
 
 ### Phase 7 — Production Deployment & Polish (Week 7-8)
-Goal: ship a production-ready MVP on Vercel with launch-quality UX, monitoring, and the last template gap closed.
+Goal: ship a production-ready MVP on Vercel with launch-quality UX, public invitation routing, SEO, and monitoring.
 
 Dependencies:
-- [x] Phases 1 through 6 complete
+- [x] Phases 1 through 4 and 6 complete
 
 Files to create/modify:
-- [ ] `src/app/u/[slug]/page.tsx`
-- [ ] `src/app/sitemap.ts`
-- [ ] `src/app/robots.ts`
-- [ ] `src/components/templates/IslamicElegant.tsx`
-- [ ] `src/components/templates/RusticNusantara.tsx`
-- [ ] `src/components/seo/InvitationJsonLd.tsx`
-- [ ] `src/lib/monitoring.ts`
-- [ ] `src/instrumentation.ts`
+- [x] `src/app/u/[slug]/page.tsx`
+- [x] `src/app/sitemap.ts`
+- [x] `src/app/robots.ts`
+- [x] `src/components/templates/IslamicElegant.tsx`
+- [x] `src/components/templates/RusticNusantara.tsx`
+- [x] `src/components/seo/InvitationJsonLd.tsx`
+- [x] `src/lib/monitoring.ts`
+- [x] `src/instrumentation.ts`
 
 Tasks:
 - [x] Add public slug route `/u/[slug]` for published invitations backed by Supabase data
-- [x] Deliver final 2 launch templates to reach 15+ live options
+- [x] Deliver final 2 launch templates to bring the catalog to 13 live options
 - [x] Add invitation SEO metadata, robots, sitemap, and share card strategy
 - [x] Wire Sentry for runtime and API monitoring
 - [x] Prepare Vercel production config, domain setup, and smoke checks
@@ -516,9 +518,9 @@ Tasks:
 ## 7. Launch Checklist
 
 - [x] All Supabase tables created with RLS policies and indexes
-- [x] 15+ templates live and rendering correctly
+- [x] 13 templates live and rendering correctly
 - [x] RSVP data persisting to database
-- [x] Stripe checkout working in test mode
+- [ ] Stripe checkout working in test mode
 - [x] Admin can manage templates and users
 - [x] Custom invitation URLs working (`/u/[slug]`)
 - [x] Mobile responsive across all templates

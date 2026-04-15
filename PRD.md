@@ -15,9 +15,9 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 - [x] Persistent Supabase Postgres tables
 - [x] Invitation CRUD and template editor
 - [x] Persistent RSVP backend
-- [x] Stripe checkout
-- [ ] Admin dashboard
-- [ ] Production deployment
+- [ ] Stripe checkout
+- [x] Admin dashboard
+- [x] Production deployment
 
 ## Core Differentiators
 - Indonesian cultural theme library: Jawa, Sunda, Minang, Bali, Batak, Bugis-Makassar, Betawi, Dayak, Aceh, Toraja, Papua, dan lainnya
@@ -34,7 +34,7 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 ### Phase 2 — Theme Library
 - [x] Add 10 new Indonesian themes in core build phase
 - [x] Store template metadata in Supabase Postgres
-- [x] Reach 15+ total templates by launch
+- [x] Reach 13 registered templates in the current library
 
 ### Phase 3 — Dashboard
 - [x] Invitation CRUD
@@ -47,13 +47,14 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 - [x] Photo upload and draft/publish flow
 
 ### Phase 5 — Monetization
-- [x] Stripe checkout
-- [x] Premium template gating
-- [x] Payment-to-entitlement sync in Supabase
+- [ ] Stripe checkout
+- [ ] Premium template gating
+- [ ] Payment-to-entitlement sync in Supabase
 
 ### Phase 6 — Admin + Launch
-- [ ] Admin dashboard for users, templates, analytics
-- [ ] Vercel deployment, custom domain, Sentry, CI/CD
+- [x] Admin dashboard for users, templates, analytics
+- [x] Vercel deployment, Sentry, CI/CD
+- [ ] Custom domain
 - [x] Public invitation slug route `/u/[slug]`
 
 ## Tech Stack
@@ -66,7 +67,8 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 - [ ] Month 1: 100 signups, 10 paid (Rp 990.000)
 - [ ] Month 3: 500 signups, 50 paid (Rp 4.950.000)
 - [ ] Month 6: 2000 signups, 200 paid (Rp 19.800.000)
-- [ ] Launch KPI: 15+ templates live, persistent RSVP, Stripe test checkout, admin ops ready
+- [ ] Launch KPI: 15+ templates live, Stripe test checkout, and custom domain
+- [x] Current launch state: 13 templates live, persistent RSVP, admin ops ready, production deploy active
 
 ## Non-Goals for v2.0
 - [ ] Native mobile app

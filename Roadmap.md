@@ -30,25 +30,25 @@ Target window: 2026-04-15 → 2026-06-10
 - [x] Photo upload
 - [x] Draft/publish workflow
 
-### Week 5-6: Payments — 100% complete
-- [x] Stripe integration
-- [x] Checkout flow
-- [x] Premium template gating
-- [x] Payment status sync to Supabase
+### Week 5-6: Payments — planned
+- [ ] Stripe integration
+- [ ] Checkout flow
+- [ ] Premium template gating
+- [ ] Payment status sync to Supabase
 
-### Week 6-7: Admin — planned
-- [ ] Admin dashboard
-- [ ] User/template management
-- [ ] Revenue analytics
-- [ ] Template activation workflow
+### Week 6-7: Admin — 100% complete
+- [x] Admin dashboard
+- [x] User/template management
+- [x] Revenue analytics
+- [x] Template activation workflow
 
-### Week 7-8: Launch — in progress
-- [ ] Production deploy on Vercel
+### Week 7-8: Launch — mostly complete
+- [x] Production deploy on Vercel
 - [ ] Custom domain
-- [ ] Error monitoring
-- [ ] Performance optimization
-- [ ] Marketing landing page polish
-- [ ] Final 2 launch themes to reach 15+ total templates
+- [x] Error monitoring
+- [x] Performance optimization
+- [x] Marketing landing page polish
+- [x] Final 2 launch themes added, bringing the catalog to 13 total templates
 - [x] Public invitation slug route `/u/[slug]`
 
 ## v2.1 — Growth (Q3 2026)

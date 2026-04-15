@@ -24,7 +24,7 @@ GitHub Flow dengan fokus SaaS: iterasi fitur invitation, RSVP, dashboard, dan pa
 ### 3.3 Review & Deploy
 - PR review.
 - Merge → auto-deploy via Vercel.
-- Monitor error dan auth/database issues via Supabase dashboard logs + observability tool yang dipakai.
+- Monitor error dan auth/database issues via Sentry error monitoring, Supabase dashboard logs, dan Vercel analytics.
 
 ### 3.4 Release & Marketing
 - Test checkout flow dan RSVP flow end-to-end.

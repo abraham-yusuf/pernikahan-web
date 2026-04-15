@@ -4,9 +4,10 @@ import { RSVPForm } from "../RSVPForm";
 
 interface TemplateProps {
   event?: WeddingEvent;
+  invitationId?: string;
 }
 
-export function FloralGardenTemplate({ event }: TemplateProps) {
+export function FloralGardenTemplate({ event, invitationId }: TemplateProps) {
   const data = event ?? demoEvent;
   return (
     <div className="min-h-screen bg-[#fdf6f0] text-[#2d4a3e]">
@@ -135,7 +136,7 @@ export function FloralGardenTemplate({ event }: TemplateProps) {
           Konfirmasi Kehadiran
         </p>
         <h2 className="text-3xl font-serif mb-8">RSVP</h2>
-        <RSVPForm templateId="floral-garden" />
+        <RSVPForm templateId="floral-garden" invitationId={invitationId} />
       </section>
 
       {/* Footer */}

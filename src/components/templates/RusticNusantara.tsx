@@ -4,9 +4,10 @@ import { RSVPForm } from "../RSVPForm";
 
 interface TemplateProps {
   event?: WeddingEvent;
+  invitationId?: string;
 }
 
-export function RusticNusantaraTemplate({ event }: TemplateProps) {
+export function RusticNusantaraTemplate({ event, invitationId }: TemplateProps) {
   const data = event ?? demoEvent;
   return (
     <div className="min-h-screen overflow-hidden bg-[#F7F0E6] text-[#3a2e22] bg-wood-grain">
@@ -140,7 +141,7 @@ export function RusticNusantaraTemplate({ event }: TemplateProps) {
           Konfirmasi Kehadiran
         </p>
         <h2 className="mb-8 text-3xl font-serif">RSVP</h2>
-        <RSVPForm templateId="rustic-nusantara" />
+        <RSVPForm templateId="rustic-nusantara" invitationId={invitationId} />
       </section>
 
       <section className="border-t border-[#C9A77D]/25 px-6 py-16 text-center">

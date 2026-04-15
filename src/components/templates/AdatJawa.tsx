@@ -4,9 +4,10 @@ import { RSVPForm } from "../RSVPForm";
 
 interface TemplateProps {
   event?: WeddingEvent;
+  invitationId?: string;
 }
 
-export function AdatJawaTemplate({ event }: TemplateProps) {
+export function AdatJawaTemplate({ event, invitationId }: TemplateProps) {
   const data = event ?? demoEvent;
   return (
     <div className="min-h-screen bg-[#f8f0e3] text-[#4a1a0a] bg-batik">
@@ -149,7 +150,7 @@ export function AdatJawaTemplate({ event }: TemplateProps) {
           Konfirmasi Kehadiran
         </p>
         <h2 className="text-3xl font-serif mb-8">RSVP</h2>
-        <RSVPForm templateId="adat-jawa" />
+        <RSVPForm templateId="adat-jawa" invitationId={invitationId} />
       </section>
 
       {/* Footer */}

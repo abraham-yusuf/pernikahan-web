@@ -4,9 +4,10 @@ import { RSVPForm } from "../RSVPForm";
 
 interface TemplateProps {
   event?: WeddingEvent;
+  invitationId?: string;
 }
 
-export function ModernElegantTemplate({ event }: TemplateProps) {
+export function ModernElegantTemplate({ event, invitationId }: TemplateProps) {
   const data = event ?? demoEvent;
   return (
     <div className="min-h-screen bg-[#1a1a2e] text-white bg-geometric">
@@ -109,7 +110,7 @@ export function ModernElegantTemplate({ event }: TemplateProps) {
           Konfirmasi Kehadiran
         </p>
         <h2 className="text-3xl font-serif mb-8">RSVP</h2>
-        <RSVPForm templateId="modern-elegant" />
+        <RSVPForm templateId="modern-elegant" invitationId={invitationId} />
       </section>
 
       {/* Footer */}

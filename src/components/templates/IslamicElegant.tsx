@@ -4,9 +4,10 @@ import { RSVPForm } from "../RSVPForm";
 
 interface TemplateProps {
   event?: WeddingEvent;
+  invitationId?: string;
 }
 
-export function IslamicElegantTemplate({ event }: TemplateProps) {
+export function IslamicElegantTemplate({ event, invitationId }: TemplateProps) {
   const data = event ?? demoEvent;
   return (
     <div className="min-h-screen overflow-hidden bg-[#F8F5EE] text-[#1a2a2a] bg-mashrabiya">
@@ -139,7 +140,7 @@ export function IslamicElegantTemplate({ event }: TemplateProps) {
           Konfirmasi Kehadiran
         </p>
         <h2 className="mb-8 text-3xl font-serif">RSVP</h2>
-        <RSVPForm templateId="islamic-elegant" />
+        <RSVPForm templateId="islamic-elegant" invitationId={invitationId} />
       </section>
 
       <section className="border-t border-[#D4AF37]/25 px-6 py-16 text-center">

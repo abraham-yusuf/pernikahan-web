@@ -4,9 +4,10 @@ import { RSVPForm } from "../RSVPForm";
 
 interface TemplateProps {
   event?: WeddingEvent;
+  invitationId?: string;
 }
 
-export function AdatSundaTemplate({ event }: TemplateProps) {
+export function AdatSundaTemplate({ event, invitationId }: TemplateProps) {
   const data = event ?? demoEvent;
   const couples = [
     {
@@ -160,7 +161,7 @@ export function AdatSundaTemplate({ event }: TemplateProps) {
           Konfirmasi Kehadiran
         </p>
         <h2 className="mb-8 font-serif text-3xl text-[#1a3a5c]">RSVP</h2>
-        <RSVPForm templateId="adat-sunda" />
+        <RSVPForm templateId="adat-sunda" invitationId={invitationId} />
       </section>
 
       <section className="border-t border-[#7CB7D9]/20 px-6 py-16 text-center">

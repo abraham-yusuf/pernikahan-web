@@ -1,4 +1,5 @@
 export type UserTier = "free" | "premium";
+export type UserRole = "user" | "admin";
 export type SubscriptionStatus =
   | "none"
   | "pending"
@@ -18,6 +19,7 @@ export type UserRow = {
   id: string;
   auth_user_id: string;
   email: string;
+  role: UserRole;
   full_name: string;
   tier: UserTier;
   subscription_status: SubscriptionStatus;
@@ -131,6 +133,7 @@ export type Database = {
           id?: string;
           auth_user_id: string;
           email: string;
+          role?: UserRole;
           full_name: string;
           tier?: UserTier;
           subscription_status?: SubscriptionStatus;

@@ -482,10 +482,12 @@ Files to create/modify:
 - [ ] `src/lib/admin.ts`
 
 Tasks:
-- [ ] Add admin role guard based on Supabase app metadata or `users` table flag
-- [ ] Build user list with tier and subscription status
-- [ ] Build template activation and sort-order management
-- [ ] Build admin analytics for signups, paid conversions, and RSVP volume
+- [x] Admin role & permissions system
+- [x] Admin API routes (users, templates, analytics)
+- [x] Admin dashboard overview page
+- [x] User management (view, search, edit role/tier)
+- [x] Template management (status, tier, sort, featured)
+- [x] Revenue analytics with charts
 
 ### Phase 7 — Production Deployment & Polish (Week 7-8)
 Goal: ship a production-ready MVP on Vercel with launch-quality UX, monitoring, and the last template gap closed.

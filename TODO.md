@@ -83,7 +83,7 @@
 - [ ] Supabase Storage buckets configured
 - [ ] Vercel deployment pipeline
 - [ ] GitHub Actions CI/CD
-- [ ] Sentry error monitoring
+- [x] Sentry error monitoring
 - [ ] Production domain and DNS
 
 ## 2. Indonesian Theme Library Plan
@@ -506,10 +506,10 @@ Files to create/modify:
 - [ ] `src/instrumentation.ts`
 
 Tasks:
-- [ ] Add public slug route `/u/[slug]` for published invitations backed by Supabase data
+- [x] Add public slug route `/u/[slug]` for published invitations backed by Supabase data
 - [ ] Deliver final 2 launch templates to reach 15+ live options
-- [ ] Add invitation SEO metadata, robots, sitemap, and share card strategy
-- [ ] Wire Sentry for runtime and API monitoring
+- [x] Add invitation SEO metadata, robots, sitemap, and share card strategy
+- [x] Wire Sentry for runtime and API monitoring
 - [ ] Prepare Vercel production config, domain setup, and smoke checks
 - [ ] Add CI steps for build, lint, and route-level regression coverage
 
@@ -522,8 +522,8 @@ Tasks:
 - [ ] Admin can manage templates and users
 - [x] Custom invitation URLs working (`/u/[slug]`)
 - [x] Mobile responsive across all templates
-- [ ] SEO metadata on all public pages
-- [ ] Error monitoring (Sentry)
+- [x] SEO metadata on all public pages
+- [x] Error monitoring (Sentry)
 - [ ] Vercel production deployment
 - [ ] Custom domain configured
 - [ ] GitHub Actions CI/CD

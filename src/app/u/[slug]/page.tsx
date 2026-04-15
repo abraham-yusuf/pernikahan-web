@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { InvitationJsonLd } from "@/components/seo/InvitationJsonLd";
 import { getInvitationBySlug } from "@/lib/db";
 import type { WeddingEvent } from "@/lib/data";
 import { templateComponents } from "@/lib/template-registry";
 
 type Params = Promise<{ slug: string }>;
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL || "https://nikah-digital.vercel.app";
 
 async function getPublishedInvitation(slug: string) {
   try {
@@ -61,6 +64,13 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
+      url: `${BASE_URL}/u/${slug}`,
+      siteName: "NikahDigital",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
@@ -85,5 +95,18 @@ export default async function PublicInvitationPage({
 
   const event = mapInvitationToWeddingEvent(invitation);
 
-  return <TemplateComponent event={event} invitationId={invitation.id} />;
+  return (
+    <>
+      <InvitationJsonLd
+        bride={invitation.bride}
+        groom={invitation.groom}
+        akadDate={invitation.akad_date}
+        akadLocation={invitation.akad_location}
+        resepsiDate={invitation.resepsi_date}
+        resepsiLocation={invitation.resepsi_location}
+        slug={slug}
+      />
+      <TemplateComponent event={event} invitationId={invitation.id} />
+    </>
+  );
 }

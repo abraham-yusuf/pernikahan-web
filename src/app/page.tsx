@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { HomeHeroActions } from "@/components/HomeHeroActions";
 import { Footer } from "@/components/Footer";
 import { TemplateCard } from "@/components/TemplateCard";
 import { templates } from "@/lib/data";
@@ -23,20 +24,7 @@ export default function Home() {
             hitungan menit. Pilih template, customize, dan bagikan ke tamu
             undangan Anda.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="#templates"
-              className="px-8 py-3.5 bg-primary text-white rounded-full font-medium hover:bg-primary-dark transition-colors text-lg"
-            >
-              Lihat Template
-            </Link>
-            <Link
-              href="/undangan/modern-elegant"
-              className="px-8 py-3.5 border-2 border-gray-200 text-gray-700 rounded-full font-medium hover:border-primary hover:text-primary transition-colors text-lg"
-            >
-              Demo Undangan
-            </Link>
-          </div>
+          <HomeHeroActions />
         </div>
       </section>
 
@@ -197,6 +185,100 @@ export default function Home() {
         </div>
       </section>
 
+
+      {/* Testimonial Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Cerita Pengguna Kami
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Ratusan pasangan telah mempercayakan undangan digital mereka bersama
+              NikahDigital.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Nadia & Arif",
+                quote:
+                  "Tampilannya elegan, proses edit sangat cepat, dan RSVP langsung terkumpul rapi.",
+              },
+              {
+                name: "Citra & Bimo",
+                quote:
+                  "Bisa langsung share ke WhatsApp keluarga. Dalam 1 malam undangan beres semua!",
+              },
+              {
+                name: "Dina & Fajar",
+                quote:
+                  "Support-nya responsif, pilihannya banyak, dan premium sangat worth it.",
+              },
+            ].map((testimonial) => (
+              <figure
+                key={testimonial.name}
+                className="rounded-2xl border border-gray-100 bg-gray-50 p-6"
+              >
+                <blockquote className="text-gray-700 leading-relaxed">
+                  “{testimonial.quote}”
+                </blockquote>
+                <figcaption className="mt-4 text-sm font-semibold text-gray-900">
+                  {testimonial.name}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Pertanyaan yang Sering Ditanyakan
+            </h2>
+            <p className="text-gray-600">
+              Jawaban cepat sebelum Anda mulai membuat undangan.
+            </p>
+          </div>
+          <div className="space-y-4">
+            {[
+              {
+                question: "Apakah bisa mulai gratis?",
+                answer:
+                  "Bisa. Paket gratis tersedia untuk mencoba fitur inti sebelum upgrade ke premium.",
+              },
+              {
+                question: "Berapa lama proses membuat undangan?",
+                answer:
+                  "Rata-rata 10-20 menit tergantung kelengkapan konten foto dan detail acara.",
+              },
+              {
+                question: "Apakah undangan bisa dibuka di semua perangkat?",
+                answer:
+                  "Ya, semua template sudah mobile-friendly dan tetap optimal di desktop.",
+              },
+              {
+                question: "Bisakah saya ganti template setelah memilih?",
+                answer:
+                  "Bisa. Anda dapat mengganti template kapan saja sebelum undangan dipublikasikan.",
+              },
+            ].map((item) => (
+              <details
+                key={item.question}
+                className="group rounded-xl border border-gray-200 bg-white p-5"
+              >
+                <summary className="cursor-pointer list-none font-semibold text-gray-900">
+                  {item.question}
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* CTA */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 text-center bg-gradient-to-b from-white to-amber-50/50">
         <div className="max-w-2xl mx-auto">

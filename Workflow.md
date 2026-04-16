@@ -32,3 +32,11 @@ GitHub Flow dengan fokus SaaS: iterasi fitur invitation, RSVP, dashboard, dan pa
 - Promosi di X (@bram0511) atau Reddit.
 
 Best practices: weekly releases untuk new themes, schema changes lewat SQL yang versioned, dan RLS review setiap kali menambah tabel baru.
+
+
+## 4. Event Tracking Convention
+- Gunakan format nama event: `snake_case` dan berbasis aksi pengguna (contoh: `cta_click`, `checkout_started`).
+- Gunakan payload konsisten untuk CTA utama: `cta_name`, `placement`, `page`.
+- `cta_name` wajib pakai nilai stabil (`lihat_template`, `demo_undangan`, `pilih_premium`) agar mudah dipakai untuk dashboard, funnel, dan alert.
+- Tracking harus non-blocking: panggil di event handler, jalankan async/deferred (idle callback/timeout), dan jangan memblokir navigasi atau hydration.
+- Hindari data sensitif (PII) pada payload analytics.

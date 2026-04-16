@@ -72,6 +72,9 @@ export function LoginForm() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
+            <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+              Lupa password?
+            </Link>
           </div>
           <input
             id="password"

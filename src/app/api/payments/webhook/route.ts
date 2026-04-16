@@ -64,13 +64,20 @@ export async function POST(request: NextRequest) {
           "@/lib/supabase/server"
         );
         const db = createSupabaseAdminClient();
-        await db
+        const { error: watermarkError } = await db
           .from("invitations")
           .update({
             watermark_enabled: false,
             updated_at: new Date().toISOString(),
           })
           .eq("id", payment.invitation_id);
+
+        if (watermarkError) {
+          console.error(
+            `Webhook: failed to remove watermark for invitation=${payment.invitation_id}:`,
+            watermarkError.message
+          );
+        }
       }
     }
 

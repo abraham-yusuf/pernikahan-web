@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getLoggedInUser } from "@/lib/auth";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardRecentInvitations } from "@/components/dashboard/DashboardRecentInvitations";
+import { PaymentStatusCard } from "@/components/dashboard/PaymentStatusCard";
+import { StartPremiumCheckoutButton } from "@/components/payment/StartPremiumCheckoutButton";
 
 export const metadata: Metadata = {
   title: "Dashboard - NikahDigital",
@@ -27,6 +29,21 @@ export default async function DashboardPage() {
 
       <DashboardStats />
       <DashboardRecentInvitations />
+
+      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Upgrade Premium</h2>
+            <p className="text-sm text-gray-600">Aktifkan Premium via Xendit untuk menghapus watermark dan membuka fitur premium.</p>
+          </div>
+          <StartPremiumCheckoutButton
+            label="Checkout Premium"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+          />
+        </div>
+      </div>
+
+      <PaymentStatusCard />
 
       <div className="rounded-2xl border border-gray-100 bg-white p-6">
         <h2 className="text-lg font-semibold text-gray-900">Informasi Akun</h2>

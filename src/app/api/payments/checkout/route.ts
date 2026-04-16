@@ -68,8 +68,8 @@ export async function POST(request: NextRequest) {
         description: `Premium Invitation: ${invitation.title}`,
         currency: "IDR",
         invoiceDuration: 86400,
-        successRedirectUrl: `${appUrl}/payment/success?external_id=${externalId}`,
-        failureRedirectUrl: `${appUrl}/payment/cancel?external_id=${externalId}`,
+        successRedirectUrl: `${appUrl}/payment/success?external_id=${externalId}&invitation_id=${invitationId}`,
+        failureRedirectUrl: `${appUrl}/payment/cancel?external_id=${externalId}&invitation_id=${invitationId}`,
         items: [
           {
             name: "Premium Wedding Invitation",

@@ -5,9 +5,9 @@ GitHub Flow dengan fokus SaaS: iterasi fitur invitation, RSVP, dashboard, dan pa
 
 ## 2. Tools
 - Next.js + Supabase.
-- Stripe Dashboard.
+- Xendit Dashboard (dashboard.xendit.co).
 - Supabase Dashboard + SQL Editor (`database.sql`) untuk schema, RLS, dan storage setup.
-- Claude Opus: prompt untuk "Build Stripe integration in Next.js API route."
+- Claude Opus: prompt untuk "Build Xendit integration in Next.js API route."
 
 ## 3. Proses
 ### 3.1 Planning
@@ -19,7 +19,7 @@ GitHub Flow dengan fokus SaaS: iterasi fitur invitation, RSVP, dashboard, dan pa
 2. Code dengan AI help.
 3. Jalankan local validation: `npm run lint`, `npm run build`, dan test flow yang relevan.
 4. Jika ada perubahan schema, update `database.sql` lalu jalankan di Supabase SQL Editor.
-5. Untuk env lokal, copy `.env.example` → `.env.local` dan isi `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, serta Stripe keys.
+5. Untuk env lokal, copy `.env.example` → `.env.local` dan isi `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, serta Xendit keys (`XENDIT_SECRET_KEY`, `XENDIT_WEBHOOK_TOKEN`).
 
 ### 3.3 Review & Deploy
 - PR review.

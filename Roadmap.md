@@ -31,7 +31,7 @@ Target window: 2026-04-15 → 2026-06-10
 - [x] Draft/publish workflow
 
 ### Week 5-6: Payments — planned
-- [ ] Stripe integration
+- [x] Xendit integration
 - [ ] Checkout flow
 - [ ] Premium template gating
 - [ ] Payment status sync to Supabase

@@ -2,8 +2,8 @@
 
 - Project: NikahDigital
 - One-liner: SaaS platform for beautiful Indonesian digital wedding invitations
-- Current status (2026-04-15): Core product, admin dashboard, SEO infrastructure, Sentry monitoring, and GitHub Actions CI/CD are implemented. The current catalog has 13 registered templates (3 original + 10 cultural themes), public invitation pages via `/u/[slug]`, and live dashboard stats. Remaining gaps in the repo: Stripe payment flow, custom domain DNS configuration, and 7 planned future cultural themes.
-- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Supabase (Auth/Database/Storage), Vercel, Sentry, GitHub Actions CI/CD, Stripe (planned)
+- Current status (2026-04-15): Core product, admin dashboard, SEO infrastructure, Sentry monitoring, and GitHub Actions CI/CD are implemented. The current catalog has 13 registered templates (3 original + 10 cultural themes), public invitation pages via `/u/[slug]`, and live dashboard stats. Remaining gaps in the repo: custom domain DNS configuration and 7 planned future cultural themes.
+- Tech stack: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4, Supabase (Auth/Database/Storage), Vercel, Sentry, GitHub Actions CI/CD, Xendit (Indonesia payment gateway)
 
 ## 1. Current State Checklist
 
@@ -62,11 +62,11 @@
 
 ### Payments
 - [x] Pricing model is visible on the landing page
-- [ ] Stripe package and env wiring
-- [ ] Checkout session route
-- [ ] Webhook handler
+- [x] Xendit SDK and env wiring
+- [x] Checkout session route
+- [x] Webhook handler
 - [ ] Premium entitlement sync to Supabase
-- [ ] Payment success/cancel pages
+- [x] Payment success/cancel pages
 
 ### Admin
 - [x] Admin routes
@@ -242,15 +242,17 @@ Relationships:
 - one template can be referenced by many invitations through `template_id`
 
 ### `payments`
-Purpose: record Stripe checkout activity and premium purchases.
+Purpose: record Xendit invoice activity and premium purchases.
 
 Fields:
 - `id` — `uuid`, primary key, default `uuid_generate_v4()`
 - `user_id` — `uuid`, required, references `users(id)` on delete cascade
 - `invitation_id` — `uuid`, optional, references `invitations(id)` on delete set null
-- `stripe_checkout_session_id` — `text`, required, unique
-- `stripe_payment_intent_id` — `text`, optional
-- `stripe_customer_id` — `text`, optional
+- `xendit_invoice_id` — `text`, required, unique
+- `xendit_external_id` — `text`, required
+- `xendit_payment_method` — `text`, optional
+- `xendit_payment_channel` — `text`, optional
+- `xendit_invoice_url` — `text`, optional
 - `amount` — `integer`, required
 - `currency` — `text`, required, default `idr`, check in (`idr`)
 - `plan` — `text`, required, check in (`premium_invitation`)
@@ -260,7 +262,8 @@ Fields:
 - `updated_at` — `timestamptz`, required
 
 Indexes:
-- unique index on `stripe_checkout_session_id`
+- unique index on `xendit_invoice_id`
+- unique index on `xendit_external_id`
 - composite index on `user_id`, `status`
 - index on `invitation_id`
 - index on `paid_at`
@@ -302,8 +305,9 @@ Relationships:
 - [x] `GET /api/templates` — list active templates with tier gating metadata
 
 ### Payments APIs
-- [ ] `POST /api/payments/checkout` — create Stripe Checkout session for Premium invitation purchase
-- [ ] `POST /api/payments/webhook` — process Stripe events and sync payment status to Supabase
+- [x] `POST /api/payments/checkout` — create Xendit Invoice for Premium purchase
+- [x] `POST /api/payments/webhook` — process Xendit callback and sync payment status
+- [x] `GET /api/payments` — list user payment history
 
 ### Admin APIs
 - [x] `GET /api/admin/users` — admin user management
@@ -319,9 +323,9 @@ Relationships:
 - [x] `/dashboard/rsvp/[id]` — view RSVPs for invitation
 - [x] `/dashboard/settings` — user settings and billing profile
 - [x] `/editor/[templateId]` — visual template editor
-- [ ] `/payment/checkout` — Stripe checkout handoff page
-- [ ] `/payment/success` — payment success state
-- [ ] `/payment/cancel` — payment cancelled state
+- [x] `/payment/checkout` — Xendit checkout page with pricing cards
+- [x] `/payment/success` — payment success confirmation page
+- [x] `/payment/cancel` — payment failure/cancel page
 - [x] `/admin` — admin dashboard
 - [x] `/admin/users` — manage users
 - [x] `/admin/templates` — manage templates
@@ -439,27 +443,27 @@ Tasks:
 - [x] Add photo upload via Supabase Storage
 - [x] Add save draft and publish actions
 
-### Phase 5 — Stripe Payment Integration (Week 5-6)
+### Phase 5 — Xendit Payment Integration (Week 5-6)
 Goal: monetize Premium invitation purchases with a clean checkout flow.
 
 Dependencies:
 - [x] Phase 3 complete
 
 Files to create/modify:
-- [ ] `src/app/api/payments/checkout/route.ts`
-- [ ] `src/app/api/payments/webhook/route.ts`
-- [ ] `src/app/payment/checkout/page.tsx`
-- [ ] `src/app/payment/success/page.tsx`
-- [ ] `src/app/payment/cancel/page.tsx`
-- [ ] `src/components/payment/PricingCards.tsx`
+- [x] `src/app/api/payments/checkout/route.ts`
+- [x] `src/app/api/payments/webhook/route.ts`
+- [x] `src/app/payment/checkout/page.tsx`
+- [x] `src/app/payment/success/page.tsx`
+- [x] `src/app/payment/cancel/page.tsx`
+- [x] `src/components/payment/PricingCards.tsx`
 - [ ] `src/components/payment/CheckoutSummary.tsx`
-- [ ] `src/lib/payments.ts`
+- [x] `src/lib/payments.ts`
 - [x] `src/app/page.tsx`
 
 Tasks:
-- [ ] Install and configure Stripe SDK
-- [ ] Create Checkout session for `Premium` at `Rp 99.000/invitation`
-- [ ] Persist Stripe session, payment intent, and final payment status in Supabase
+- [x] Install and configure Xendit SDK (xendit-node)
+- [x] Create Xendit Invoice for `Premium` at `Rp 99.000/invitation`
+- [x] Persist Xendit invoice, external ID, and payment status in Supabase
 - [ ] Unlock premium template access after successful payment
 - [ ] Surface paid/free state inside dashboard and editor
 
@@ -520,7 +524,7 @@ Tasks:
 - [x] All Supabase tables created with RLS policies and indexes
 - [x] 13 templates live and rendering correctly
 - [x] RSVP data persisting to database
-- [ ] Stripe checkout working in test mode
+- [x] Xendit checkout working in test mode
 - [x] Admin can manage templates and users
 - [x] Custom invitation URLs working (`/u/[slug]`)
 - [x] Mobile responsive across all templates

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listPaymentsByUser } from "@/lib/payments";
+import { getPaymentByExternalId, listPaymentsByUser } from "@/lib/payments";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 async function getAuthenticatedProfile(): Promise<{ id: string } | null> {
@@ -34,6 +34,21 @@ export async function GET(request: NextRequest) {
 
   try {
     const url = new URL(request.url);
+    const externalId = url.searchParams.get("external_id")?.trim();
+
+    if (externalId) {
+      const payment = await getPaymentByExternalId(externalId);
+
+      if (!payment || payment.user_id !== profile.id) {
+        return NextResponse.json(
+          { error: "Payment not found." },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({ payment });
+    }
+
     const rawLimit = Number(url.searchParams.get("limit") ?? 20);
     const rawOffset = Number(url.searchParams.get("offset") ?? 0);
     const limit = Number.isFinite(rawLimit)

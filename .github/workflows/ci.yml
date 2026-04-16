@@ -39,9 +39,8 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
           SUPABASE_SERVICE_ROLE_KEY: placeholder_service_role_key
           NEXT_PUBLIC_APP_URL: http://localhost:3000
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
-          STRIPE_SECRET_KEY: sk_test_placeholder
-          STRIPE_WEBHOOK_SECRET: whsec_placeholder
+          XENDIT_SECRET_KEY: xnd_development_placeholder
+          XENDIT_WEBHOOK_TOKEN: webhook_placeholder
           NEXT_PUBLIC_SENTRY_DSN: ""
           SENTRY_ORG: ""
           SENTRY_PROJECT: ""

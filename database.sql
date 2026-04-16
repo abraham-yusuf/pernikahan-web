@@ -98,9 +98,11 @@ create table public.payments (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid not null references public.users(id) on delete cascade,
   invitation_id uuid references public.invitations(id) on delete set null,
-  stripe_checkout_session_id text not null unique,
-  stripe_payment_intent_id text,
-  stripe_customer_id text,
+  xendit_invoice_id text not null unique,
+  xendit_external_id text not null unique,
+  xendit_invoice_url text,
+  xendit_payment_method text,
+  xendit_payment_channel text,
   amount integer not null check (amount >= 0),
   currency text not null default 'idr' check (currency in ('idr')),
   plan text not null check (plan in ('premium_invitation')),
@@ -149,9 +151,9 @@ create index idx_templates_category_region on public.templates(category, region)
 create index idx_templates_tier on public.templates(tier_access);
 
 -- payments indexes
-create index idx_payments_user_status on public.payments(user_id, status);
-create index idx_payments_invitation on public.payments(invitation_id);
-create index idx_payments_paid_at on public.payments(paid_at);
+create index idx_payments_user on public.payments(user_id);
+create index idx_payments_status on public.payments(status);
+create index idx_payments_xendit_external on public.payments(xendit_external_id);
 
 -- analytics indexes
 create index idx_analytics_date on public.analytics(date_key);

@@ -11,10 +11,13 @@ export interface TemplatePickerItem {
   previewColor: string;
   accentColor: string;
   bgPattern: string;
+  tierAccess: "free" | "premium";
+  locked: boolean;
 }
 
 interface TemplatesPayload {
   templates?: TemplatePickerItem[];
+  userTier?: "free" | "premium";
   error?: string;
 }
 
@@ -39,6 +42,7 @@ export function TemplatePicker({
   onSelect,
 }: TemplatePickerProps) {
   const [templates, setTemplates] = useState<TemplatePickerItem[]>([]);
+  const [userTier, setUserTier] = useState<"free" | "premium">("free");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,10 +73,12 @@ export function TemplatePicker({
         }
 
         setTemplates(payload?.templates ?? []);
+        setUserTier(payload?.userTier === "premium" ? "premium" : "free");
       } catch {
         if (active) {
           setError("Gagal memuat template.");
           setTemplates([]);
+          setUserTier("free");
         }
       } finally {
         if (active) {
@@ -120,17 +126,24 @@ export function TemplatePicker({
           ? Array.from({ length: 6 }, (_, index) => <TemplateCardSkeleton key={index} />)
           : templates.map((template) => {
               const isSelected = template.id === selectedTemplateId;
+              const isLocked = template.locked;
 
               return (
                 <button
                   key={template.id}
                   type="button"
-                  onClick={() => onSelect(template)}
+                  onClick={() => {
+                    if (!isLocked) {
+                      onSelect(template);
+                    }
+                  }}
+                  disabled={isLocked}
                   className={[
                     "group text-left rounded-2xl border bg-white p-4 transition-all",
                     isSelected
                       ? "border-primary ring-2 ring-primary/20"
                       : "border-gray-100 hover:border-primary/40 hover:shadow-lg",
+                    isLocked ? "cursor-not-allowed opacity-70" : "",
                   ].join(" ")}
                 >
                   <div
@@ -156,6 +169,11 @@ export function TemplatePicker({
                         ✓
                       </div>
                     ) : null}
+                    {template.tierAccess === "premium" ? (
+                      <div className="absolute left-3 top-3 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-700">
+                        Premium
+                      </div>
+                    ) : null}
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3">
                     <h3 className="font-semibold text-gray-900">{template.name}</h3>
@@ -169,10 +187,34 @@ export function TemplatePicker({
                   <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-gray-400">
                     {template.region}
                   </p>
+                  {isLocked ? (
+                    <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                      Template ini khusus Premium.{" "}
+                      <a
+                        href="/dashboard/settings"
+                        className="font-semibold underline underline-offset-2"
+                      >
+                        Upgrade sekarang
+                      </a>
+                      .
+                    </div>
+                  ) : null}
                 </button>
               );
             })}
       </div>
+      {userTier === "free" ? (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Beberapa template Premium terkunci untuk akun gratis.{" "}
+          <a
+            href="/dashboard/settings"
+            className="font-semibold underline underline-offset-2"
+          >
+            Upgrade ke Premium
+          </a>{" "}
+          untuk membuka semuanya.
+        </div>
+      ) : null}
     </div>
   );
 }

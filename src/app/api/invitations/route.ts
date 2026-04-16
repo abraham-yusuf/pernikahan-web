@@ -5,8 +5,11 @@ import {
   generateSlug,
   validateCreateInvitationInput,
 } from "@/lib/invitations";
+import type { UserTier } from "@/lib/supabase/types";
 
-async function getAuthenticatedProfile(): Promise<{ id: string } | null> {
+async function getAuthenticatedProfile(): Promise<
+  { id: string; tier: UserTier } | null
+> {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -18,7 +21,7 @@ async function getAuthenticatedProfile(): Promise<{ id: string } | null> {
 
   const { data: profile, error } = await supabase
     .from("users")
-    .select("id")
+    .select("id, tier")
     .eq("auth_user_id", user.id)
     .single();
 
@@ -42,6 +45,34 @@ export async function POST(request: NextRequest) {
 
     if (error || !data) {
       return NextResponse.json({ error }, { status: 400 });
+    }
+
+    const supabase = await createSupabaseServerClient();
+    const { data: template, error: templateError } = await supabase
+      .from("templates")
+      .select("template_key, tier_access, status")
+      .eq("template_key", data.templateId)
+      .maybeSingle();
+
+    if (templateError) {
+      throw templateError;
+    }
+
+    if (!template || template.status !== "active") {
+      return NextResponse.json(
+        { error: "Template tidak tersedia." },
+        { status: 400 }
+      );
+    }
+
+    if (profile.tier === "free" && template.tier_access === "premium") {
+      return NextResponse.json(
+        {
+          error:
+            "Template premium hanya tersedia untuk akun Premium. Silakan upgrade terlebih dahulu.",
+        },
+        { status: 403 }
+      );
     }
 
     const invitation = await createInvitation({

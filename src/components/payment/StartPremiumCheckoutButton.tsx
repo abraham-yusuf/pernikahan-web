@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   invitationId?: string;
@@ -56,6 +57,12 @@ export function StartPremiumCheckoutButton({
   }
 
   async function handleCheckout() {
+    trackEvent("cta_click", {
+      cta_name: "pilih_premium",
+      placement: invitationId ? "invitation" : "home_pricing",
+      page: invitationId ? "invitation" : "home",
+    });
+
     setLoading(true);
     setError(null);
 

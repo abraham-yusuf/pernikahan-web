@@ -193,12 +193,20 @@ export function RSVPViewer({ invitationId }: { invitationId: string }) {
           <h1 className="text-2xl font-bold text-gray-900">RSVP Viewer</h1>
           <p className="mt-1 text-sm text-gray-500">{title}</p>
         </div>
-        <Link
-          href={`/dashboard/invitations/${invitationId}`}
-          className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
-        >
-          Kembali ke Undangan
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/api/rsvp/${encodeURIComponent(invitationId)}/export?format=csv`}
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
+          >
+            Export CSV
+          </Link>
+          <Link
+            href={`/dashboard/invitations/${invitationId}`}
+            className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+          >
+            Kembali ke Undangan
+          </Link>
+        </div>
       </div>
 
       {error ? (

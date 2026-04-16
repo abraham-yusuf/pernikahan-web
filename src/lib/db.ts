@@ -40,6 +40,96 @@ export async function listRSVPsByInvitation(
   return { documents: data ?? [], total: count ?? 0 };
 }
 
+export async function listAllRSVPsByInvitation(invitationId: string) {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("rsvp_responses")
+    .select("*")
+    .eq("invitation_id", invitationId)
+    .order("submitted_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function countRecentRSVPSubmissionsByTag(
+  invitationId: string,
+  guestTag: string,
+  sinceISO: string
+) {
+  const supabase = createSupabaseAdminClient();
+  const { count, error } = await supabase
+    .from("rsvp_responses")
+    .select("*", { count: "exact", head: true })
+    .eq("invitation_id", invitationId)
+    .eq("guest_tag", guestTag)
+    .gte("submitted_at", sinceISO);
+
+  if (error) {
+    throw error;
+  }
+
+  return count ?? 0;
+}
+
+export async function findRecentDuplicateRSVP(
+  invitationId: string,
+  payload: {
+    guestName: string;
+    attendance: Database["public"]["Tables"]["rsvp_responses"]["Insert"]["attendance"];
+    guestCount: number;
+    message: string | null;
+  },
+  sinceISO: string
+) {
+  const supabase = createSupabaseAdminClient();
+  let query = supabase
+    .from("rsvp_responses")
+    .select("*")
+    .eq("invitation_id", invitationId)
+    .eq("guest_name", payload.guestName)
+    .eq("attendance", payload.attendance)
+    .eq("guest_count", payload.guestCount)
+    .gte("submitted_at", sinceISO)
+    .order("submitted_at", { ascending: false })
+    .limit(1);
+
+  query = payload.message
+    ? query.eq("message", payload.message)
+    : query.is("message", null);
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return data?.[0] ?? null;
+}
+
+export async function getLatestRSVPSubmissionByTag(
+  invitationId: string,
+  guestTag: string
+) {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("rsvp_responses")
+    .select("submitted_at")
+    .eq("invitation_id", invitationId)
+    .eq("guest_tag", guestTag)
+    .order("submitted_at", { ascending: false })
+    .limit(1);
+
+  if (error) {
+    throw error;
+  }
+
+  return data?.[0]?.submitted_at ?? null;
+}
+
 export async function countRSVPsByInvitation(invitationId: string) {
   const supabase = createSupabaseAdminClient();
 

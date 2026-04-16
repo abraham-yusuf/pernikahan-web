@@ -3,6 +3,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { TemplateCard } from "@/components/TemplateCard";
 import { templates } from "@/lib/data";
+import { StartPremiumCheckoutButton } from "@/components/payment/StartPremiumCheckoutButton";
 
 export default function Home() {
   return (
@@ -187,9 +188,10 @@ export default function Home() {
                   <span className="text-primary">✓</span> Galeri foto
                 </li>
               </ul>
-              <button className="w-full py-2.5 rounded-full bg-primary text-white font-medium hover:bg-primary-dark transition-colors">
-                Pilih Premium
-              </button>
+              <StartPremiumCheckoutButton
+                label="Pilih Premium"
+                className="w-full py-2.5 rounded-full bg-primary text-white font-medium hover:bg-primary-dark transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+              />
             </div>
           </div>
         </div>

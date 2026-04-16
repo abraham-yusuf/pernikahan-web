@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { StartPremiumCheckoutButton } from "@/components/payment/StartPremiumCheckoutButton";
 
 type InvitationStatus = "draft" | "published" | "archived";
 
@@ -10,6 +11,7 @@ interface EditorToolbarProps {
   saving: boolean;
   onSave: () => void;
   onPublish: () => void;
+  invitationId: string;
 }
 
 function getStatusClasses(status: InvitationStatus) {
@@ -42,6 +44,7 @@ export function EditorToolbar({
   saving,
   onSave,
   onPublish,
+  invitationId,
 }: EditorToolbarProps) {
   return (
     <div className="sticky top-0 z-20 border-b border-gray-200 bg-white/95 backdrop-blur">
@@ -82,6 +85,11 @@ export function EditorToolbar({
           >
             {saving ? "Menyimpan..." : "Simpan"}
           </button>
+          <StartPremiumCheckoutButton
+            invitationId={invitationId}
+            label="Upgrade Premium"
+            className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+          />
           {status === "draft" ? (
             <button
               type="button"

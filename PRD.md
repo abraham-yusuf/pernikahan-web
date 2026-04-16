@@ -15,7 +15,7 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 - [x] Persistent Supabase Postgres tables
 - [x] Invitation CRUD and template editor
 - [x] Persistent RSVP backend
-- [ ] Stripe checkout
+- [x] Xendit checkout
 - [x] Admin dashboard
 - [x] Production deployment
 
@@ -47,7 +47,7 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 - [x] Photo upload and draft/publish flow
 
 ### Phase 5 — Monetization
-- [ ] Stripe checkout
+- [x] Xendit checkout
 - [ ] Premium template gating
 - [ ] Payment-to-entitlement sync in Supabase
 
@@ -60,14 +60,14 @@ NikahDigital adalah SaaS platform for beautiful Indonesian digital wedding invit
 ## Tech Stack
 - Frontend: Next.js 16.1.6, React 19.2.3, TypeScript 5+, Tailwind CSS v4
 - Backend/Auth/DB: Supabase Auth with session cookies, Supabase Postgres, and Supabase Storage
-- Payments: Stripe
+- Payments: Xendit
 - Deployment: Vercel
 
 ## Success Metrics
 - [ ] Month 1: 100 signups, 10 paid (Rp 990.000)
 - [ ] Month 3: 500 signups, 50 paid (Rp 4.950.000)
 - [ ] Month 6: 2000 signups, 200 paid (Rp 19.800.000)
-- [ ] Launch KPI: 15+ templates live, Stripe test checkout, and custom domain
+- [ ] Launch KPI: 15+ templates live, Xendit sandbox checkout, and custom domain
 - [x] Current launch state: 13 templates live, persistent RSVP, admin ops ready, production deploy active
 
 ## Non-Goals for v2.0

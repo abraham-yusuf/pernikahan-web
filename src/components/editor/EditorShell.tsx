@@ -277,6 +277,7 @@ export function EditorShell({ invitationId }: { invitationId: string }) {
         saving={saving}
         onSave={() => void handleSave()}
         onPublish={() => void handlePublish()}
+        invitationId={invitation.id}
       />
 
       <div className="border-b border-gray-200 bg-white px-4 py-3 lg:hidden">

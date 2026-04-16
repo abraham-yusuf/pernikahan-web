@@ -45,6 +45,9 @@ export async function POST(request: NextRequest) {
       case "EXPIRED":
         mappedStatus = "expired";
         break;
+      case "FAILED":
+        mappedStatus = "failed";
+        break;
       default:
         mappedStatus = "pending";
     }

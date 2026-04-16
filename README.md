@@ -7,14 +7,14 @@
 ## Deskripsi
 Platform SaaS untuk buat dan jual undangan pernikahan digital custom. User bisa pilih dari library template wedding theme (modern, vintage, floral, etc.), customize teks/foto, tambah RSVP/guest management, lalu generate/share. Monetisasi via subscription ($5-20/bulan) atau per-undangan ($1-5). Dibangun dari MVP React/Next.js, sekarang dengan backend untuk multi-user.
 
-Manfaatkan GitHub Student Developer Pack: Stripe untuk payment, Supabase untuk auth/database/storage, dan Vercel untuk hosting.
+Manfaatkan stack lokal Indonesia: Xendit untuk payment, Supabase untuk auth/database/storage, dan Vercel untuk hosting.
 
 Coding tasks dibantu Claude Opus sebagai AI agent untuk generate components/templates.
 
 ## Tech Stack
 - **Frontend**: Next.js (SSR untuk SEO), React, Tailwind CSS, React Hook Form.
 - **Backend**: Supabase Auth, Supabase Postgres, Supabase Storage.
-- **Payment**: Stripe (integrasi checkout).
+- **Payment**: Xendit Invoice API (integrasi checkout + webhook).
 - **Deployment**: Vercel.
 - **AI Agent**: Claude Opus untuk coding; GitHub Copilot untuk suggestions.
 
@@ -22,7 +22,7 @@ Coding tasks dibantu Claude Opus sebagai AI agent untuk generate components/temp
 1. Clone repo: `git clone https://github.com/abraham-yusuf/pernikahan-web.git`
 2. Install deps: `npm install`
 3. Copy env template: `cp .env.example .env.local`
-4. Isi `.env.local` dengan kredensial Supabase dan Stripe.
+4. Isi `.env.local` dengan kredensial Supabase dan Xendit.
 5. Jalankan `database.sql` di Supabase SQL Editor untuk membuat tabel, index, trigger, dan RLS policies.
 6. Run dev: `npm run dev`
 7. Deploy: push ke Vercel untuk preview/production.
@@ -37,9 +37,8 @@ Copy `.env.example` to `.env.local` and fill in your values:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anon/public key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key (server-side only) |
 | `NEXT_PUBLIC_APP_URL` | Yes | App URL (e.g. `http://localhost:3000`) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | For payments | Stripe publishable key |
-| `STRIPE_SECRET_KEY` | For payments | Stripe secret key |
-| `STRIPE_WEBHOOK_SECRET` | For payments | Stripe webhook signing secret |
+| `XENDIT_SECRET_KEY` | For payments | Xendit secret API key |
+| `XENDIT_WEBHOOK_TOKEN` | For payments | Callback token untuk verifikasi webhook Xendit |
 | `NEXT_PUBLIC_SENTRY_DSN` | For monitoring | Sentry DSN |
 | `SENTRY_ORG` | For monitoring | Sentry organization slug |
 | `SENTRY_PROJECT` | For monitoring | Sentry project name |
@@ -64,7 +63,7 @@ The app is configured for Vercel deployment:
 - Pilih template dari library.
 - Customize: edit teks, upload foto, atur theme colors.
 - Tambah fitur: RSVP form, guest list, map.
-- Bayar via Stripe untuk unlock/share invitation.
+- Bayar via Xendit untuk unlock Premium dan menghapus watermark invitation.
 - Admin: dashboard untuk manage templates/payments.
 
 ## Monetisasi

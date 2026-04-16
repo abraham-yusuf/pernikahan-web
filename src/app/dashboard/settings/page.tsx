@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { getLoggedInUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/LogoutButton";
+import { StartPremiumCheckoutButton } from "@/components/payment/StartPremiumCheckoutButton";
 
 export default async function DashboardSettingsPage() {
   const user = await getLoggedInUser();
@@ -35,21 +35,17 @@ export default async function DashboardSettingsPage() {
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Akun</h2>
             <p className="mt-1 text-sm text-gray-500">
-              Paket premium dan pembayaran Stripe akan tersedia pada fase berikutnya.
+              Paket premium tersedia via checkout Xendit. Anda dapat upgrade kapan saja.
             </p>
           </div>
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700">
               Gratis
             </span>
-            <Link
-              href="/#harga"
-              aria-disabled="true"
-              tabIndex={-1}
-              className="pointer-events-none inline-flex items-center justify-center rounded-full bg-gray-100 px-5 py-3 text-sm font-medium text-gray-400"
-            >
-              Upgrade ke Premium
-            </Link>
+            <StartPremiumCheckoutButton
+              label="Upgrade ke Premium"
+              className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-medium text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+            />
           </div>
         </div>
       </section>

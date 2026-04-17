@@ -285,7 +285,7 @@ export function AdminTemplateTable() {
   ) {
     return (event: React.FocusEvent<HTMLInputElement>) => {
       const nextValue = event.currentTarget.value.trim() || null;
-      if (fallbackValue === nextValue) {
+      if ((fallbackValue ?? null) === nextValue) {
         event.currentTarget.value = fallbackValue ?? "";
         return;
       }

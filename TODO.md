@@ -102,7 +102,7 @@ Status target: minimum 15 live templates for launch. Current state: 13 templates
 - [x] `Adat Dayak` — Origin: Kalimantan; Palette: `#5A3E2B`, `#C46B2D`, `#E7D7B6`; Elements: shield motif, hornbill pattern, tribal geometry; Tag: `etnik`
 - [x] `Adat Aceh` — Origin: Aceh; Palette: `#0B6E4F`, `#D4AF37`, `#FAF3E0`; Elements: pinto Aceh gate, arabesque motif, kaligrafi detail; Tag: `islami`
 - [ ] `Adat Manado/Minahasa` — Origin: Sulawesi Utara; Palette: `#1E8C8C`, `#FF7F6A`, `#FFF4E8`; Elements: wale house silhouette, sea breeze gradient, coconut leaf pattern; Tag: `pesisir`
-- [ ] `Adat Toraja` — Origin: Sulawesi Selatan; Palette: `#7A1F1F`, `#111111`, `#D8B36A`; Elements: tongkonan roofline, carved panel motif, ceremonial stripe; Tag: `etnik`
+- [x] `Adat Toraja` — Origin: Sulawesi Selatan; Palette: `#7A1F1F`, `#111111`, `#D8B36A`; Elements: tongkonan roofline, carved panel motif, ceremonial stripe; Tag: `etnik`
 - [ ] `Adat Papua` — Origin: Papua; Palette: `#A65E2E`, `#6D4C41`, `#E9C46A`; Elements: tifa drum motif, tribal linework, bark texture; Tag: `etnik`
 - [x] `Islamic Elegant` — Origin: pan-Islamic Indonesian wedding style; Palette: `#0F766E`, `#D4AF37`, `#F8F5EE`; Elements: arabic calligraphy, mashrabiya geometry, crescent accents; Tag: `islami`
 - [x] `Rustic Nusantara` — Origin: destination wedding Indonesia; Palette: `#8C6A43`, `#C9A77D`, `#F7F0E6`; Elements: wood grain, batik accent strip, dried foliage; Tag: `rustic`

@@ -2,26 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin";
 import { adminCreateTemplate, adminListTemplates } from "@/lib/admin-db";
 import type { TemplateStatus, TemplateTierAccess } from "@/lib/supabase/types";
+import { parseOptionalUrl } from "@/lib/template-admin-validation";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value);
-}
-
-function parseOptionalUrl(value: unknown): string | null | undefined {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (value === null) {
-    return null;
-  }
-
-  if (typeof value !== "string") {
-    return undefined;
-  }
-
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
 }
 
 function validateTemplateCreate(body: unknown): {

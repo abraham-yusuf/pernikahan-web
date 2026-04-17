@@ -272,6 +272,24 @@ export function AdminTemplateTable() {
     return `Menampilkan ${offset + 1}–${Math.min(offset + limit, total)} dari ${total} template`;
   }, [limit, offset, total]);
 
+  function handleOptionalUrlBlur(
+    template: AdminTemplateItem,
+    field: "thumbnail_url" | "preview_url",
+    fallbackValue: string | null
+  ) {
+    return (event: React.FocusEvent<HTMLInputElement>) => {
+      const nextValue = event.currentTarget.value.trim() || null;
+      if (fallbackValue === nextValue) {
+        event.currentTarget.value = fallbackValue ?? "";
+        return;
+      }
+
+      void handleUpdateTemplate(template.id, {
+        [field]: nextValue,
+      });
+    };
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -614,16 +632,11 @@ export function AdminTemplateTable() {
                               defaultValue={template.thumbnail_url ?? ""}
                               placeholder="thumbnail_url"
                               disabled={isPending}
-                              onBlur={(event) => {
-                                const nextValue = event.currentTarget.value.trim() || null;
-                                if ((template.thumbnail_url ?? null) === nextValue) {
-                                  event.currentTarget.value = template.thumbnail_url ?? "";
-                                  return;
-                                }
-                                void handleUpdateTemplate(template.id, {
-                                  thumbnail_url: nextValue,
-                                });
-                              }}
+                              onBlur={handleOptionalUrlBlur(
+                                template,
+                                "thumbnail_url",
+                                template.thumbnail_url
+                              )}
                               className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs"
                             />
                             <input
@@ -632,16 +645,11 @@ export function AdminTemplateTable() {
                               defaultValue={template.preview_url ?? ""}
                               placeholder="preview_url"
                               disabled={isPending}
-                              onBlur={(event) => {
-                                const nextValue = event.currentTarget.value.trim() || null;
-                                if ((template.preview_url ?? null) === nextValue) {
-                                  event.currentTarget.value = template.preview_url ?? "";
-                                  return;
-                                }
-                                void handleUpdateTemplate(template.id, {
-                                  preview_url: nextValue,
-                                });
-                              }}
+                              onBlur={handleOptionalUrlBlur(
+                                template,
+                                "preview_url",
+                                template.preview_url
+                              )}
                               className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs"
                             />
                             <input

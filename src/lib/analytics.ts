@@ -14,7 +14,7 @@ function scheduleTracking(task: () => void) {
     return;
   }
 
-  window.setTimeout(task, 0);
+  setTimeout(task, 0);
 }
 
 export function trackEvent(name: string, payload?: EventPayload) {

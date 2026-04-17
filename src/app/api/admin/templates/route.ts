@@ -69,13 +69,10 @@ function validateTemplateCreate(body: unknown): {
 
   if (
     typeof body.sort_order !== "number" ||
-    !Number.isInteger(body.sort_order)
+    !Number.isInteger(body.sort_order) ||
+    body.sort_order < 0
   ) {
     return { error: "sort_order must be a non-negative integer." };
-  }
-
-  if (body.sort_order < 0) {
-    return { error: "sort_order must be greater than or equal to 0." };
   }
 
   if (typeof body.is_featured !== "boolean") {

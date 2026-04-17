@@ -24,7 +24,7 @@ export async function GET() {
     const { data: templates, error } = await supabase
       .from("templates")
       .select(
-        "id, template_key, name, description, category, region, preview_color, accent_color, bg_pattern, tier_access, status, sort_order, is_featured, thumbnail_url, preview_url"
+        "id, template_key, name, description, category, region, preview_color, accent_color, bg_pattern, tier_access, status, sort_order, is_featured, thumbnail_url"
       )
       .eq("status", "active")
       .in("tier_access", ["free", "premium"] satisfies TemplateTierAccess[])
@@ -52,7 +52,6 @@ export async function GET() {
         sortOrder: template.sort_order,
         isFeatured: template.is_featured,
         thumbnailUrl: template.thumbnail_url,
-        previewUrl: template.preview_url,
         locked: userTier === "free" && template.tier_access === "premium",
       })),
     });

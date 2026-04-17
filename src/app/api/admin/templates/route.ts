@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin";
 import { adminCreateTemplate, adminListTemplates } from "@/lib/admin-db";
 import type { TemplateStatus, TemplateTierAccess } from "@/lib/supabase/types";
-import { parseOptionalUrl } from "@/lib/template-admin-validation";
+import { parseOptionalString } from "@/lib/template-admin-validation";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value);
@@ -69,9 +69,10 @@ function validateTemplateCreate(body: unknown): {
 
   if (
     typeof body.sort_order !== "number" ||
-    !Number.isFinite(body.sort_order)
+    !Number.isFinite(body.sort_order) ||
+    !Number.isInteger(body.sort_order)
   ) {
-    return { error: "sort_order must be a valid number." };
+    return { error: "sort_order must be an integer number." };
   }
 
   if (body.sort_order < 0) {
@@ -82,12 +83,12 @@ function validateTemplateCreate(body: unknown): {
     return { error: "is_featured must be a boolean." };
   }
 
-  const thumbnailUrl = parseOptionalUrl(body.thumbnail_url);
+  const thumbnailUrl = parseOptionalString(body.thumbnail_url);
   if ("thumbnail_url" in body && thumbnailUrl === undefined) {
     return { error: "thumbnail_url must be a string, null, or omitted." };
   }
 
-  const previewUrl = parseOptionalUrl(body.preview_url);
+  const previewUrl = parseOptionalString(body.preview_url);
   if ("preview_url" in body && previewUrl === undefined) {
     return { error: "preview_url must be a string, null, or omitted." };
   }
@@ -105,7 +106,7 @@ function validateTemplateCreate(body: unknown): {
       component_name: requiredValues.component_name,
       tier_access: body.tier_access,
       status: body.status,
-      sort_order: Math.trunc(body.sort_order),
+      sort_order: body.sort_order,
       is_featured: body.is_featured,
       ...(thumbnailUrl !== undefined ? { thumbnail_url: thumbnailUrl } : {}),
       ...(previewUrl !== undefined ? { preview_url: previewUrl } : {}),

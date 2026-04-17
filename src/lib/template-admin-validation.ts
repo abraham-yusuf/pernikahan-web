@@ -1,4 +1,4 @@
-export function parseOptionalUrl(value: unknown): string | null | undefined {
+export function parseOptionalString(value: unknown): string | null | undefined {
   if (value === undefined) {
     return undefined;
   }

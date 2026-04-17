@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { TemplateStatus, TemplateTierAccess } from "@/lib/supabase/types";
-import { parseOptionalUrl } from "@/lib/template-admin-validation";
+import { parseOptionalString } from "@/lib/template-admin-validation";
 
 interface AdminTemplateItem {
   id: string;
@@ -245,8 +245,8 @@ export function AdminTemplateTable() {
         body: JSON.stringify({
           ...createForm,
           sort_order: Number(createForm.sort_order),
-          thumbnail_url: parseOptionalUrl(createForm.thumbnail_url) ?? null,
-          preview_url: parseOptionalUrl(createForm.preview_url) ?? null,
+          thumbnail_url: parseOptionalString(createForm.thumbnail_url),
+          preview_url: parseOptionalString(createForm.preview_url),
         }),
       });
 

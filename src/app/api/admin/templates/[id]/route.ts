@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin";
 import { adminGetTemplate, adminUpdateTemplate } from "@/lib/admin-db";
 import type { TemplateStatus, TemplateTierAccess } from "@/lib/supabase/types";
-import { parseOptionalUrl } from "@/lib/template-admin-validation";
+import { parseOptionalString } from "@/lib/template-admin-validation";
 
 type Params = Promise<{ id: string }>;
 
@@ -75,16 +75,17 @@ function validateTemplateUpdate(body: unknown): {
   if ("sort_order" in body) {
     if (
       typeof body.sort_order !== "number" ||
-      !Number.isFinite(body.sort_order)
+      !Number.isFinite(body.sort_order) ||
+      !Number.isInteger(body.sort_order)
     ) {
-      return { error: "sort_order must be a valid number." };
+      return { error: "sort_order must be an integer number." };
     }
 
     if (body.sort_order < 0) {
       return { error: "sort_order must be greater than or equal to 0." };
     }
 
-    data.sort_order = Math.trunc(body.sort_order);
+    data.sort_order = body.sort_order;
   }
 
   if ("is_featured" in body) {
@@ -136,7 +137,7 @@ function validateTemplateUpdate(body: unknown): {
   }
 
   if ("thumbnail_url" in body) {
-    const parsed = parseOptionalUrl(body.thumbnail_url);
+    const parsed = parseOptionalString(body.thumbnail_url);
     if (parsed === undefined) {
       return { error: "thumbnail_url must be a string, null, or omitted." };
     }
@@ -144,7 +145,7 @@ function validateTemplateUpdate(body: unknown): {
   }
 
   if ("preview_url" in body) {
-    const parsed = parseOptionalUrl(body.preview_url);
+    const parsed = parseOptionalString(body.preview_url);
     if (parsed === undefined) {
       return { error: "preview_url must be a string, null, or omitted." };
     }

@@ -5,6 +5,10 @@ import { createSupabaseAdminClient } from "@/lib/supabase";
 
 type Params = Promise<{ id: string }>;
 
+/**
+ * Fetch a single template metadata record by canonical template key.
+ * Returns null when lookup fails or no matching row exists.
+ */
 async function getTemplateByKey(templateKey: string) {
   try {
     const supabase = createSupabaseAdminClient();
@@ -20,7 +24,10 @@ async function getTemplateByKey(templateKey: string) {
 
     return data;
   } catch (error) {
-    console.error("Template lookup error:", error);
+    console.error(
+      "Failed to fetch template metadata from database. Template will be unavailable; verify Supabase connectivity and template_key data:",
+      error
+    );
     return null;
   }
 }

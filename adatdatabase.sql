@@ -1,6 +1,6 @@
 -- ============================================================
 -- NikahDigital — Template metadata migration seed
--- Source: src/lib/data.ts
+-- Canonical template metadata seed for public.templates
 -- Idempotent: safe to run multiple times
 -- ============================================================
 
@@ -98,19 +98,33 @@ INSERT INTO public.templates (
   is_featured,
   updated_at
 ) VALUES
+  -- Modern
   ('modern-elegant', 'Modern Elegant', 'Desain modern minimalis dengan sentuhan emas yang elegan. Cocok untuk pasangan yang menyukai kesederhanaan.', 'Indonesia', 'Modern', '#1a1a2e', '#c9a84c', 'geometric', 'ModernElegantTemplate', 'free', 'active', 10, null, null, true, now()),
+  -- Tradisional Jawa
   ('adat-jawa', 'Adat Jawa', 'Tema tradisional Jawa dengan motif batik dan ornamen wayang. Sempurna untuk pernikahan adat.', 'Jawa Tengah', 'Tradisional', '#4a1a0a', '#d4a574', 'batik', 'AdatJawaTemplate', 'premium', 'active', 20, null, null, false, now()),
+  -- Floral
   ('floral-garden', 'Floral Garden', 'Desain romantis dengan hiasan bunga-bunga cantik. Ideal untuk pernikahan di taman atau outdoor.', 'Indonesia', 'Romantis', '#2d4a3e', '#e8a0bf', 'floral', 'FloralGardenTemplate', 'premium', 'active', 30, null, null, false, now()),
+  -- Tradisional Sunda
   ('adat-sunda', 'Adat Sunda', 'Tema pernikahan adat Sunda dengan motif mega mendung dan nuansa biru pastel yang menenangkan.', 'Jawa Barat', 'Tradisional', '#1a3a5c', '#F4C95D', 'mega-mendung', 'AdatSundaTemplate', 'premium', 'active', 40, null, null, false, now()),
+  -- Tradisional Minang
   ('adat-minang', 'Adat Minang', 'Tema adat Minangkabau dengan ukiran tradisional dan nuansa emas kerajaan yang megah.', 'Sumatera Barat', 'Tradisional', '#2C1B12', '#D4AF37', 'minang-ukir', 'AdatMinangTemplate', 'premium', 'active', 50, null, null, false, now()),
+  -- Tradisional Bali
   ('adat-bali', 'Adat Bali', 'Tema pernikahan Bali dengan ornamen candi dan nuansa emas tropis yang sakral.', 'Bali', 'Tradisional', '#2d1f0e', '#D4AF37', 'bali-relief', 'AdatBaliTemplate', 'premium', 'active', 60, null, null, false, now()),
+  -- Tradisional Batak
   ('adat-batak', 'Adat Batak', 'Tema adat Batak dengan ornamen gorga dan kombinasi merah-hitam yang tegas dan gagah.', 'Sumatera Utara', 'Tradisional', '#8B1E1E', '#111111', 'gorga', 'AdatBatakTemplate', 'premium', 'active', 70, null, null, false, now()),
+  -- Tradisional Bugis-Makassar
   ('adat-bugis-makassar', 'Adat Bugis-Makassar', 'Tema adat Bugis-Makassar dengan nuansa kerajaan emas dan maroon yang agung.', 'Sulawesi Selatan', 'Tradisional', '#6E1E2A', '#C9A227', 'lontara', 'AdatBugisMakassarTemplate', 'premium', 'active', 80, null, null, false, now()),
+  -- Tradisional Betawi
   ('adat-betawi', 'Adat Betawi', 'Tema adat Betawi yang ceria dengan motif gigi balang dan warna-warna semarak khas Jakarta.', 'DKI Jakarta', 'Tradisional', '#F28C28', '#2E8B57', 'gigi-balang', 'AdatBetawiTemplate', 'premium', 'active', 90, null, null, false, now()),
+  -- Etnik Dayak
   ('adat-dayak', 'Adat Dayak', 'Tema etnik Dayak dengan motif perisai dan pola geometris tribal bernuansa bumi Kalimantan.', 'Kalimantan', 'Etnik', '#5A3E2B', '#C46B2D', 'dayak-shield', 'AdatDayakTemplate', 'premium', 'active', 100, null, null, false, now()),
+  -- Islami Aceh
   ('adat-aceh', 'Adat Aceh', 'Tema adat Aceh dengan ornamen arabesque dan nuansa hijau emas yang islami dan elegan.', 'Aceh', 'Islami', '#0B6E4F', '#D4AF37', 'aceh-arabesque', 'AdatAcehTemplate', 'premium', 'active', 110, null, null, false, now()),
+  -- Etnik Toraja
   ('adat-toraja', 'Adat Toraja', 'Tema adat Toraja dengan siluet tongkonan, ukiran panel tradisional, dan nuansa marun emas yang megah.', 'Sulawesi Selatan', 'Etnik', '#7A1F1F', '#D8B36A', 'toraja-panel', 'AdatTorajaTemplate', 'premium', 'active', 120, null, null, true, now()),
+  -- Islami modern
   ('islamic-elegant', 'Islamic Elegant', 'Tema islami elegan dengan pola mashrabiya dan kaligrafi, nuansa teal dan emas yang timeless.', 'Pan-Islamic Indonesian', 'Islami', '#0F766E', '#D4AF37', 'mashrabiya', 'IslamicElegantTemplate', 'premium', 'active', 130, null, null, false, now()),
+  -- Rustic
   ('rustic-nusantara', 'Rustic Nusantara', 'Tema rustic Nusantara dengan tekstur kayu dan aksen batik, sempurna untuk pernikahan outdoor yang hangat.', 'Indonesian destination wedding', 'Rustic', '#8C6A43', '#C9A77D', 'wood-grain', 'RusticNusantaraTemplate', 'premium', 'active', 140, null, null, false, now())
 ON CONFLICT (template_key)
 DO UPDATE SET
@@ -128,6 +142,37 @@ DO UPDATE SET
   thumbnail_url = EXCLUDED.thumbnail_url,
   preview_url = EXCLUDED.preview_url,
   is_featured = EXCLUDED.is_featured,
-  updated_at = now();
+  updated_at = now()
+WHERE (
+  public.templates.name,
+  public.templates.description,
+  public.templates.region,
+  public.templates.category,
+  public.templates.preview_color,
+  public.templates.accent_color,
+  public.templates.bg_pattern,
+  public.templates.component_name,
+  public.templates.tier_access,
+  public.templates.status,
+  public.templates.sort_order,
+  public.templates.thumbnail_url,
+  public.templates.preview_url,
+  public.templates.is_featured
+) IS DISTINCT FROM (
+  EXCLUDED.name,
+  EXCLUDED.description,
+  EXCLUDED.region,
+  EXCLUDED.category,
+  EXCLUDED.preview_color,
+  EXCLUDED.accent_color,
+  EXCLUDED.bg_pattern,
+  EXCLUDED.component_name,
+  EXCLUDED.tier_access,
+  EXCLUDED.status,
+  EXCLUDED.sort_order,
+  EXCLUDED.thumbnail_url,
+  EXCLUDED.preview_url,
+  EXCLUDED.is_featured
+);
 
 COMMIT;

@@ -6,6 +6,10 @@ import { TemplateCard } from "@/components/TemplateCard";
 import { StartPremiumCheckoutButton } from "@/components/payment/StartPremiumCheckoutButton";
 import { createSupabaseAdminClient } from "@/lib/supabase";
 
+/**
+ * Load active templates for the homepage gallery from Supabase.
+ * Returns an empty array when the database is unreachable so the page still renders.
+ */
 async function getHomeTemplates() {
   try {
     const supabase = createSupabaseAdminClient();
@@ -30,7 +34,10 @@ async function getHomeTemplates() {
       accentColor: template.accent_color,
     }));
   } catch (error) {
-    console.error("Home templates load error:", error);
+    console.error(
+      "Failed to load templates for homepage from database. Check Supabase connection settings and ensure public.templates exists:",
+      error
+    );
     return [];
   }
 }

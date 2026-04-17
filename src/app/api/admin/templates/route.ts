@@ -74,7 +74,7 @@ function validateTemplateCreate(body: unknown): {
     return { error: "sort_order must be a valid number." };
   }
 
-  if (Math.trunc(body.sort_order) < 0) {
+  if (body.sort_order < 0) {
     return { error: "sort_order must be greater than or equal to 0." };
   }
 

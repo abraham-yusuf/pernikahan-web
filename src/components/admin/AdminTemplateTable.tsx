@@ -29,6 +29,23 @@ interface AdminTemplatesResponse {
   error?: string;
 }
 
+function getApiErrorMessage(
+  payload: unknown,
+  fallback: string
+): string {
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "error" in payload &&
+    typeof payload.error === "string" &&
+    payload.error.trim().length > 0
+  ) {
+    return payload.error;
+  }
+
+  return fallback;
+}
+
 function getStatusBadge(status: TemplateStatus) {
   if (status === "active") {
     return "bg-green-100 text-green-700";
@@ -145,8 +162,8 @@ export function AdminTemplateTable() {
         }
 
         if (!res.ok) {
-          const payload = (await res.json().catch(() => null)) as AdminTemplatesResponse | null;
-          setError(payload?.error ?? "Gagal memuat template.");
+          const payload = await res.json().catch(() => null);
+          setError(getApiErrorMessage(payload, "Gagal memuat template."));
           setTemplates([]);
           setTotal(0);
           return;
@@ -206,8 +223,8 @@ export function AdminTemplateTable() {
         return;
       }
 
-      const payload = (await res.json().catch(() => null)) as { error?: string } | null;
-      setError(payload?.error ?? "Gagal memperbarui template.");
+      const payload = await res.json().catch(() => null);
+      setError(getApiErrorMessage(payload, "Gagal memperbarui template."));
     } catch {
       setError("Gagal memperbarui template.");
     } finally {
@@ -234,8 +251,8 @@ export function AdminTemplateTable() {
       });
 
       if (!res.ok) {
-        const payload = (await res.json().catch(() => null)) as { error?: string } | null;
-        setError(payload?.error ?? "Gagal menambah template.");
+        const payload = await res.json().catch(() => null);
+        setError(getApiErrorMessage(payload, "Gagal menambah template."));
         return;
       }
 

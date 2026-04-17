@@ -13,6 +13,7 @@ import { AdatDayakTemplate } from "@/components/templates/AdatDayak";
 import { AdatAcehTemplate } from "@/components/templates/AdatAceh";
 import { IslamicElegantTemplate } from "@/components/templates/IslamicElegant";
 import { RusticNusantaraTemplate } from "@/components/templates/RusticNusantara";
+import { AdatTorajaTemplate } from "@/components/templates/AdatToraja";
 
 export type TemplateComponentProps = {
   event?: WeddingEvent;
@@ -34,6 +35,7 @@ export const templateComponents: Record<string, TemplateComponent> = {
   "adat-aceh": AdatAcehTemplate,
   "islamic-elegant": IslamicElegantTemplate,
   "rustic-nusantara": RusticNusantaraTemplate,
+  "adat-toraja": AdatTorajaTemplate,
 };
 
 export function getTemplateComponent(

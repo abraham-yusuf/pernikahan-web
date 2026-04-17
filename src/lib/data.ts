@@ -156,6 +156,17 @@ export const templates: WeddingTemplate[] = [
     bgPattern: "aceh-arabesque",
   },
   {
+    id: "adat-toraja",
+    name: "Adat Toraja",
+    description:
+      "Tema adat Toraja dengan siluet tongkonan, ukiran panel tradisional, dan nuansa marun emas yang megah.",
+    category: "Etnik",
+    region: "Sulawesi Selatan",
+    previewColor: "#7A1F1F",
+    accentColor: "#D8B36A",
+    bgPattern: "toraja-panel",
+  },
+  {
     id: "islamic-elegant",
     name: "Islamic Elegant",
     description:

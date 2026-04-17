@@ -33,7 +33,7 @@ export function PaymentSuccessStatus({ externalId }: { externalId?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<PaymentStatus | null>(null);
   const [invitationId, setInvitationId] = useState<string | null>(null);
-  const pollingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollingTimerRef = useRef<ReturnType<typeof window.setInterval> | null>(null);
 
   const normalizedExternalId = useMemo(() => {
     if (!externalId) {

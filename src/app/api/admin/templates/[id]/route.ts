@@ -77,7 +77,7 @@ function validateTemplateUpdate(body: unknown): {
       typeof body.sort_order !== "number" ||
       !Number.isInteger(body.sort_order)
     ) {
-      return { error: "sort_order must be an integer number." };
+      return { error: "sort_order must be an integer." };
     }
 
     if (body.sort_order < 0) {

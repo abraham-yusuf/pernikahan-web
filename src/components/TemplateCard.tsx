@@ -1,10 +1,18 @@
 import Link from "next/link";
-import { templates } from "@/lib/data";
+
+export interface TemplateCardItem {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  previewColor: string;
+  accentColor: string;
+}
 
 export function TemplateCard({
   template,
 }: {
-  template: (typeof templates)[number];
+  template: TemplateCardItem;
 }) {
   return (
     <Link

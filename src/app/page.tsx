@@ -3,10 +3,48 @@ import { Navbar } from "@/components/Navbar";
 import { HomeHeroActions } from "@/components/HomeHeroActions";
 import { Footer } from "@/components/Footer";
 import { TemplateCard } from "@/components/TemplateCard";
-import { templates } from "@/lib/data";
 import { StartPremiumCheckoutButton } from "@/components/payment/StartPremiumCheckoutButton";
+import { createSupabaseAdminClient } from "@/lib/supabase";
 
-export default function Home() {
+/**
+ * Load active templates for the homepage gallery from Supabase.
+ * Returns an empty array when the database is unreachable so the page still renders.
+ */
+async function getHomeTemplates() {
+  try {
+    const supabase = createSupabaseAdminClient();
+    const { data, error } = await supabase
+      .from("templates")
+      .select(
+        "template_key, name, description, category, preview_color, accent_color"
+      )
+      .eq("status", "active")
+      .order("sort_order", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data ?? []).map((template) => ({
+      id: template.template_key,
+      name: template.name,
+      description: template.description,
+      category: template.category,
+      previewColor: template.preview_color,
+      accentColor: template.accent_color,
+    }));
+  } catch (error) {
+    console.error(
+      "Failed to load templates for homepage from database. Check Supabase connection settings and ensure public.templates exists:",
+      error
+    );
+    return [];
+  }
+}
+
+export default async function Home() {
+  const templates = await getHomeTemplates();
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />

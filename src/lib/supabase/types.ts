@@ -89,6 +89,7 @@ export type TemplateRow = {
   status: TemplateStatus;
   sort_order: number;
   thumbnail_url: string | null;
+  preview_url: string | null;
   is_featured: boolean;
   created_by_user_id: string | null;
   created_at: string;
@@ -217,6 +218,7 @@ export type Database = {
           status?: TemplateStatus;
           sort_order?: number;
           thumbnail_url?: string | null;
+          preview_url?: string | null;
           is_featured?: boolean;
           created_by_user_id?: string | null;
           created_at?: string;

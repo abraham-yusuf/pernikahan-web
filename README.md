@@ -24,8 +24,12 @@ Coding tasks dibantu Claude Opus sebagai AI agent untuk generate components/temp
 3. Copy env template: `cp .env.example .env.local`
 4. Isi `.env.local` dengan kredensial Supabase dan Xendit.
 5. Jalankan `database.sql` di Supabase SQL Editor untuk membuat tabel, index, trigger, dan RLS policies.
-6. Run dev: `npm run dev`
-7. Deploy: push ke Vercel untuk preview/production.
+6. Jalankan `adatdatabase.sql` di Supabase SQL Editor (nama file ini mengikuti requirement migrasi issue) untuk seed semua metadata template dari app ke tabel `public.templates` (idempotent, aman dijalankan berulang).
+7. Verifikasi sinkronisasi dengan query:
+   - `select template_key, name, status, sort_order from public.templates order by sort_order asc;`
+   - pastikan daftar template di homepage/dashboard mengikuti hasil query DB.
+8. Run dev: `npm run dev`
+9. Deploy: push ke Vercel untuk preview/production.
 
 ## Environment Variables
 

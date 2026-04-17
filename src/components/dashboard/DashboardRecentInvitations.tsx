@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { templates } from "@/lib/data";
 import { EmptyInvitations } from "@/components/dashboard/EmptyInvitations";
 
 interface InvitationItem {
   id: string;
   title: string;
   template_id: string;
+  template_name?: string | null;
   status: "draft" | "published" | "archived";
   created_at?: string;
 }
@@ -17,7 +17,6 @@ interface InvitationsPayload {
   invitations?: InvitationItem[];
 }
 
-const templateNameMap = new Map(templates.map((template) => [template.id, template.name]));
 const dateFormatter = new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" });
 
 function getStatusClasses(status: InvitationItem["status"]) {
@@ -166,7 +165,7 @@ export function DashboardRecentInvitations() {
             <div>
               <p className="font-medium text-gray-900">{invitation.title}</p>
               <p className="mt-1 text-sm text-gray-500">
-                {templateNameMap.get(invitation.template_id) ?? invitation.template_id} · {formatDate(invitation.created_at)}
+                {invitation.template_name ?? invitation.template_id} · {formatDate(invitation.created_at)}
               </p>
             </div>
             <div className="flex items-center gap-3">

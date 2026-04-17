@@ -60,11 +60,15 @@ function validateTemplateCreate(body: unknown): {
     "component_name",
   ] as const;
 
+  const requiredValues = {} as Record<(typeof requiredStringFields)[number], string>;
+
   for (const field of requiredStringFields) {
     const value = body[field];
     if (typeof value !== "string" || value.trim().length === 0) {
       return { error: `${field} must be a non-empty string.` };
     }
+
+    requiredValues[field] = value.trim();
   }
 
   if (body.tier_access !== "free" && body.tier_access !== "premium") {
@@ -102,15 +106,15 @@ function validateTemplateCreate(body: unknown): {
 
   return {
     data: {
-      template_key: body.template_key.trim(),
-      name: body.name.trim(),
-      description: body.description.trim(),
-      region: body.region.trim(),
-      category: body.category.trim(),
-      preview_color: body.preview_color.trim(),
-      accent_color: body.accent_color.trim(),
-      bg_pattern: body.bg_pattern.trim(),
-      component_name: body.component_name.trim(),
+      template_key: requiredValues.template_key,
+      name: requiredValues.name,
+      description: requiredValues.description,
+      region: requiredValues.region,
+      category: requiredValues.category,
+      preview_color: requiredValues.preview_color,
+      accent_color: requiredValues.accent_color,
+      bg_pattern: requiredValues.bg_pattern,
+      component_name: requiredValues.component_name,
       tier_access: body.tier_access,
       status: body.status,
       sort_order: Math.trunc(body.sort_order),

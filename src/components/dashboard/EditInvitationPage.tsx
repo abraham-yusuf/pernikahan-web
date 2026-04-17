@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { templates } from "@/lib/data";
 import { EmptyInvitations } from "@/components/dashboard/EmptyInvitations";
 import {
   InvitationForm,
@@ -30,6 +29,8 @@ interface InvitationDetail {
   slug: string;
   status: InvitationStatus;
   template_id: string;
+  template_name?: string | null;
+  template_description?: string | null;
 }
 
 interface InvitationPayload {
@@ -131,19 +132,6 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
       active = false;
     };
   }, [invitationId]);
-
-  const selectedTemplate = useMemo(() => {
-    if (!invitation) {
-      return null;
-    }
-
-    const template = templates.find((item) => item.id === invitation.template_id);
-
-    return {
-      name: template?.name ?? invitation.template_id,
-      description: template?.description ?? "",
-    };
-  }, [invitation]);
 
   async function updateInvitation(body: InvitationFormValues | { status: InvitationStatus }) {
     const response = await fetch(`/api/invitations/${encodeURIComponent(invitationId)}`, {
@@ -344,10 +332,10 @@ export function EditInvitationPage({ invitationId }: { invitationId: string }) {
       <div className="rounded-2xl border border-gray-100 bg-white p-6">
         <p className="text-sm font-medium text-gray-500">Template digunakan</p>
         <h2 className="mt-1 text-lg font-semibold text-gray-900">
-          {selectedTemplate?.name ?? invitation.template_id}
+          {invitation.template_name ?? invitation.template_id}
         </h2>
-        {selectedTemplate?.description ? (
-          <p className="mt-2 text-sm text-gray-500">{selectedTemplate.description}</p>
+        {invitation.template_description ? (
+          <p className="mt-2 text-sm text-gray-500">{invitation.template_description}</p>
         ) : null}
       </div>
 

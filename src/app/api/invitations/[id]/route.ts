@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteInvitation, getInvitationById, updateInvitation } from "@/lib/db";
+import { createSupabaseAdminClient } from "@/lib/supabase";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { validateUpdateInvitationInput } from "@/lib/invitations";
 
@@ -46,7 +47,24 @@ export async function GET(
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     }
 
-    return NextResponse.json({ invitation });
+    const adminSupabase = createSupabaseAdminClient();
+    const { data: template, error: templateError } = await adminSupabase
+      .from("templates")
+      .select("name, description")
+      .eq("template_key", invitation.template_id)
+      .maybeSingle();
+
+    if (templateError) {
+      throw templateError;
+    }
+
+    return NextResponse.json({
+      invitation: {
+        ...invitation,
+        template_name: template?.name ?? null,
+        template_description: template?.description ?? null,
+      },
+    });
   } catch (error) {
     console.error("Invitation fetch error:", error);
     return NextResponse.json(

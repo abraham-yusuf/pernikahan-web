@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createInvitation, listInvitationsByUser } from "@/lib/db";
+import { createSupabaseAdminClient } from "@/lib/supabase";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   generateSlug,
@@ -130,9 +131,32 @@ export async function GET(request: NextRequest) {
       : 0;
 
     const invitations = await listInvitationsByUser(profile.id, limit, offset);
+    const templateIds = [
+      ...new Set(invitations.documents.map((invitation) => invitation.template_id)),
+    ];
+    const templateNameMap = new Map<string, string>();
+
+    if (templateIds.length > 0) {
+      const adminSupabase = createSupabaseAdminClient();
+      const { data: templateRows, error: templateLookupError } = await adminSupabase
+        .from("templates")
+        .select("template_key, name")
+        .in("template_key", templateIds);
+
+      if (templateLookupError) {
+        throw templateLookupError;
+      }
+
+      for (const templateRow of templateRows ?? []) {
+        templateNameMap.set(templateRow.template_key, templateRow.name);
+      }
+    }
 
     return NextResponse.json({
-      invitations: invitations.documents,
+      invitations: invitations.documents.map((invitation) => ({
+        ...invitation,
+        template_name: templateNameMap.get(invitation.template_id) ?? null,
+      })),
       total: invitations.total,
       limit,
       offset,

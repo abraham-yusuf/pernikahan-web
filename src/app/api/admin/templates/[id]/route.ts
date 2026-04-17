@@ -9,14 +9,40 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value);
 }
 
+function parseOptionalUrl(value: unknown): string | null | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (value === null) {
+    return null;
+  }
+
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 function validateTemplateUpdate(body: unknown): {
   data?: {
     status?: TemplateStatus;
     tier_access?: TemplateTierAccess;
     sort_order?: number;
     is_featured?: boolean;
+    template_key?: string;
     name?: string;
     description?: string;
+    region?: string;
+    category?: string;
+    preview_color?: string;
+    accent_color?: string;
+    bg_pattern?: string;
+    component_name?: string;
+    thumbnail_url?: string | null;
+    preview_url?: string | null;
   };
   error?: string;
 } {
@@ -29,8 +55,17 @@ function validateTemplateUpdate(body: unknown): {
     tier_access?: TemplateTierAccess;
     sort_order?: number;
     is_featured?: boolean;
+    template_key?: string;
     name?: string;
     description?: string;
+    region?: string;
+    category?: string;
+    preview_color?: string;
+    accent_color?: string;
+    bg_pattern?: string;
+    component_name?: string;
+    thumbnail_url?: string | null;
+    preview_url?: string | null;
   } = {};
 
   if ("status" in body) {
@@ -89,6 +124,43 @@ function validateTemplateUpdate(body: unknown): {
     }
 
     data.description = body.description.trim();
+  }
+
+  const requiredStringFields = [
+    "template_key",
+    "region",
+    "category",
+    "preview_color",
+    "accent_color",
+    "bg_pattern",
+    "component_name",
+  ] as const;
+
+  for (const field of requiredStringFields) {
+    if (field in body) {
+      const value = body[field];
+      if (typeof value !== "string" || value.trim().length === 0) {
+        return { error: `${field} must be a non-empty string.` };
+      }
+
+      data[field] = value.trim();
+    }
+  }
+
+  if ("thumbnail_url" in body) {
+    const parsed = parseOptionalUrl(body.thumbnail_url);
+    if (parsed === undefined) {
+      return { error: "thumbnail_url must be a string, null, or omitted." };
+    }
+    data.thumbnail_url = parsed;
+  }
+
+  if ("preview_url" in body) {
+    const parsed = parseOptionalUrl(body.preview_url);
+    if (parsed === undefined) {
+      return { error: "preview_url must be a string, null, or omitted." };
+    }
+    data.preview_url = parsed;
   }
 
   if (Object.keys(data).length === 0) {

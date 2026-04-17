@@ -111,8 +111,17 @@ export async function adminUpdateTemplate(
       | "tier_access"
       | "sort_order"
       | "is_featured"
+      | "template_key"
       | "name"
       | "description"
+      | "region"
+      | "category"
+      | "preview_color"
+      | "accent_color"
+      | "bg_pattern"
+      | "component_name"
+      | "thumbnail_url"
+      | "preview_url"
     >
   >
 ): Promise<TemplateRow> {
@@ -121,6 +130,42 @@ export async function adminUpdateTemplate(
     .from("templates")
     .update(updates)
     .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function adminCreateTemplate(
+  input: Pick<
+    TemplateRow,
+    | "template_key"
+    | "name"
+    | "description"
+    | "region"
+    | "category"
+    | "preview_color"
+    | "accent_color"
+    | "bg_pattern"
+    | "component_name"
+    | "tier_access"
+    | "status"
+    | "sort_order"
+    | "is_featured"
+  > & {
+    thumbnail_url?: string | null;
+    preview_url?: string | null;
+    created_by_user_id?: string | null;
+  }
+): Promise<TemplateRow> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("templates")
+    .insert(input)
     .select()
     .single();
 

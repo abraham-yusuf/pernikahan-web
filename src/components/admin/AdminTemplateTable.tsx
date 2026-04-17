@@ -29,6 +29,26 @@ interface AdminTemplatesResponse {
   error?: string;
 }
 
+function getDefaultCreateForm() {
+  return {
+    template_key: "",
+    name: "",
+    description: "",
+    region: "",
+    category: "",
+    preview_color: "#1a1a2e",
+    accent_color: "#c9a84c",
+    bg_pattern: "",
+    component_name: "",
+    tier_access: "premium" as TemplateTierAccess,
+    status: "draft" as TemplateStatus,
+    sort_order: 100,
+    thumbnail_url: "",
+    preview_url: "",
+    is_featured: false,
+  };
+}
+
 function getApiErrorMessage(
   payload: unknown,
   fallback: string
@@ -114,23 +134,7 @@ export function AdminTemplateTable() {
   const [pendingTemplateId, setPendingTemplateId] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [creating, setCreating] = useState(false);
-  const [createForm, setCreateForm] = useState({
-    template_key: "",
-    name: "",
-    description: "",
-    region: "",
-    category: "",
-    preview_color: "#1a1a2e",
-    accent_color: "#c9a84c",
-    bg_pattern: "",
-    component_name: "",
-    tier_access: "premium" as TemplateTierAccess,
-    status: "draft" as TemplateStatus,
-    sort_order: 100,
-    thumbnail_url: "",
-    preview_url: "",
-    is_featured: false,
-  });
+  const [createForm, setCreateForm] = useState(getDefaultCreateForm);
 
   useEffect(() => {
     let active = true;
@@ -256,23 +260,7 @@ export function AdminTemplateTable() {
         return;
       }
 
-      setCreateForm({
-        template_key: "",
-        name: "",
-        description: "",
-        region: "",
-        category: "",
-        preview_color: "#1a1a2e",
-        accent_color: "#c9a84c",
-        bg_pattern: "",
-        component_name: "",
-        tier_access: "premium",
-        status: "draft",
-        sort_order: 100,
-        thumbnail_url: "",
-        preview_url: "",
-        is_featured: false,
-      });
+      setCreateForm(getDefaultCreateForm());
       setOffset(0);
       setReloadKey((value) => value + 1);
     } catch {

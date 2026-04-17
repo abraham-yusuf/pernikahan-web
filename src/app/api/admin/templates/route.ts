@@ -69,7 +69,6 @@ function validateTemplateCreate(body: unknown): {
 
   if (
     typeof body.sort_order !== "number" ||
-    !Number.isFinite(body.sort_order) ||
     !Number.isInteger(body.sort_order)
   ) {
     return { error: "sort_order must be an integer number." };

@@ -75,7 +75,6 @@ function validateTemplateUpdate(body: unknown): {
   if ("sort_order" in body) {
     if (
       typeof body.sort_order !== "number" ||
-      !Number.isFinite(body.sort_order) ||
       !Number.isInteger(body.sort_order)
     ) {
       return { error: "sort_order must be an integer number." };
